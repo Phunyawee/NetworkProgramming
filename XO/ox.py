@@ -205,13 +205,15 @@ def serverPlay():
        
         upDate()
     except ValueError:
-        print("Server disconnect")
+        print("ValueError")
     except ConnectionAbortedError:
-        print("Server disconnect") 
+        print("ConnectionAbortedError") 
     except UnboundLocalError:
-        print("Server disconnect")
+        print("UnboundLocalError")
     except ConnectionResetError :
-        print("Server disconnect")
+        print("ConnectionResetError")
+    except OSError :
+        print("OSError")
         
     print_table(msg)
     check()
@@ -261,6 +263,7 @@ def default():
     stateBtn=[False,False,False,False,False,False,False,False,False]
     onConnection()
     btnSend["state"]= "disabled"
+    stateServer.set("Input Ip/Port")
 
 def offConnection():
     txtIp["state"] = "disabled"
@@ -366,7 +369,10 @@ def getStart():
             stateServer.set("Server not response")
             print("TimeoutError")
             actionWindow("ip/port error")
-
+        except ConnectionRefusedError:
+            stateServer.set("Server not response")
+            print("ConnectionRefusedError ")
+            actionWindow("ip/port error")
         except ConnectionResetError :
             stateServer.set("Server not response")
             print("ConnectionResetError")
@@ -378,8 +384,10 @@ def getStart():
         
         except UnboundLocalError:
             stateServer.set("Server not response")
-            print("UnboundLocalError")
+            print("UnboundLocalError ")
             actionWindow("ip/port error")
+
+        
 
     
     #print(server)
