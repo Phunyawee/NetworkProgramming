@@ -363,19 +363,22 @@ def getStart():
             stateServer.set("Welcome to XO Game")
             statePlayer.set("Your turn")
         except TimeoutError:
-            print("Server disconnect")
+            stateServer.set("Server not response")
+            print("TimeoutError")
             actionWindow("ip/port error")
 
         except ConnectionResetError :
             stateServer.set("Server not response")
-            print("Server not response")
+            print("ConnectionResetError")
             actionWindow("ip/port error")
         except OSError:
-            print("Server disconnect")
+            stateServer.set("Server not response")
+            print("OSError")
             actionWindow("ip/port error")
         
         except UnboundLocalError:
-            print("Server disconnect")
+            stateServer.set("Server not response")
+            print("UnboundLocalError")
             actionWindow("ip/port error")
 
     
