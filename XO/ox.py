@@ -1,7 +1,9 @@
+from ast import Num
 from tkinter import *
 import tkinter.font as TkFont
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+import time
 #Client
 root = Tk()
 root.geometry("1600x800+0+0")
@@ -20,9 +22,144 @@ f2.pack(side=RIGHT)
 lblInfo = Label(Tops,font=('TH Sarabun New',50,'bold'),
                 text="Tic-tac-toe",fg="Blue",bd=10,anchor='w')
 lblInfo.grid(row=0,column=0)
+#OX code =======================================================================
+
+count = 0
+def print_table(msg):
+    #os.system("cls")
+    print ("")
+    print (" "+str(msg[0])+" | "+str(msg[1])+" | "+str(msg[2])+" ")
+    print (" "+str(msg[3])+" | "+str(msg[4])+" | "+str(msg[5])+" ")
+    print (" "+str(msg[6])+" | "+str(msg[7])+" | "+str(msg[8])+" ")
+    print ("") 
+def check():
+    global count
+    global msg
+    global useSlot
+    if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
+        if (msg[0] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")            
+        if (msg[0] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10        
+                         
+    if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
+        if (msg[3] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")
+        if (msg[3] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10
+                 
+    if (msg[6] == msg[7]) and (msg[7] == msg[8]):
+        if (msg[6] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")            
+        if (msg[6] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10        
+                           
+    if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
+        if (msg[0] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")
+            
+        if (msg[0] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10        
+                         
+    if (msg[1] == msg[4]) and (msg[4] == msg[7]):
+        if (msg[1] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")            
+        if (msg[1] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10        
+             
+    if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
+        if (msg[2] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")
+            
+        if (msg[2] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10        
+                       
+
+    if (msg[0] == msg[4]) and (msg[4] == msg[8]):
+        if (msg[0] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")            
+        if (msg[0] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10        
+                         
+    if (msg[2] == msg[4]) and (msg[4] == msg[6]):
+        if (msg[2] == 'x'):
+            print ("Client WIN !!!!!!!!!!!!!!")            
+        if (msg[2] == 'o'):
+            print ("Server WIN !!!!!!!!!!!!!!")
+        count = 10        
+         
+def clientPlay(tmp):
+    global msg    
+    global count
+    global useSlot
+
+    
+    #print_table(msg)
+    #====================================
+    #====================================
+    (msg[int(tmp)-1]) = 'x'
+    number[int(tmp)-1]='X'
+    #====================================AttributeError: 'int' object has no attribute 'encode'
+    tmp = str(tmp)
+    #====================================
+    try:
+        s.send(tmp.encode('ascii'))
+    except ValueError:
+        print("Server disconnect")
+    except ConnectionAbortedError:
+        print("Server disconnect") 
+    except UnboundLocalError:
+        print("Server disconnect")
+    except ConnectionResetError:
+        print("Server disconnect")
+    print_table(msg)
+    check()
+    print ("Please Wait !!!")  
 
 
-#function
+def putSlot(index):
+    global useSlot
+    if useSlot[index-1] == '0':
+        useSlot[index-1] = '1'
+        return True
+    else:
+        return False
+
+
+def serverPlay():
+    global msg
+    global count
+    count+=1
+    try:
+        tmp = s.recv(20)
+        putSlot(int(tmp))
+        (msg[int(tmp)-1]) = 'o'
+        number[int(tmp)-1]='O'
+    except ValueError:
+        print("Server disconnect")
+    except ConnectionAbortedError:
+        print("Server disconnect") 
+    except UnboundLocalError:
+        print("Server disconnect")
+    except ConnectionResetError :
+        print("Server disconnect")
+        
+    print_table(msg)
+    check()
+    
+
+
+
+
+#OX code =======================================================================
+#Variable
 stateServer= StringVar()
 statePlayer= StringVar()
 ip_Input = StringVar()
@@ -48,28 +185,33 @@ text6.set('  ')
 text7.set('  ')
 text8.set('  ')
 text9.set('  ')
-#inform inpit
+#index in table
+msg = ['1','2','3','4','5','6','7','8','9']
+#number = ['1','2','3','4','5','6','7','8','9']
+useSlot = ['0','0','0','0','0','0','0','0','0']
 operator = True
 number = ['  ','  ','  ','  ','  ','  ','  ','  ','  ']
 stateBtn=[False,False,False,False,False,False,False,False,False]
 
 buttons = []
+numberToSend=0
+def sentToServer():
+    global numbers
+    clientPlay(numbers)#server -1 แล้ว
+    serverPlay()
+            
+
 def btnClick(numbers):
-    global operator
-    if operator == True:
-        
-        if stateBtn[numbers-1]==False:
-           stateBtn[numbers-1]=True
-           number[numbers-1]='x'
-           operator = False
-        
-        
-    else:
-        
-        if stateBtn[numbers-1]==False:
-           stateBtn[numbers-1]=True
-           number[numbers-1]='o'
-           operator = True   
+    global operator  
+    if stateBtn[numbers-1]==False:
+        if putSlot(numbers)==False:
+            print("used")
+            statePlayer.set("select another")
+        else:
+            stateBtn[numbers-1]=True
+            operator = True   
+            statePlayer.set("Your turn")
+            
     text1.set(number[0])
     text2.set(number[1])
     text3.set(number[2])
@@ -79,6 +221,9 @@ def btnClick(numbers):
     text7.set(number[6])
     text8.set(number[7])
     text9.set(number[8])
+
+
+    
 def getStart():
     if len(ip_Input.get())==0 or len(port_Input.get())==0:
         top = Toplevel(root) 
@@ -95,8 +240,10 @@ def getStart():
             stateServer.set("Server not response")
         try:
             s.connect((server, port))
-            state = True
-            stateServer.set("Connected")
+        
+            
+            stateServer.set("Welcome to XO Game")
+            statePlayer.set("Your turn")
         except ConnectionResetError and TimeoutError and OSError :
             state = False
             stateServer.set("Server not response")
@@ -120,15 +267,15 @@ txtDisplay.grid(columnspan=4)
 #===============================Row5=======================================
 btn1 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text1,bg="powder blue",command=lambda:btnClick(1)).grid(row=5,column=0)
+              textvariable=text1,bg="powder blue",command=lambda:btnClick(1)).grid(row=3,column=0)
 
 btn2 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text2,bg="powder blue",command=lambda:btnClick(2)).grid(row=5,column=1)
+              textvariable=text2,bg="powder blue",command=lambda:btnClick(2)).grid(row=3,column=1)
 
 btn3 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text3,bg="powder blue",command=lambda:btnClick(3)).grid(row=5,column=2)
+              textvariable=text3,bg="powder blue",command=lambda:btnClick(3)).grid(row=3,column=2)
 #===============================Row4=======================================
 btn4 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
@@ -146,17 +293,19 @@ btn6 = Button(f2,padx=16,pady=16,bd=8,fg="black",
 
 btn7 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text7,bg="powder blue",command=lambda:btnClick(7)).grid(row=3,column=0)
+              textvariable=text7,bg="powder blue",command=lambda:btnClick(7)).grid(row=5,column=0)
 
 btn8 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text8,bg="powder blue",command=lambda:btnClick(8)).grid(row=3,column=1)
+              textvariable=text8,bg="powder blue",command=lambda:btnClick(8)).grid(row=5,column=1)
 
 btn9 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text9,bg="powder blue",command=lambda:btnClick(9)).grid(row=3,column=2)
+              textvariable=text9,bg="powder blue",command=lambda:btnClick(9)).grid(row=5,column=2)
 
-
+btnSend = Button(f2,padx=16,pady=16,bd=8,fg="black",
+              font=font1,
+              text="send",bg="powder blue",command=sentToServer).grid(row=6,column=2)
 
 
 
@@ -178,5 +327,5 @@ txtMenu2 = Entry(f1,font=font1,textvariable=port_Input,
                      bd=10,insertwidth=4,bg='powder blue',justify='right').grid(row=2,column=1)  
 
 btnStart = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
-                  width=10,text="Start",bg="powder blue",command=getStart).grid(row=7,column=1)
+                  width=10,text="Connect",bg="powder blue",command=getStart).grid(row=7,column=1)
 root.mainloop()  
