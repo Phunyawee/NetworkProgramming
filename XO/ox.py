@@ -1,4 +1,6 @@
 from ast import Num
+from http import server
+from stat import filemode
 from tkinter import *
 import tkinter.font as TkFont
 from tkinter import StringVar
@@ -19,16 +21,21 @@ f1.pack(side=LEFT)
 
 f2 = Frame(root,width=300,height=700,relief=SUNKEN)
 f2.pack(side=RIGHT)
+
+modeNow = StringVar()
+
 #label
 lblInfo = Label(Tops,font=('TH Sarabun New',50,'bold'),
                 text="Tic-tac-toe",fg="Blue",bd=10,anchor='w')
 lblInfo.grid(row=0,column=0)
 lblRole = Label(Tops,font=('TH Sarabun New',40,'bold'),
-                text="Client",fg="Blue",bd=10,anchor='w')
+                textvariable=modeNow,fg="Blue",bd=10,anchor='w')
 lblRole.grid(row=1,column=0)
 #OX code =======================================================================
 numberToSend=0
 count = 0
+stateServer= StringVar()
+statePlayer= StringVar()
 def print_table(msg):
     #os.system("cls")
     print ("")
@@ -48,8 +55,14 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10  
-        s.close()
-        default()      
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")
                          
     if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
         if (msg[3] == 'x'):
@@ -59,9 +72,14 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10
-        s.close()
-        default()
-        actionWindow("Reconnect for play again.")
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")  
                  
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
         if (msg[6] == 'x'):
@@ -71,9 +89,14 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10  
-        s.close()
-        default() 
-        actionWindow("Reconnect for play again.")     
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")       
                            
     if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
         if (msg[0] == 'x'):
@@ -83,9 +106,14 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10    
-        s.close()
-        default()  
-        actionWindow("Reconnect for play again.")  
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")   
                          
     if (msg[1] == msg[4]) and (msg[4] == msg[7]):
         if (msg[1] == 'x'):
@@ -95,9 +123,14 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10  
-        s.close()
-        default()  
-        actionWindow("Reconnect for play again.")    
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")     
              
     if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
         if (msg[2] == 'x'):
@@ -107,9 +140,14 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10  
-        s.close()
-        default()  
-        actionWindow("Reconnect for play again.")    
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")    
                        
 
     if (msg[0] == msg[4]) and (msg[4] == msg[8]):
@@ -120,9 +158,14 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10 
-        s.close()
-        default()  
-        actionWindow("Reconnect for play again.")     
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")      
                          
     if (msg[2] == msg[4]) and (msg[4] == msg[6]):
         if (msg[2] == 'x'):
@@ -132,11 +175,31 @@ def check():
             print ("Server WIN !!!!!!!!!!!!!!")
             whoWin(2)
         count = 10    
+        if whatRole == 1:
+            s.close()
+            default("Client")   
+            actionWindow("Reconnect for play again.")
+        if whatRole == 2:
+            c.close()   
+            default("Server")   
+            actionWindow("Reconnect for play again.")  
+
+def disConnected():
+    if whatRole == 1:
         s.close()
-        default()    
+        default("Client")   
+        statePlayer.set("disconnected")
         actionWindow("Reconnect for play again.")
-         
+        
+    if whatRole == 2:
+        c.close()   
+        default("Server")   
+        statePlayer.set("disconnected")
+        actionWindow("Reconnect for play again.")  
+
+
 def clientPlay(tmp):
+    print("clientPlay")
     global msg    
     global count
     global useSlot
@@ -145,30 +208,63 @@ def clientPlay(tmp):
     #print_table(msg)
     #====================================
     #====================================
-    (msg[int(tmp)-1]) = 'x'
-    number[int(tmp)-1]=' X '
-    upDate()
-    #====================================AttributeError: 'int' object has no attribute 'encode'
-    tmp = str(tmp)
-    #====================================
-    try:
-        s.send(tmp.encode('ascii'))
-    except ValueError:
-        print("Server disconnect")
-        statePlayer.set("Server disconnect")
-        default()
-    except ConnectionAbortedError:
-        print("Server disconnect") 
-        statePlayer.set("Server disconnect")
-        default()
-    except UnboundLocalError:
-        print("Server disconnect")
-        statePlayer.set("Server disconnect")
-        default()
-    except ConnectionResetError:
-        print("Server disconnect")
-        statePlayer.set("Server disconnect")
-        default()
+    
+    if whatRole == 1:
+        count+=1
+        print("Count"+str(count))
+        (msg[int(tmp)-1]) = 'x'
+        number[int(tmp)-1]=' X '
+        print(number)
+        upDate()
+        #====================================AttributeError: 'int' object has no attribute 'encode'
+        tmp = str(tmp)
+        #====================================
+        try:
+            s.send(tmp.encode('ascii'))
+        except ValueError:
+            print("Server disconnect")
+            statePlayer.set("Server disconnect")
+            default("Client")
+        except ConnectionAbortedError:
+            print("Server disconnect") 
+            statePlayer.set("Server disconnect")
+            default("Client")
+        except UnboundLocalError:
+            print("Server disconnect")
+            statePlayer.set("Server disconnect")
+            default("Client")
+        except ConnectionResetError:
+            print("Server disconnect")
+            statePlayer.set("Server disconnect")
+            default("Client")
+    elif whatRole == 2:
+        count+=1
+        print("Count"+str(count))
+        try:
+            tmpS = c.recv(20)
+            putSlot(int(tmpS))
+            print(useSlot)
+            (msg[int(tmpS)-1]) = 'X'
+            number[int(tmpS)-1]=' X '
+            print(number)
+            upDate()
+            onButton()
+        except ValueError:
+            print("Client disconnect")
+            statePlayer.set("Client disconnect")
+            default("Server")
+        except ConnectionAbortedError:
+            print("Client disconnect") 
+            statePlayer.set("Client disconnect")
+            default("Server")
+        except UnboundLocalError:
+            print("Client disconnect")
+            statePlayer.set("Client disconnect")
+            default("Server")
+        except ConnectionResetError :
+            print("Client disconnect")
+            statePlayer.set("Client disconnect")
+            default("Server")
     print_table(msg)
     check()
     print ("Please Wait !!!")  
@@ -192,28 +288,61 @@ def whoWin(winner):
     else:
         statePlayer.set("You lose")
 
-def serverPlay():
+def serverPlay(tmp):
+    print("serverPlay")
     global msg
     global count
-    count+=1
-    try:
-        tmp = s.recv(20)
+    if whatRole == 1:
+        count+=1
+        print("Count"+str(count))
+        try:
+            tmp = s.recv(20)
+            putSlot(int(tmp))
+            print(useSlot)
+            (msg[int(tmp)-1]) = 'o'
+            number[int(tmp)-1]=' O '
+            statePlayer.set("Your turn")
+            print(number)
+            upDate()
+        except ValueError:
+            print("ValueError")
+        except ConnectionAbortedError:
+            print("ConnectionAbortedError") 
+        except UnboundLocalError:
+            print("UnboundLocalError")
+        except ConnectionResetError :
+            print("ConnectionResetError")
+        except OSError :
+            print("OSError")
+    elif whatRole == 2:
+        count+=1
+        print("Count"+str(count))
+            
+        (msg[int(tmp)-1]) = 'X'
+    #====================================AttributeError: 'int' object has no attribute 'encode'
+        tmp = str(tmp)
+        print("###")
+        print(useSlot)
+
         putSlot(int(tmp))
-        (msg[int(tmp)-1]) = 'o'
-        number[int(tmp)-1]=' O '
-        statePlayer.set("Your turn")
-       
+        number[int(tmp)-1]=' X '
+        print(number)
         upDate()
-    except ValueError:
-        print("ValueError")
-    except ConnectionAbortedError:
-        print("ConnectionAbortedError") 
-    except UnboundLocalError:
-        print("UnboundLocalError")
-    except ConnectionResetError :
-        print("ConnectionResetError")
-    except OSError :
-        print("OSError")
+        try:
+            c.send(tmp.encode('ascii'))
+            
+            
+            statePlayer.set("Wait Client")
+            clientPlay(0)
+        except ValueError:
+            print("Client disconnect")
+        
+        except ConnectionAbortedError:
+            print("Client disconnect") 
+        except UnboundLocalError:
+            print("Client disconnect")
+        except ConnectionResetError :
+            print("Client disconnect")
         
     print_table(msg)
     check()
@@ -224,8 +353,7 @@ def serverPlay():
 
 #OX code =======================================================================
 #Variable
-stateServer= StringVar()
-statePlayer= StringVar()
+
 ip_Input = StringVar()
 port_Input = StringVar()
 
@@ -239,10 +367,62 @@ text7 = StringVar()
 text8 = StringVar()
 text9 = StringVar()
 
+changeModeLabel = StringVar()
+
+
+def configMode():  
+    if configAllow == True:
+        if(btnConfig['text']=='Server'):
+            btnConfig['text']='Client'
+            modeNow.set('Client')
+            default('Client')
+            #default()
+        else:
+            btnConfig['text']='Server'
+            modeNow.set('Server')
+            default('Server')
+            #default()
+    else:
+        print("Not allow")
+
+    
+configAllow = True
+def configuration():
+    
+    global btnConfig
+    def close():
+        changeModeLabel.set("")
+        made.destroy()
+    made = Tk()
+    made.geometry('300x300')
+    made.title("Config")
+    txtLabel=Label(made,font=('arial',13,'bold'),text="Mode")
+    txtLabel.pack()
+    btnConfig=Button(made,font=('arial',11,'bold'),text='Client',command=configMode)
+    btnConfig.pack()
+    
+    btnClose=Button(made,font=('arial',11,'bold'),text='close',command=close).pack(side=BOTTOM)
+    made.mainloop()
+allowServerSend = False
 #Default
-def default():
-    global msg,useSlot,operator,number,stateBtn,ip_Input,port_Input,s
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def default(role):
+
+    #global role
+    global whatRole,count
+    count=0
+    #global client
+    global msg,useSlot,operator,number,stateBtn,ip_Input,port_Input,s,configAllow
+    #global server
+    global serversocket,c,addr,allowServerSend
+    if role == "Client":
+        whatRole = 1
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        modeNow.set('Client')
+    elif role =="Server":
+        allowServerSend = False
+        whatRole = 2
+        serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        modeNow.set('Server')
     text1.set('    ')
     text2.set('    ')
     text3.set('    ')
@@ -266,14 +446,20 @@ def default():
     stateServer.set("Input Ip/Port")
 
 def offConnection():
+    global configAllow
     txtIp["state"] = "disabled"
     txtPort["state"] = "disabled"
     btnStart["state"] = "disabled"
+    configAllow = False
+    
 
 def onConnection():
+    global configAllow
     txtIp["state"] = "normal"
     txtPort["state"] = "normal"
     btnStart["state"] = "normal"
+    configAllow = True
+    
 
 
 def offButton():
@@ -301,13 +487,37 @@ def onButton():
     return 0 
 
 
-def sentToServer():
-    global numberToSend
+def communication():
+    global numberToSend,count,allowServerSend
+   
+    if whatRole == 1:
+        if count== 10:
+            s.close()
+            default("Client")
+            count=0
+        else:
+            clientPlay(numberToSend)#server -1 แล้ว
+            serverPlay(numberToSend)
+            onButton()
+            #s.close()
+    elif whatRole == 2:
+        if count== 10:
+            c.close()
+            default("Server")
+            count=0
+        else:
+            onButton()
+            if allowServerSend == False:
+                clientPlay(numberToSend)#server -1 แล้ว
+                
+            else:
+                serverPlay(numberToSend)
+                allowServerSend = False
+                
+            
+            
+            #s.close()
     btnSend["state"]= "disabled"
-    clientPlay(numberToSend)#server -1 แล้ว
-    serverPlay()
-    onButton()
-    #s.close()
 def upDate():
     text1.set(number[0])
     text2.set(number[1])
@@ -320,20 +530,38 @@ def upDate():
     text9.set(number[8])         
 
 def btnClick(numbers):
-    global operator,numberToSend
+    global operator,numberToSend,allowServerSend
     numberToSend = numbers
-    if stateBtn[numbers-1]==False:
-        if putSlot(numbers)==False:
-            print("used")
-            statePlayer.set("select another")
-        else:
-            stateBtn[numbers-1]=True
-            operator = True   
-            statePlayer.set("Wait server")
-            number[int(numbers)-1]=' X '
-            upDate()
-            offButton()
-            btnSend["state"]= "normal"
+    if whatRole == 1:
+
+        if stateBtn[numbers-1]==False:
+            if putSlot(numbers)==False:
+                print("used")
+                statePlayer.set("select another")
+            else:
+                stateBtn[numbers-1]=True
+                operator = True   
+                statePlayer.set("Wait server")
+                number[int(numbers)-1]=' X '
+                upDate()
+                offButton()
+                btnSend["state"]= "normal"
+    elif whatRole == 2:
+        if stateBtn[numbers-1]==False:
+            if putSlot(numbers)==False:
+                print("used")
+                statePlayer.set("select another")
+            else:
+                stateBtn[numbers-1]=True
+                operator = True   
+                statePlayer.set("Wait server")
+                number[int(numbers)-1]=' X '
+                upDate()
+                offButton()
+                btnSend["state"]= "normal"
+                allowServerSend = True
+                
+                
 
 def actionWindow(whatAction):
     top = Toplevel(root) 
@@ -345,47 +573,87 @@ def actionWindow(whatAction):
 
     
 def getStart():
+    global c,addr
     if len(ip_Input.get())==0 or len(port_Input.get())==0:
         actionWindow("ip/port error")
     else:
        
         
-       
-
-        try:
-            server = ip_Input.get()
-            port = int(port_Input.get())
-        except ValueError:
-            stateServer.set("Server not response")
-        try:
-            s.connect((server, port))
-            onButton()
-            offConnection()
-        
+        if whatRole == 1:
             
-            stateServer.set("Welcome to XO Game")
-            statePlayer.set("Your turn")
-        except TimeoutError:
-            stateServer.set("Server not response")
-            print("TimeoutError")
-            actionWindow("ip/port error")
-        except ConnectionRefusedError:
-            stateServer.set("Server not response")
-            print("ConnectionRefusedError ")
-            actionWindow("ip/port error")
-        except ConnectionResetError :
-            stateServer.set("Server not response")
-            print("ConnectionResetError")
-            actionWindow("ip/port error")
-        except OSError:
-            stateServer.set("Server not response")
-            print("OSError")
-            actionWindow("ip/port error")
-        
-        except UnboundLocalError:
-            stateServer.set("Server not response")
-            print("UnboundLocalError ")
-            actionWindow("ip/port error")
+            try:
+                server = ip_Input.get()
+                port = int(port_Input.get())
+            except ValueError:
+                stateServer.set("Server not response")
+            try:
+                s.connect((server, port))
+                onButton()
+                offConnection()
+            
+                
+                stateServer.set("Welcome to XO Game")
+                statePlayer.set("Your turn")
+            except TimeoutError:
+                stateServer.set("Server not response")
+                print("TimeoutError")
+                actionWindow("ip/port error")
+            except ConnectionRefusedError:
+                stateServer.set("Server not response")
+                print("ConnectionRefusedError ")
+                actionWindow("ip/port error")
+            except ConnectionResetError :
+                stateServer.set("Server not response")
+                print("ConnectionResetError")
+                actionWindow("ip/port error")
+            except OSError:
+                stateServer.set("Server not response")
+                print("OSError")
+                actionWindow("ip/port error")
+            
+            except UnboundLocalError:
+                stateServer.set("Server not response")
+                print("UnboundLocalError ")
+                actionWindow("ip/port error")
+        elif whatRole == 2:
+            try:
+                ip = ip_Input.get()
+                port = int(port_Input.get())
+                serversocket.bind((ip, port))
+                serversocket.listen(5)
+            except ValueError:
+                stateServer.set("Server not response")
+            try:
+                c,addr = serversocket.accept()
+                offButton()
+                offConnection()
+                stateServer.set("Welcome to XO Game")
+                statePlayer.set("Wait Client")
+                clientPlay(0)
+                #upDate()
+                #onButton()
+               # sentToServer()
+            except TimeoutError:
+                stateServer.set("Client not response")
+                print("TimeoutError")
+                actionWindow("ip/port error")
+            except ConnectionRefusedError:
+                stateServer.set("Client not response")
+                print("ConnectionRefusedError ")
+                actionWindow("ip/port error")
+            except ConnectionResetError :
+                stateServer.set("Client not response")
+                print("ConnectionResetError")
+                actionWindow("ip/port error")
+            except OSError:
+                stateServer.set("Client not response")
+                print("OSError")
+                actionWindow("ip/port error")
+            
+           # except UnboundLocalError:
+              #  stateServer.set("Client not response")
+              #  print("UnboundLocalError ")
+              # actionWindow("ip/port error")
 
         
 
@@ -403,60 +671,74 @@ txtDisplayState = Label(f2,font=font1,
 
 txtDisplayState.grid(columnspan=4)
 txtDisplay = Entry(f2,font=font1,
-                   textvariable=statePlayer,bd=30,insertwidth=4,bg="powder blue",justify='right',state='disabled',disabledbackground='powder blue')
+                   textvariable=statePlayer,bd=30,insertwidth=4,
+                   bg="powder blue",justify='right',state='disabled',disabledbackground='powder blue')
 txtDisplay.grid(columnspan=4)
+
+btnWidth = 5
+btnHeight = 1
 
 #===============================Row5=======================================
 btn1 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text1,bg="powder blue",command=lambda:btnClick(1))
+              textvariable=text1,width=btnWidth,
+              height=btnHeight,
+              bg="powder blue",command=lambda:btnClick(1))
 btn1.grid(row=3,column=0)
 
 btn2 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text2,bg="powder blue",command=lambda:btnClick(2))
+              textvariable=text2,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(2))
 btn2.grid(row=3,column=1)
 
 btn3 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text3,bg="powder blue",command=lambda:btnClick(3))
+              textvariable=text3,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(3))
 btn3.grid(row=3,column=2)
 #===============================Row4=======================================
 btn4 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text4,bg="powder blue",command=lambda:btnClick(4))
+              textvariable=text4,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(4))
 btn4.grid(row=4,column=0)
 
 btn5 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text5,bg="powder blue",command=lambda:btnClick(5))
+              textvariable=text5,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(5))
 btn5.grid(row=4,column=1)
 
 btn6 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text6,bg="powder blue",command=lambda:btnClick(6))
+              textvariable=text6,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(6))
 btn6.grid(row=4,column=2)
 
 #===============================Row3=======================================
 
 btn7 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text7,bg="powder blue",command=lambda:btnClick(7))
+              textvariable=text7,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(7))
 btn7.grid(row=5,column=0)
 
 btn8 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text8,bg="powder blue",command=lambda:btnClick(8))
+              textvariable=text8,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(8))
 btn8.grid(row=5,column=1)
 
 btn9 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              textvariable=text9,bg="powder blue",command=lambda:btnClick(9))
+              textvariable=text9,width=btnWidth,
+              height=btnHeight,bg="powder blue",command=lambda:btnClick(9))
 btn9.grid(row=5,column=2)
 
 btnSend = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
-              text="send",bg="powder blue",command=sentToServer)
+              text="send",bg="powder blue",command=communication)
 btnSend.grid(row=6,column=2)
 
 offButton()
@@ -483,7 +765,14 @@ txtPort.grid(row=2,column=1)
 btnStart = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
                   width=10,text="Connect",bg="powder blue",command=getStart)
 btnStart.grid(row=7,column=1)
+menubar= Menu(root)
+filemenu = Menu(menubar, tearoff =0)
+menubar.add_cascade(label="File",menu=filemenu)
+filemenu.add_command(label="Config",command=configuration)
+filemenu.add_command(label="End",command=disConnected)
+
+root.config(menu=menubar)
 
 
-default()
+default("Client")
 root.mainloop()  
