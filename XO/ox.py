@@ -244,8 +244,8 @@ def clientPlay(tmp):
             tmpS = c.recv(20)
             putSlot(int(tmpS))
             print(useSlot)
-            (msg[int(tmpS)-1]) = 'X'
-            number[int(tmpS)-1]=' X '
+            (msg[int(tmpS)-1]) = 'o'
+            number[int(tmpS)-1]=' O '
             print(number)
             upDate()
             onButton()
@@ -554,7 +554,7 @@ def btnClick(numbers):
             else:
                 stateBtn[numbers-1]=True
                 operator = True   
-                statePlayer.set("Wait server")
+                statePlayer.set("Wait Client")
                 number[int(numbers)-1]=' X '
                 upDate()
                 offButton()
