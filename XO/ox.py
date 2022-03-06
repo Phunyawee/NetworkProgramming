@@ -292,57 +292,70 @@ def serverPlay(tmp):
     print("serverPlay")
     global msg
     global count
+    
     if whatRole == 1:
         count+=1
         print("Count"+str(count))
-        try:
-            tmp = s.recv(20)
-            putSlot(int(tmp))
-            print(useSlot)
-            (msg[int(tmp)-1]) = 'o'
-            number[int(tmp)-1]=' O '
-            statePlayer.set("Your turn")
-            print(number)
-            upDate()
-        except ValueError:
-            print("ValueError")
-        except ConnectionAbortedError:
-            print("ConnectionAbortedError") 
-        except UnboundLocalError:
-            print("UnboundLocalError")
-        except ConnectionResetError :
-            print("ConnectionResetError")
-        except OSError :
-            print("OSError")
+        if count== 10:
+            s.close()
+            default("Client")
+            count=0
+        else:
+            
+            try:
+                tmp = s.recv(20)
+                putSlot(int(tmp))
+                print(useSlot)
+                (msg[int(tmp)-1]) = 'o'
+                number[int(tmp)-1]=' O '
+                statePlayer.set("Your turn")
+                print(number)
+                upDate()
+            except ValueError:
+                print("ValueError")
+            except ConnectionAbortedError:
+                print("ConnectionAbortedError") 
+            except UnboundLocalError:
+                print("UnboundLocalError")
+            except ConnectionResetError :
+                print("ConnectionResetError")
+            except OSError :
+                print("OSError")
     elif whatRole == 2:
         count+=1
         print("Count"+str(count))
-            
-        (msg[int(tmp)-1]) = 'X'
-    #====================================AttributeError: 'int' object has no attribute 'encode'
-        tmp = str(tmp)
-        print("###")
-        print(useSlot)
+        if count== 10:
+            c.close()
+            default("Server")
+            count=0
+        else:
 
-        putSlot(int(tmp))
-        number[int(tmp)-1]=' X '
-        print(number)
-        upDate()
-        try:
-            c.send(tmp.encode('ascii'))
             
-            statePlayer.set("Your turn")
+            (msg[int(tmp)-1]) = 'X'
+        #====================================AttributeError: 'int' object has no attribute 'encode'
+            tmp = str(tmp)
+            print("###")
+            print(useSlot)
+
+            putSlot(int(tmp))
+            number[int(tmp)-1]=' X '
+            print(number)
+            upDate()
+            try:
+                c.send(tmp.encode('ascii'))
+                
+                statePlayer.set("Your turn")
+                
+                clientPlay(0)
+            except ValueError:
+                print("Client disconnect")
             
-            clientPlay(0)
-        except ValueError:
-            print("Client disconnect")
-        
-        except ConnectionAbortedError:
-            print("Client disconnect") 
-        except UnboundLocalError:
-            print("Client disconnect")
-        except ConnectionResetError :
-            print("Client disconnect")
+            except ConnectionAbortedError:
+                print("Client disconnect") 
+            except UnboundLocalError:
+                print("Client disconnect")
+            except ConnectionResetError :
+                print("Client disconnect")
         
     print_table(msg)
     check()
@@ -534,33 +547,44 @@ def btnClick(numbers):
     global operator,numberToSend,allowServerSend
     numberToSend = numbers
     if whatRole == 1:
+        if count== 10:
+            s.close()
+            default("Client")
+            count=0
+        else:
 
-        if stateBtn[numbers-1]==False:
-            if putSlot(numbers)==False:
-                print("used")
-                statePlayer.set("select another")
-            else:
-                stateBtn[numbers-1]=True
-                operator = True   
-                statePlayer.set("Wait server")
-                number[int(numbers)-1]=' X '
-                upDate()
-                offButton()
-                btnSend["state"]= "normal"
+
+            if stateBtn[numbers-1]==False:
+                if putSlot(numbers)==False:
+                    print("used")
+                    statePlayer.set("select another")
+                else:
+                    stateBtn[numbers-1]=True
+                    operator = True   
+                    statePlayer.set("Wait server")
+                    number[int(numbers)-1]=' X '
+                    upDate()
+                    offButton()
+                    btnSend["state"]= "normal"
     elif whatRole == 2:
-        if stateBtn[numbers-1]==False:
-            if putSlot(numbers)==False:
-                print("used")
-                statePlayer.set("select another")
-            else:
-                stateBtn[numbers-1]=True
-                operator = True   
-                statePlayer.set("Wait Client")
-                number[int(numbers)-1]=' X '
-                upDate()
-                offButton()
-                btnSend["state"]= "normal"
-                allowServerSend = True
+        if count== 10:
+            c.close()
+            default("Server")
+            count=0
+        else:
+            if stateBtn[numbers-1]==False:
+                if putSlot(numbers)==False:
+                    print("used")
+                    statePlayer.set("select another")
+                else:
+                    stateBtn[numbers-1]=True
+                    operator = True   
+                    statePlayer.set("Wait Client")
+                    number[int(numbers)-1]=' X '
+                    upDate()
+                    offButton()
+                    btnSend["state"]= "normal"
+                    allowServerSend = True
                 
                 
 
@@ -629,7 +653,7 @@ def getStart():
                 offButton()
                 offConnection()
                 stateServer.set("Welcome to XO Game")
-                statePlayer.set("Wait Client")
+                statePlayer.set("your turn")
                 clientPlay(0)
                 #upDate()
                 #onButton()
