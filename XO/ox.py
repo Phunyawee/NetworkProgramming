@@ -331,8 +331,8 @@ def serverPlay(tmp):
         try:
             c.send(tmp.encode('ascii'))
             
+            statePlayer.set("Your turn")
             
-            statePlayer.set("Wait Client")
             clientPlay(0)
         except ValueError:
             print("Client disconnect")
@@ -511,6 +511,7 @@ def communication():
                 clientPlay(numberToSend)#server -1 แล้ว
                 
             else:
+                
                 serverPlay(numberToSend)
                 allowServerSend = False
                 
