@@ -544,7 +544,7 @@ def upDate():
     text9.set(number[8])         
 
 def btnClick(numbers):
-    global operator,numberToSend,allowServerSend
+    global operator,numberToSend,allowServerSend,count
     numberToSend = numbers
     if whatRole == 1:
         if count== 10:
