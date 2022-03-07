@@ -263,7 +263,7 @@ def clientPlay(tmp):
     elif whatRole == 2:
         count+=1
         print("Count"+str(count))
-        if count== 9:
+        if count== 10:
                
             c.close()
             default("Server")
@@ -874,7 +874,7 @@ filemenu.add_command(label="Config",command=configuration)
 filemenu.add_command(label="End",command=disConnected)
 filemenu.add_command(label="Exit", command = closeGame)
 root.config(menu=menubar)
-root.attributes('-fullscreen', True)  
-root.resizable(False,False)
+#root.attributes('-fullscreen', True)  
+#root.resizable(False,False)
 default("Client")
 root.mainloop()  
