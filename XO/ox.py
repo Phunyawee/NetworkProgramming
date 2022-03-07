@@ -1,5 +1,6 @@
 from ast import Num
 from http import server
+from pydoc import plain
 from stat import filemode
 from tkinter import *
 import tkinter.font as TkFont
@@ -31,7 +32,7 @@ f2.grid(row=1,column=2)
 f3 = Frame(Bottoms,width=500,height=700,relief=SUNKEN)
 #f3.pack(side=RIGHT)
 f3.grid(row=1,column=3)
-
+messagetry = StringVar()
 modeNow = StringVar()
 modeMainFrame = StringVar()
 lblInfox = Label(f3,font=('Microsoft YaHei Light',50,'bold'),
@@ -42,7 +43,7 @@ lblRolex = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
 lblRolex.grid(row=1,column=0)
 
 #f2.pack(side=RIGHT)
-
+chkTime = 0
 
 #label
 lblInfo = Label(Tops,font=('Microsoft YaHei Light',50,'bold'),
@@ -52,6 +53,10 @@ lblRole = Label(Tops,font=('Microsoft YaHei Light',40,'bold'),
                 textvariable=modeMainFrame,fg="Blue",bd=10,anchor='w')
 lblRole.grid(row=1,column=0)
 #OX code =======================================================================
+ip_recent = ''
+port_recent = ''
+
+
 numberToSend=0
 count = 0
 stateServer= StringVar()
@@ -67,7 +72,8 @@ def check():
     print("check")
     global count
     global msg
-    global useSlot
+    global useSlot,c
+
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
         if (msg[0] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -78,13 +84,16 @@ def check():
         count = 10  
         if whatRole == 1:
             s.close()
-            default("Client")   
-            tryAgain(True)
+            playAgain() 
+            default("Client") 
+            
             #actionWindow("Reconnect for play again.")
         if whatRole == 2:
             c.close()   
-            default("Server")   
-            tryAgain(True)
+            messagetry.set('')
+            playAgain() 
+            default("Server")
+            
             #actionWindow("Reconnect for play again.")
                          
     if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
@@ -97,12 +106,16 @@ def check():
         count = 10
         if whatRole == 1:
             s.close()
+            playAgain() 
             default("Client")   
-            actionWindow("Reconnect for play again.")
+            
         if whatRole == 2:
             c.close()   
-            default("Server")   
-            actionWindow("Reconnect for play again.")  
+           
+            messagetry.set('')
+            playAgain() 
+            default("Server")
+             
                  
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
         if (msg[6] == 'x'):
@@ -114,12 +127,15 @@ def check():
         count = 10  
         if whatRole == 1:
             s.close()
+            messagetry.set('')
+            playAgain()
             default("Client")   
-            actionWindow("Reconnect for play again.")
+            
         if whatRole == 2:
             c.close()   
-            default("Server")   
-            actionWindow("Reconnect for play again.")       
+            playAgain()
+            default("Server")     
+            
                            
     if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
         if (msg[0] == 'x'):
@@ -131,12 +147,16 @@ def check():
         count = 10    
         if whatRole == 1:
             s.close()
+            playAgain()
+        
             default("Client")   
-            actionWindow("Reconnect for play again.")
+            
         if whatRole == 2:
             c.close()   
+            messagetry.set('')
+            playAgain()
             default("Server")   
-            actionWindow("Reconnect for play again.")   
+            
                          
     if (msg[1] == msg[4]) and (msg[4] == msg[7]):
         if (msg[1] == 'x'):
@@ -148,12 +168,16 @@ def check():
         count = 10  
         if whatRole == 1:
             s.close()
+            playAgain()
+           
             default("Client")   
-            actionWindow("Reconnect for play again.")
+            
         if whatRole == 2:
             c.close()   
-            default("Server")   
-            actionWindow("Reconnect for play again.")     
+            messagetry.set('')
+            playAgain()
+            default("Server")       
+            
              
     if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
         if (msg[2] == 'x'):
@@ -165,12 +189,16 @@ def check():
         count = 10  
         if whatRole == 1:
             s.close()
+            playAgain()
+            
             default("Client")   
-            actionWindow("Reconnect for play again.")
+            
         if whatRole == 2:
             c.close()   
-            default("Server")   
-            actionWindow("Reconnect for play again.")    
+            messagetry.set('')
+            playAgain()
+            default("Server")    
+            
                        
 
     if (msg[0] == msg[4]) and (msg[4] == msg[8]):
@@ -183,12 +211,15 @@ def check():
         count = 10 
         if whatRole == 1:
             s.close()
+            messagetry.set('')
+            playAgain()
             default("Client")   
-            actionWindow("Reconnect for play again.")
+            
         if whatRole == 2:
             c.close()   
-            default("Server")   
-            actionWindow("Reconnect for play again.")      
+            playAgain()
+            default("Server")     
+            
                          
     if (msg[2] == msg[4]) and (msg[4] == msg[6]):
         if (msg[2] == 'x'):
@@ -200,14 +231,18 @@ def check():
         count = 10    
         if whatRole == 1:
             s.close()
+            messagetry.set('')
+            playAgain()
             default("Client")   
-            actionWindow("Reconnect for play again.")
+            
         if whatRole == 2:
             c.close()   
-            default("Server")   
-            actionWindow("Reconnect for play again.")  
+            playAgain()
+            default("Server")     
+            
 
 def disConnected():
+    print("disconnected call")
     if whatRole == 1:
         s.close()
         default("Client")   
@@ -281,19 +316,19 @@ def clientPlay(tmp):
                 upDate()
                 onButton()
             except ValueError:
-                print("Client disconnect")
+                print("ValueError")
                 statePlayer.set("Client disconnect")
                 default("Server")
             except ConnectionAbortedError:
-                print("Client disconnect") 
+                print("ConnectionAbortedErrort") 
                 statePlayer.set("Client disconnect")
                 default("Server")
             except UnboundLocalError:
-                print("Client disconnect")
+                print("UnboundLocalError")
                 statePlayer.set("Client disconnect")
                 default("Server")
             except ConnectionResetError :
-                print("Client disconnect")
+                print("ConnectionResetError")
                 statePlayer.set("Client disconnect")
                 default("Server")
     print_table(msg)
@@ -459,7 +494,7 @@ def default(role):
     #global role
     # 1 = client
     # 2 = server
-    global whatRole,count
+    global whatRole,count,chkTime
     count=0
     #global client
     global msg,useSlot,operator,number,stateBtn,ip_Input,port_Input,s,configAllow
@@ -489,8 +524,12 @@ def default(role):
     text7.set('    ')
     text8.set('    ')
     text9.set('    ')
-    ip_Input.set('')
-    port_Input.set('')
+    if chkTime == 1:
+        ip_Input.set('')
+        port_Input.set('')
+    else:
+        ip_Input.set(ip_recent)
+        port_Input.set(port_recent)
     #index in table
     msg = ['1','2','3','4','5','6','7','8','9']
     #number = ['1','2','3','4','5','6','7','8','9']
@@ -503,6 +542,7 @@ def default(role):
     stateServer.set("Input Ip/Port")
 
 def offConnection():
+    print('offConnection')
     global configAllow
     txtIp["state"] = "disabled"
     txtPort["state"] = "disabled"
@@ -511,6 +551,7 @@ def offConnection():
     
 
 def onConnection():
+    print('onConnection')
     global configAllow
     txtIp["state"] = "normal"
     txtPort["state"] = "normal"
@@ -520,6 +561,7 @@ def onConnection():
 
 
 def offButton():
+    print('offButton')
     btn1["state"] = "disabled"
     btn2["state"] = "disabled"
     btn3["state"] = "disabled"
@@ -532,6 +574,7 @@ def offButton():
     return 0
     
 def onButton():
+    print('onButton')
     btn1["state"] = "normal"
     btn2["state"] = "normal"
     btn3["state"] = "normal"
@@ -545,6 +588,7 @@ def onButton():
 
 
 def communication():
+    print('communication call')
     global numberToSend,count,allowServerSend
    
     if whatRole == 1:
@@ -577,6 +621,7 @@ def communication():
             #s.close()
     btnSend["state"]= "disabled"
 def upDate():
+    print("update call")
     text1.set(number[0])
     text2.set(number[1])
     text3.set(number[2])
@@ -588,6 +633,7 @@ def upDate():
     text9.set(number[8])         
 
 def btnClick(numbers):
+    print("btnClick call num = "+str(numbers))
     global operator,numberToSend,allowServerSend,count
     numberToSend = numbers
     if whatRole == 1:
@@ -632,6 +678,13 @@ def btnClick(numbers):
                     offButton()
                     btnSend["state"]= "normal"
                     allowServerSend = True
+def playAgain():
+    pass
+
+def getRecent():
+    print("ip:"+str(ip_recent))
+    print("port:"+str(port_recent))
+
 
 def closeGame():
     End = tkinter.messagebox.askyesno("TIC TAC TOE","Confirm exit")
@@ -639,29 +692,11 @@ def closeGame():
         root.destroy()
         return              
 def tryAgain():
-    top = Toplevel(root) 
-    top.geometry("500x230")
-    frame = Frame(top)
-    top.resizable(False, False)
-    try_lb = Label(top,padx=16,pady=32,bd=8,fg="black",
-    font=font1, text="Try Again or Leave a Game")
-    try_btn = Button(frame,padx=16,pady=16,bd=8,fg="black",
-              font=font1,
-              text="Try again",width=10,
-              height=1,bg="powder blue")
-    leave_btn = Button(frame,padx=16,pady=16,bd=8,fg="black",
-              font=font1,
-              text="Leave a game",width=15,
-              height=1,bg="powder blue")
-              
-    try_lb.pack()       
-    frame.pack()
-    try_btn.grid(row=1,column=1)
-    leave_btn.grid(row=1,column=2)
-    top.mainloop()         
+    pass        
 
 
 def actionWindow(whatAction):
+    print("actionWindow call")
     top = Toplevel(root) 
     top.geometry("500x200")
     l2 = Label(top,padx=16,pady=16,bd=8,fg="black",
@@ -670,22 +705,46 @@ def actionWindow(whatAction):
     top.mainloop()  
 
     
-def getStart():
-    global c,addr
-    if len(ip_Input.get())==0 or len(port_Input.get())==0:
+def getStart(playTime):
+    print('getStart call:'+ str(playTime))
+    global c,addr,ip_recent,port_recent,chkTime
+    chkTime = playTime
+
+    firstTime = True if playTime == 1 else False
+    
+    if (len(ip_Input.get())==0 or len(port_Input.get())==0) and firstTime:
         actionWindow("ip/port error")
     else:
-       
-        
         if whatRole == 1:
-            
             try:
-                server = ip_Input.get()
-                port = int(port_Input.get())
+                if playTime == 1:
+                    server = ip_Input.get()
+                    port = int(port_Input.get())
+                    ip_recent = ip_Input.get()
+                    port_recent = port_Input.get()
+                elif playTime == 2:
+                    time.sleep(10)
+                    server = ip_recent
+                    port = int(port_recent)
+                    ip_Input.set(server)
+                    port_Input.set(port_recent)
+                    default("Client")
             except ValueError:
                 stateServer.set("Server not response")
             try:
-                s.connect((server, port))
+                connected = False  
+                #s.connect((server, port))
+                while not connected:  
+                # attempt to reconnect, otherwise sleep for 2 seconds  
+                    try:  
+                        s.connect((server, port))
+                        connected = True  
+                        print( "re-connection successful" )  
+                    except socket.error: 
+                        stateServer.set("try to connect")
+                        print( "connect failed" )   
+                        time.sleep(2)
+                
                 onButton()
                 offConnection()
             
@@ -715,8 +774,17 @@ def getStart():
                 actionWindow("ip/port error")
         elif whatRole == 2:
             try:
-                ip = ip_Input.get()
-                port = int(port_Input.get())
+                if playTime == 1:
+                    ip = ip_Input.get()
+                    port = int(port_Input.get())
+                    ip_recent = ip_Input.get()
+                    port_recent = int(port_Input.get())
+                elif playTime == 2:
+                    ip = ip_recent
+                    port = port_recent
+                    ip_Input.set(ip)
+                    port_Input.set(port)
+                    default("Server")
                 serversocket.bind((ip, port))
                 serversocket.listen(5)
             except ValueError:
@@ -730,7 +798,7 @@ def getStart():
                 clientPlay(0)
                 #upDate()
                 #onButton()
-               # sentToServer()
+            # sentToServer()
             except TimeoutError:
                 stateServer.set("Client not response")
                 print("TimeoutError")
@@ -748,13 +816,10 @@ def getStart():
                 print("OSError")
                 actionWindow("ip/port error")
             
-           # except UnboundLocalError:
-              #  stateServer.set("Client not response")
-              #  print("UnboundLocalError ")
-              # actionWindow("ip/port error")
-
-        
-
+        # except UnboundLocalError:
+            #  stateServer.set("Client not response")
+            #  print("UnboundLocalError ")
+            # actionWindow("ip/port error")
     
     #print(server)
     #print(port)
@@ -862,7 +927,7 @@ txtPort = Entry(f1,font=font1,textvariable=port_Input,
 txtPort.grid(row=2,column=1)  
 
 btnStart = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
-                  width=10,text="Connect",bg="#49A",command=getStart)
+                  width=10,text="Connect",bg="#49A",command=lambda:getStart(1))
 btnStart.grid(row=7,column=1)
 btnTry = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
                   width=5,text="Exit",bg="#49A",command=closeGame)
@@ -871,6 +936,7 @@ menubar= Menu(root)
 filemenu = Menu(menubar, tearoff =0)
 menubar.add_cascade(label="File",menu=filemenu)
 filemenu.add_command(label="Config",command=configuration)
+filemenu.add_command(label="test",command=playAgain)
 filemenu.add_command(label="End",command=disConnected)
 filemenu.add_command(label="Exit", command = closeGame)
 root.config(menu=menubar)
