@@ -1,4 +1,6 @@
 from ast import Num
+from distutils.command.config import config
+from faulthandler import disable
 from http import server
 from pydoc import plain
 from stat import filemode
@@ -427,7 +429,7 @@ def serverPlay(tmp):
 
 #OX code =======================================================================
 #Variable
-
+name_Input = StringVar()
 ip_Input = StringVar()
 port_Input = StringVar()
 
@@ -926,6 +928,14 @@ txtPort = Entry(f1,font=font1,textvariable=port_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtPort.grid(row=2,column=1)  
 
+lblName = Label(f1,font=font1, text="Name"
+                 ,bd=16,anchor='w').grid(row=3,column=0)  
+txtName = Entry(f1,font=font1,textvariable=name_Input,
+                     bd=10,insertwidth=4,bg='white',justify='right',state='disabled',disabledbackground='powder blue')
+txtName.grid(row=3,column=1)  
+
+
+
 btnStart = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
                   width=10,text="Connect",bg="#49A",command=lambda:getStart(1))
 btnStart.grid(row=7,column=1)
@@ -933,7 +943,7 @@ btnTry = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
                   width=5,text="Exit",bg="#49A",command=closeGame)
 btnTry.grid(row=8,column=1)
 menubar= Menu(root)
-filemenu = Menu(menubar, tearoff =0)
+filemenu = Menu(menubar, tearoff =0,font= 'Helvetica 30 bold')
 menubar.add_cascade(label="File",menu=filemenu)
 filemenu.add_command(label="Config",command=configuration)
 filemenu.add_command(label="test",command=playAgain)
