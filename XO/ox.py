@@ -15,11 +15,58 @@ root = Tk()
 root.geometry("1600x800+0+0")
 #root.attributes('-fullscreen', True)  
 root.title("Tic-tac-toe")
-
-Tops = Frame(root,width=1600,bg="#856ff8",relief=SUNKEN)
+root.configure(background='powder blue')
+messagetry = StringVar()
+modeNow = StringVar()
+modeMainFrame = StringVar()
+Tops = Frame(root,width=1600,height=400,bg="powder blue",relief=SUNKEN)
 Tops.pack(side=TOP)
 
-Bottoms = Frame(root,width=1600,bg="#856ff8",relief=SUNKEN)
+f0 = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0.grid(row=0,column=0)
+
+#label
+lblInfo = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
+                text="TIC-TAC-TOE",fg="Blue",bd=10,background='powder blue')
+lblInfo.grid(row=0,column=0)
+lblRole = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
+                text="Client",fg="Blue",bd=10,background='powder blue')
+lblRole.grid(row=1,column=0)
+#bank zone
+#===============================================================
+f0a = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0a.grid(row=0,column=1)
+lblAir = Label(f0a,font=('Microsoft YaHei Light',50,'bold'),
+                text="\t     ",fg="Blue",bd=10,background='powder blue')
+lblAir.grid(row=0,column=0)
+lblAir2 = Label(f0a,font=('Microsoft YaHei Light',40,'bold'),
+                text="\t     ",fg="Blue",bd=10,background='powder blue')
+lblAir2.grid(row=1,column=0)
+#===============================================================
+#hall
+f0b = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0b.grid(row=0,column=2)
+
+lblHall = Label(f0b,font=('Microsoft YaHei Light',50,'bold'),
+                text="Hall of frame",fg="Blue",bd=10,background='powder blue')
+lblHall.grid(row=0,column=0)
+lblHall2 = Label(f0b,font=('Microsoft YaHei Light',40,'bold'),
+                text="Client",fg="Blue",bd=10,background='powder blue')
+lblHall2.grid(row=1,column=0)
+
+
+
+
+
+# lblInfo3 = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
+#                 text="\t\t",fg="Blue",bd=10)
+# lblInfo3.grid(row=0,column=2)
+# lblRole3 = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
+#                 text="\t\t",fg="Blue",bd=10)
+# lblRole3.grid(row=1,column=2)
+
+
+Bottoms = Frame(root,width=1600,bg="powder blue",relief=SUNKEN)
 Bottoms.pack(side=BOTTOM)
 
 f1 = Frame(Bottoms,width=800,height=700,bg="",relief=SUNKEN)
@@ -30,13 +77,10 @@ f2 = Frame(Bottoms,width=600,height=700,relief=SUNKEN)
 #f2.pack(side=LEFT)
 #f2.pack(side=RIGHT)
 f2.grid(row=1,column=2)
-
+f2.configure(background='powder blue')
 f3 = Frame(Bottoms,width=500,height=700,relief=SUNKEN)
 #f3.pack(side=RIGHT)
 f3.grid(row=1,column=3)
-messagetry = StringVar()
-modeNow = StringVar()
-modeMainFrame = StringVar()
 lblInfox = Label(f3,font=('Microsoft YaHei Light',50,'bold'),
                 text="TIC-TAC-TOE",fg="Blue",bd=10,anchor='w')
 lblInfox.grid(row=0,column=0)
@@ -47,13 +91,7 @@ lblRolex.grid(row=1,column=0)
 #f2.pack(side=RIGHT)
 chkTime = 0
 
-#label
-lblInfo = Label(Tops,font=('Microsoft YaHei Light',50,'bold'),
-                text="TIC-TAC-TOE",fg="Blue",bd=10,anchor='w')
-lblInfo.grid(row=0,column=0)
-lblRole = Label(Tops,font=('Microsoft YaHei Light',40,'bold'),
-                textvariable=modeMainFrame,fg="Blue",bd=10,anchor='w')
-lblRole.grid(row=1,column=0)
+
 #OX code =======================================================================
 ip_recent = ''
 port_recent = ''
@@ -75,7 +113,6 @@ def check():
     global count
     global msg
     global useSlot,c
-
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
         if (msg[0] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -87,17 +124,12 @@ def check():
         if whatRole == 1:
             s.close()
             playAgain() 
-            default("Client") 
-            
-            #actionWindow("Reconnect for play again.")
+            default("Client")
         if whatRole == 2:
             c.close()   
             messagetry.set('')
             playAgain() 
-            default("Server")
-            
-            #actionWindow("Reconnect for play again.")
-                         
+            default("Server")   
     if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
         if (msg[3] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -110,15 +142,11 @@ def check():
             s.close()
             playAgain() 
             default("Client")   
-            
         if whatRole == 2:
             c.close()   
-           
             messagetry.set('')
             playAgain() 
             default("Server")
-             
-                 
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
         if (msg[6] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -132,13 +160,10 @@ def check():
             messagetry.set('')
             playAgain()
             default("Client")   
-            
         if whatRole == 2:
             c.close()   
             playAgain()
-            default("Server")     
-            
-                           
+            default("Server")               
     if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
         if (msg[0] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -150,16 +175,12 @@ def check():
         if whatRole == 1:
             s.close()
             playAgain()
-        
             default("Client")   
-            
         if whatRole == 2:
             c.close()   
             messagetry.set('')
             playAgain()
-            default("Server")   
-            
-                         
+            default("Server")          
     if (msg[1] == msg[4]) and (msg[4] == msg[7]):
         if (msg[1] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -171,16 +192,12 @@ def check():
         if whatRole == 1:
             s.close()
             playAgain()
-           
             default("Client")   
-            
         if whatRole == 2:
             c.close()   
             messagetry.set('')
             playAgain()
             default("Server")       
-            
-             
     if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
         if (msg[2] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -192,17 +209,12 @@ def check():
         if whatRole == 1:
             s.close()
             playAgain()
-            
             default("Client")   
-            
         if whatRole == 2:
             c.close()   
             messagetry.set('')
             playAgain()
             default("Server")    
-            
-                       
-
     if (msg[0] == msg[4]) and (msg[4] == msg[8]):
         if (msg[0] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")  
@@ -216,13 +228,10 @@ def check():
             messagetry.set('')
             playAgain()
             default("Client")   
-            
         if whatRole == 2:
             c.close()   
             playAgain()
-            default("Server")     
-            
-                         
+            default("Server")                       
     if (msg[2] == msg[4]) and (msg[4] == msg[6]):
         if (msg[2] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
@@ -465,28 +474,52 @@ def configMode():
     else:
         print("Not allow")
 
+def changeModeClient():  
+    print("changeModeClient call")
+    if configAllow == True:
+        if(btnClient['text']=='On'):
+            print('1')
+            btnClient['text']='Off'
+        elif(btnClient['text']=='Off'):
+            print('0')
+            btnClient['text']='On'
+    else:
+        print("Not allow")
     
 configAllow = True
 def configuration():
     print("configuration call")
-    global btnConfig
+    global btnConfig,btnClient
     def close():
         changeModeLabel.set("")
         made.destroy()
     made = Toplevel(root)
     made.geometry('300x300')
     made.title("Config")
-    txtLabel=Label(made,font=('Microsoft YaHei Light',13,'bold'),text="Mode")
-    txtLabel.pack()
+    made.configure(bg="powder blue")
+    fr1 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+    fr1.pack(side=TOP)
+    txtLabel=Label(fr1,font=('Microsoft YaHei Light',13,'bold'),text="Config",bg="powder blue")
+    txtLabel.grid(row=0,column=0)
+    fr2 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+    fr2.pack(side=TOP)
+    txtCh=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Mode\t",bg="powder blue")
+    txtCh.grid(row=0,column=0)
+    txtAir=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="\n\n",bg="powder blue")
+    txtAir.grid(row=1,column=0)
+    txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="powder blue")
+    txtCh2.grid(row=1,column=0)
     if whatRole == 1:
 
-        btnConfig=Button(made,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
-        btnConfig.pack()
+        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
+        btnConfig.grid(row=0,column=1)
     elif whatRole == 2:
-        btnConfig=Button(made,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
-        btnConfig.pack()
+        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
+        btnConfig.grid(row=0,column=1)
     
-    btnClose=Button(made,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).pack(side=BOTTOM)
+    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
+    btnClient.grid(row=1,column=1)
+    btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).pack(side=BOTTOM)
     made.mainloop()
 allowServerSend = False
 #Default
@@ -910,26 +943,26 @@ btnSend.grid(row=6,columnspan=3)
 offButton()
 
 lblReference = Label(f1,font=font1, text="State",
-                     bd=16,anchor='w').grid(row=0,column=0)  
+                     bd=16,anchor='w',bg="powder blue").grid(row=0,column=0)  
 txtReference = Entry(f1,font=font1,textvariable=stateServer,
                      bd=10,insertwidth=4,bg='#49A',justify='right',state='disabled',disabledbackground='powder blue').grid(row=0,column=1)
 
 #-----------------------------------------------------------------------------------------------------
 lblIp = Label(f1,font=font1, text="ip"
-                 ,bd=16,anchor='w').grid(row=1,column=0)  
+                 ,bd=16,anchor='w',bg="powder blue").grid(row=1,column=0)  
 txtIp = Entry(f1,font=font1,textvariable=ip_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtIp.grid(row=1,column=1)
 
 #-----------------------------------------------------------------------------------------------------
 lblPort = Label(f1,font=font1, text="port"
-                 ,bd=16,anchor='w').grid(row=2,column=0)  
+                 ,bd=16,anchor='w',bg="powder blue").grid(row=2,column=0)  
 txtPort = Entry(f1,font=font1,textvariable=port_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtPort.grid(row=2,column=1)  
 
 lblName = Label(f1,font=font1, text="Name"
-                 ,bd=16,anchor='w').grid(row=3,column=0)  
+                 ,bd=16,anchor='w',bg="powder blue").grid(row=3,column=0)  
 txtName = Entry(f1,font=font1,textvariable=name_Input,
                      bd=10,insertwidth=4,bg='white',justify='right',state='disabled',disabledbackground='powder blue')
 txtName.grid(row=3,column=1)  
