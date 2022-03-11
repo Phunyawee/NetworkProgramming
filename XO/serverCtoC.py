@@ -42,11 +42,11 @@ def check():
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
         gameRunning = False
         if (msg[6] == 'x'):
-            print (str(player1)+"   WIN !!!!!!!!!!!!!!")
-            return player1
+            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")
+            return record.player1
         if (msg[6] == 'o'):
-            print (str(player2)+"   WIN !!!!!!!!!!!!!!")
-            return player2
+            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            return record.player2
     if (msg[0] == msg[3]) and (msg[3] == msg[6]):     
         gameRunning = False
         if (msg[0] == 'x'):

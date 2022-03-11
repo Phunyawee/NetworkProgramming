@@ -1,6 +1,3 @@
-from ast import Num
-from cgi import print_arguments
-from distutils.command.config import config
 from faulthandler import disable
 from http import server
 from pydoc import plain
