@@ -120,11 +120,11 @@ def extract(x):
 #OX CtoC code =======================================================================
 
 def EndGame(touch):
-    global endGame,count,s
+    global endGame,count,socker
     endGame = False
    # sendMessage = str(touch)
-    s.send(str.encode(str(touch)))
-    s.close()
+    socker.send(str.encode(str(touch)))
+    socker.close()
 
 def check_CtoC(touch):
     global count
@@ -216,7 +216,7 @@ def check_CtoC(touch):
 def clientPlay2(touch):#opponent
     touch = int(touch)
     global msg
-    global count
+    global count,socker
     global useSlot,endGame
     print("clientPlay2")
     for element in msg:
@@ -230,7 +230,7 @@ def clientPlay2(touch):#opponent
                 putSlot(int(position))
                 endGame = False
                 print ("   Draw !!!!!!!!!!!!!!")
-                s.close()
+                socker.close()
                 break
             else:
                 position +=1
@@ -266,7 +266,7 @@ def clientPlay2(touch):#opponent
 def clientPlay1(touch):#my self
     touch = int(touch)
     global msg    
-    global count
+    global count,socker
     global useSlot,endGame
     print("clientPlay1")
     
@@ -307,15 +307,17 @@ def clientPlay1(touch):#my self
 
 
 def playWithClient():
-    global endGame,opponent
+    global endGame,opponent,socker
     
     if endGame==False:
         print('endGame1')
+        upDate()
+        socker.close()
     else:
         try:
             print('receiveMessage')
             print_table(msg)
-            getMessage = bytes.decode(s.recv(4096))#wait mess
+            getMessage = bytes.decode(socker.recv(4096))#wait mess
             print('getMessage'+getMessage)
             onButton()
             if getMessage == '0':
@@ -325,16 +327,22 @@ def playWithClient():
                 receiveMessage = unZip[1] #get num from opponent
                 
                 opponent = unZip[0] # get opponent's name
+                #if receiveMessage == 'disconnected':
+                #    socker.close()
+                 #   default('CtoC')
                 if receiveMessage == '99':#signal draw
                     position = 0
                     for element in msg:#find element not x,y
                         if element.isnumeric()==True:
-                            (msg[int(position)]) = 'o'
-                            number[int(position)-1]=' O '
+                            number[int(position)]=' O '
                             putSlot(int(position))
+                            print_table(msg)
+
+                            upDate()
                             endGame = False
                             print ("   Draw !!!!!!!!!!!!!!")
-                            s.close()
+                            socker.close()
+                            default('CtoC')
                             break
                         else:
                             position +=1
@@ -351,13 +359,13 @@ def playWithClient():
         except ConnectionResetError:
             print("Server disconnected")
             endGame = False
-            s.close()
+            socker.close()
         
     
         if receiveMessage == 'disconnected':
             print(opponent+" : "+receiveMessage)
             endGame = False
-            s.close()
+            socker.close()
             
         else:
             print(str(receiveMessage)+'\n')
@@ -826,7 +834,7 @@ def default(role):
     global serversocket,c,addr,allowServerSend
     
     #global client to client 
-    global endGame,ADDRESS,name,userName,state
+    global endGame,ADDRESS,name,userName,state,socker
     global opponent,myself
     if role == "Client":
         print("Client mode")
@@ -838,19 +846,22 @@ def default(role):
         txtName.configure(state='disabled',disabledbackground='powder blue')
     elif role =="Server":
         print("Server mode")
+        serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         allowServerSend = False
         whatRole = 2
         recentRole = whatRole
-        serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
         modeMainFrame.set('Server')
         modeNow.set('Client')
         txtName.configure(state='disabled',disabledbackground='powder blue')
     elif role == "CtoC":
+        print("Server mode")
+        socker = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         whatRole = 3
         count=0
         endGame = True
         txtName.configure(state='normal')
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
         print("CtoC mode")
         
         
@@ -963,12 +974,12 @@ def communication():
                 clientPlay1(sendMessage)
                 if endGame:
                     sendMessage = str(sendMessage)
-                    s.send(str.encode(sendMessage))
+                    socker.send(str.encode(sendMessage))
             
             except:
                 print("Server disconnected")
                 endGame = False
-                s.close()
+                socker.close()
         playWithClient()
     
     btnSend["state"]= "disabled"
@@ -1195,7 +1206,7 @@ def getStart(playTime):
            
                 try:
                     ADDRESS = (server,port)
-                    s.connect(ADDRESS)
+                    socker.connect(ADDRESS)
                     print('pass')
                 except:
                     print('reconect')
@@ -1203,13 +1214,13 @@ def getStart(playTime):
                     print('end connecting')
                     
                 try:
-                    messageFromServer = bytes.decode(s.recv(4096))
+                    messageFromServer = bytes.decode(socker.recv(4096))
                     print('messageFromServer'+str(messageFromServer))
                     name = nameOfPlayer
                     myself = nameOfPlayer
                     userName = str.encode(name)
                     state_CtoC = True
-                    s.send(userName)
+                    socker.send(userName)
                     offButton()
                     offConnection()
                 except ConnectionResetError:
