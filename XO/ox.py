@@ -1,4 +1,5 @@
 from ast import Num
+from cgi import print_arguments
 from distutils.command.config import config
 from faulthandler import disable
 from http import server
@@ -463,14 +464,12 @@ def configMode():
             modeNow.set('Server')
             default('Server')
             btnConfig['text']='Server'
-    
-            #default()
         elif whatRole==2:
             
             modeNow.set('Client')
             default('Client')
             btnConfig['text']='Client'
-            #default()
+            
     else:
         print("Not allow")
 
@@ -478,10 +477,16 @@ def changeModeClient():
     print("changeModeClient call")
     if configAllow == True:
         if(btnClient['text']=='On'):
-            print('1')
+            default('CtoC')
+            
             btnClient['text']='Off'
         elif(btnClient['text']=='Off'):
-            print('0')
+            if recentRole == 1:
+                default('Client')
+            elif recentRole == 2:
+                default('Server')
+
+            
             btnClient['text']='On'
     else:
         print("Not allow")
@@ -493,34 +498,37 @@ def configuration():
     def close():
         changeModeLabel.set("")
         made.destroy()
-    made = Toplevel(root)
-    made.geometry('300x300')
-    made.title("Config")
-    made.configure(bg="powder blue")
-    fr1 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
-    fr1.pack(side=TOP)
-    txtLabel=Label(fr1,font=('Microsoft YaHei Light',13,'bold'),text="Config",bg="powder blue")
-    txtLabel.grid(row=0,column=0)
-    fr2 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
-    fr2.pack(side=TOP)
-    txtCh=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Mode\t",bg="powder blue")
-    txtCh.grid(row=0,column=0)
-    txtAir=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="\n\n",bg="powder blue")
-    txtAir.grid(row=1,column=0)
-    txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="powder blue")
-    txtCh2.grid(row=1,column=0)
-    if whatRole == 1:
+    try:
+        made = Toplevel(root)
+        made.geometry('300x300')
+        made.title("Config")
+        made.configure(bg="powder blue")
+        fr1 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+        fr1.pack(side=TOP)
+        txtLabel=Label(fr1,font=('Microsoft YaHei Light',13,'bold'),text="Config",bg="powder blue")
+        txtLabel.grid(row=0,column=0)
+        fr2 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+        fr2.pack(side=TOP)
+        txtCh=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Mode\t",bg="powder blue")
+        txtCh.grid(row=0,column=0)
+        txtAir=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="\n\n",bg="powder blue")
+        txtAir.grid(row=1,column=0)
+        txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="powder blue")
+        txtCh2.grid(row=1,column=0)
+        if whatRole == 1:
 
-        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
-        btnConfig.grid(row=0,column=1)
-    elif whatRole == 2:
-        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
-        btnConfig.grid(row=0,column=1)
-    
-    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
-    btnClient.grid(row=1,column=1)
-    btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).pack(side=BOTTOM)
-    made.mainloop()
+            btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
+            btnConfig.grid(row=0,column=1)
+        elif whatRole == 2:
+            btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
+            btnConfig.grid(row=0,column=1)
+        
+        btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
+        btnClient.grid(row=1,column=1)
+        btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).pack(side=BOTTOM)
+        made.mainloop()
+    except:
+        print('Tk exception')
 allowServerSend = False
 #Default
 def default(role):
@@ -529,26 +537,33 @@ def default(role):
     #global role
     # 1 = client
     # 2 = server
-    global whatRole,count,chkTime
+    global whatRole,count,chkTime,recentRole
     count=0
     #global client
     global msg,useSlot,operator,number,stateBtn,ip_Input,port_Input,s,configAllow
     #global server
     global serversocket,c,addr,allowServerSend
     if role == "Client":
-        #btnConfig['text']='Server'
+        print("Client mode")
         whatRole = 1
+        recentRole = whatRole
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         modeMainFrame.set('Client')
         modeNow.set('Server')
         
     elif role =="Server":
-        #btnConfig['text']='Client'
+        print("Server mode")
         allowServerSend = False
         whatRole = 2
+        recentRole = whatRole
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         modeMainFrame.set('Server')
         modeNow.set('Client')
+
+    elif role == "CtoC":
+        whatRole = 3
+        print("CtoC mode")
+        pass
         
     text1.set('    ')
     text2.set('    ')
@@ -650,9 +665,6 @@ def communication():
                 
                 serverPlay(numberToSend)
                 allowServerSend = False
-                
-            
-            
             #s.close()
     btnSend["state"]= "disabled"
 def upDate():
@@ -713,6 +725,8 @@ def btnClick(numbers):
                     offButton()
                     btnSend["state"]= "normal"
                     allowServerSend = True
+    elif whatRole == 3:
+        pass
 def playAgain():
     pass
 
