@@ -8,6 +8,7 @@ from tkinter import StringVar
 import tkinter.messagebox
 import socket
 import time
+from turtle import update
 #Client
 root = Tk()
 root.geometry("1600x800+0+0")
@@ -88,12 +89,263 @@ lblRolex.grid(row=1,column=0)
 
 #f2.pack(side=RIGHT)
 chkTime = 0
+
+#tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def extract(x):
+    y = []
+    distance = 0 #name []
+    distance2 = 0 #number {}
+    state = False
+    state2 = False
+    for i in range(len(x)):
+        if x[i]=='[':
+            state = True
+        if x[i]==']':
+            state = False
+        if state:
+            distance+=1
+        if x[i]=='{':
+            state2 = True
+        if x[i]=='}':
+            state2 = False
+        if state2:
+            distance2+=1
+        
+    y.append(x[1:distance])
+    y.append(x[distance+2:distance+1+distance2])
+    distance = 0
+    distance2 = 0
+    return y
+#tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #OX CtoC code =======================================================================
 
+def EndGame(touch):
+    global endGame,count,s
+    endGame = False
+   # sendMessage = str(touch)
+    s.send(str.encode(str(touch)))
+    s.close()
+
+def check_CtoC(touch):
+    global count
+    global msg
+    global useSlot,endGame,opponent,myself
+    count=0
+    for i in msg:
+        if i.isnumeric()==False:
+            count+=1
+            if count == 9:
+                print ("   Draw !!!!!!!!!!!!!!")
+                EndGame(99)#sp case
+        else:
+            count = 0
+    print('turn: '+str(count))
+    if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
+        if (msg[0] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
+            EndGame(touch)
+        if (msg[0] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)
+        
+        
+                     
+    if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
+        if (msg[3] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(touch)
+        if (msg[3] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)
+        
+    if (msg[6] == msg[7]) and (msg[7] == msg[8]):
+        if (msg[6] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(touch) 
+        if (msg[6] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)
+    if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
+        if (msg[0] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(touch)  
+        if (msg[0] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)
+    if (msg[1] == msg[4]) and (msg[4] == msg[7]):
+        if (msg[1] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")  
+            EndGame(touch)  
+        if (msg[1] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)  
+    if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
+        if (msg[2] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(touch)
+        if (msg[2] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)
+    if (msg[0] == msg[4]) and (msg[4] == msg[8]):
+        if (msg[0] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(touch)
+        if (msg[0] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)
+                  
+    if (msg[2] == msg[4]) and (msg[4] == msg[6]):
+        if (msg[2] == 'x'):
+            print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
+            EndGame(touch)  
+        if (msg[2] == 'o'):
+            print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            EndGame(0)
+                        
 
 
 
 
+
+def clientPlay2(touch):#opponent
+    touch = int(touch)
+    global msg
+    global count
+    global useSlot,endGame
+    print("clientPlay2")
+    for element in msg:
+        if element.isnumeric()==True:
+            break
+    if touch == 99:#signal draw
+        position = 0
+        for element in msg:#find element not x,y
+            if element.isnumeric()==True:
+                (msg[int(position)]) = 'x'
+                putSlot(int(position))
+                endGame = False
+                print ("   Draw !!!!!!!!!!!!!!")
+                s.close()
+                break
+            else:
+                position +=1
+        
+      
+
+    elif touch != 0:
+        (msg[int(touch)-1]) = 'o'
+        putSlot(int(touch))
+        #====================================
+        touch = str(touch)
+    #====================================
+    
+    
+    try:
+        #s.send(touch.encode('ascii'))
+        pass
+    except ValueError:
+        print("Server disconnect")
+    except ConnectionAbortedError:
+        print("Server disconnect") 
+    except UnboundLocalError:
+        print("Server disconnect")
+    except ConnectionResetError:
+        print("Server disconnect")
+    print_table(msg)
+    if touch!=99:
+        check_CtoC(touch)
+    
+    print('endgame'+str(endGame))
+     
+
+def clientPlay1(touch):#my self
+    touch = int(touch)
+    global msg    
+    global count
+    global useSlot,endGame
+    print("clientPlay1")
+    
+    if touch == 99:#signal draw
+        position = 0
+        for element in msg:#find element not x,y
+            if element.isnumeric()==True:
+                (msg[int(position)]) = 'o'
+                putSlot(int(position))
+                endGame = False
+                break
+            else:
+                position +=1
+        
+    elif touch != 0:
+        (msg[int(touch)-1]) = 'x'
+        putSlot(int(touch))
+        #====================================
+        touch = str(touch)
+    #====================================
+    
+    try:
+        #s.send(touch.encode('ascii'))
+        pass
+    except ValueError:
+        print("Server disconnect")
+    except ConnectionAbortedError:
+        print("Server disconnect") 
+    except UnboundLocalError:
+        print("Server disconnect")
+    except ConnectionResetError:
+        print("Server disconnect")
+    print_table(msg)
+    if touch!=99:
+        check_CtoC(touch)
+    
+    print('endgame'+str(endGame))
+
+
+def playWithClient():
+    global endGame
+    
+    if endGame==False:
+        print('endGame1')
+        
+    try:
+        print('receiveMessage')
+        print_table(msg)
+        getMessage = bytes.decode(s.recv(4096))#wait mess
+        print('getMessage'+getMessage)
+        onButton()
+        if getMessage == '0':
+            receiveMessage=0
+        else:
+            unZip = extract(getMessage)
+            receiveMessage = unZip[1] #get num from opponent
+            
+            opponent = unZip[0] # get opponent's name
+            
+            number[int(getMessage)-1]=' X '
+            upDate()
+        print('lllllllllllllllllllll')
+        print('getValue'+str(receiveMessage))
+        
+        # print_table(msg)
+    except ConnectionAbortedError:
+        print('deny access')#full player in server wait server reset
+        
+    except ConnectionResetError:
+        print("Server disconnected")
+        endGame = False
+        s.close()
+        
+    
+    if receiveMessage == 'disconnected':
+        print(opponent+" : "+receiveMessage)
+        endGame = False
+        s.close()
+        
+    else:
+        print(str(receiveMessage)+'\n')
+        clientPlay2(receiveMessage)
+    
+    
+    
 
 
 #OX CtoC code =======================================================================
@@ -250,7 +502,6 @@ def check():
             messagetry.set('')
             playAgain()
             default("Client")   
-            
         if whatRole == 2:
             c.close()   
             playAgain()
@@ -264,7 +515,6 @@ def disConnected():
         default("Client")   
         statePlayer.set("disconnected")
         actionWindow("Reconnect for play again.")
-        
     if whatRole == 2:
         c.close()   
         default("Server")   
@@ -277,12 +527,6 @@ def clientPlay(tmp):
     global msg    
     global count
     global useSlot
-
-    
-    #print_table(msg)
-    #====================================
-    #====================================
-    
     if whatRole == 1:
         count+=1
         print("Count"+str(count))
@@ -314,8 +558,7 @@ def clientPlay(tmp):
     elif whatRole == 2:
         count+=1
         print("Count"+str(count))
-        if count== 10:
-               
+        if count== 10:      
             c.close()
             default("Server")
             offButton()
@@ -410,14 +653,11 @@ def serverPlay(tmp):
             default("Server")
             count=0
         else:
-
-            
             (msg[int(tmp)-1]) = 'X'
         #====================================AttributeError: 'int' object has no attribute 'encode'
             tmp = str(tmp)
             print("###")
             print(useSlot)
-
             putSlot(int(tmp))
             number[int(tmp)-1]=' X '
             print(number)
@@ -430,7 +670,6 @@ def serverPlay(tmp):
                 clientPlay(0)
             except ValueError:
                 print("Client disconnect")
-            
             except ConnectionAbortedError:
                 print("Client disconnect") 
             except UnboundLocalError:
@@ -557,16 +796,21 @@ allowServerSend = False
 #Default
 def default(role):
     print("default call")
-    #global btnConfig
+    # every global
+    global ip_Input,port_Input
     #global role
     # 1 = client
     # 2 = server
     global whatRole,count,chkTime,recentRole
     count=0
     #global client
-    global msg,useSlot,operator,number,stateBtn,ip_Input,port_Input,s,configAllow
+    global msg,useSlot,operator,number,stateBtn,s,configAllow
     #global server
     global serversocket,c,addr,allowServerSend
+    
+    #global client to client 
+    global endGame,ADDRESS,name,userName,state
+    global opponent,myself
     if role == "Client":
         print("Client mode")
         whatRole = 1
@@ -586,8 +830,12 @@ def default(role):
         txtName.configure(state='disabled',disabledbackground='powder blue')
     elif role == "CtoC":
         whatRole = 3
+        count=0
+        endGame = True
+        
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print("CtoC mode")
-        pass
+        
         
     text1.set('    ')
     text2.set('    ')
@@ -621,6 +869,7 @@ def offConnection():
     txtIp["state"] = "disabled"
     txtPort["state"] = "disabled"
     btnStart["state"] = "disabled"
+    txtName.configure(state='disabled',disabledbackground='powder blue')
     configAllow = False
     
 
@@ -663,7 +912,7 @@ def onButton():
 
 def communication():
     print('communication call')
-    global numberToSend,count,allowServerSend
+    global numberToSend,count,allowServerSend,endGame
    
     if whatRole == 1:
         if count== 10:
@@ -674,7 +923,7 @@ def communication():
             clientPlay(numberToSend)#server -1 แล้ว
             serverPlay(numberToSend)
             onButton()
-            #s.close()
+            
     elif whatRole == 2:
         if count== 10:
             c.close()
@@ -689,7 +938,27 @@ def communication():
                 
                 serverPlay(numberToSend)
                 allowServerSend = False
-            #s.close()
+    elif whatRole == 3:
+        if endGame:#=================================================================
+            try:
+                sendMessage =  numberToSend
+                
+                if putSlot(sendMessage)==False:
+                    print("used")
+                    print_table(msg)
+                else:
+                    count+=1
+                    clientPlay1(sendMessage)
+                    if endGame:
+                        sendMessage = str(sendMessage)
+                        s.send(str.encode(sendMessage))
+            
+            except:
+                print("Server disconnected")
+                endGame = False
+                s.close()
+        playWithClient()
+    
     btnSend["state"]= "disabled"
 def upDate():
     print("update call")
@@ -750,7 +1019,18 @@ def btnClick(numbers):
                     btnSend["state"]= "normal"
                     allowServerSend = True
     elif whatRole == 3:
-        pass
+       if stateBtn[numbers-1]==False:
+        if putSlot(numbers)==False:
+            print("used")
+            statePlayer.set("select another")
+        else:
+            stateBtn[numbers-1]=True
+            operator = True   
+            number[int(numbers)-1]=' X '
+            upDate()
+            offButton()
+            btnSend["state"]= "normal"
+            allowServerSend = True
 def playAgain():
     pass
 
@@ -782,7 +1062,7 @@ def getStart(playTime):
     print('getStart call:'+ str(playTime))
     global c,addr,ip_recent,port_recent,chkTime
     chkTime = playTime
-
+    global myself,opponent
     firstTime = True if playTime == 1 else False
     
     if (len(ip_Input.get())==0 or len(port_Input.get())==0) and firstTime:
@@ -817,11 +1097,8 @@ def getStart(playTime):
                         stateServer.set("try to connect")
                         print( "connect failed" )   
                         time.sleep(2)
-                
                 onButton()
                 offConnection()
-            
-                
                 stateServer.set("Welcome to XO Game")
                 statePlayer.set("Your turn")
             except TimeoutError:
@@ -888,14 +1165,55 @@ def getStart(playTime):
                 stateServer.set("Client not response")
                 print("OSError")
                 actionWindow("ip/port error")
+        if whatRole == 3:
+            server = ip_Input.get()
+            port = int(port_Input.get())
+            nameOfPlayer = name_Input.get()
+            for scan in nameOfPlayer:
+                if scan =='[' or scan == ']' or scan == '{' or scan == '}':
+                    print('forbidden')
+                    name_Input.set("")
+                    nameOfPlayer=""
+                    allowPlay = False
+                    actionWindow("Name can't contain [ ] or {""}")
+                else:
+                    print('Allow Connect')
+                    allowPlay = True
+            if allowPlay:
+           
+                try:
+                    ADDRESS = (server,port)
+                    s.connect(ADDRESS)
+                    print('pass')
+                except:
+                    print('reconect')
+                else:
+                    print('end connecting')
+                    
+                try:
+                    messageFromServer = bytes.decode(s.recv(4096))
+                    print('messageFromServer'+str(messageFromServer))
+                    name = nameOfPlayer
+                    myself = nameOfPlayer
+                    userName = str.encode(name)
+                    state_CtoC = True
+                    s.send(userName)
+                    offButton()
+                    offConnection()
+                except ConnectionResetError:
+                    print("Server disconnected")
+                    state_CtoC = False
+                if state_CtoC:
+                    playWithClient()
+                
+            #print("Name: "+nameOfPlayer)
             
         # except UnboundLocalError:
             #  stateServer.set("Client not response")
             #  print("UnboundLocalError ")
             # actionWindow("ip/port error")
     
-    #print(server)
-    #print(port)
+    
 #==========================Fonts==========================================
 #font.Font(family='Helvetica', size=12, weight='bold')
 font1 = TkFont.Font(family="Microsoft YaHei Light",size = 20,weight = 'bold')
