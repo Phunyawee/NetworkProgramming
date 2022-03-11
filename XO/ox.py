@@ -88,8 +88,15 @@ lblRolex.grid(row=1,column=0)
 
 #f2.pack(side=RIGHT)
 chkTime = 0
+#OX CtoC code =======================================================================
 
 
+
+
+
+
+
+#OX CtoC code =======================================================================
 #OX code =======================================================================
 ip_recent = ''
 port_recent = ''
@@ -457,16 +464,25 @@ def configMode():
     print("configMode call")
     if configAllow == True:
         if whatRole==1:
-            
             modeNow.set('Server')
             default('Server')
             btnConfig['text']='Server'
         elif whatRole==2:
-            
             modeNow.set('Client')
             default('Client')
             btnConfig['text']='Client'
-            
+        elif whatRole==3:
+
+            txtName.configure(state='disabled',disabledbackground='powder blue')
+            btnClient['text']='On'
+            if recentRole == 1:
+                modeNow.set('Server')
+                default('Server')
+                btnConfig['text']='Server'
+            elif recentRole == 2:
+                modeNow.set('Client')
+                default('Client')
+                btnConfig['text']='Client'
     else:
         print("Not allow")
 
@@ -475,9 +491,10 @@ def changeModeClient():
     if configAllow == True:
         if(btnClient['text']=='On'):
             default('CtoC')
-            
+            txtName.configure(state='normal')
             btnClient['text']='Off'
         elif(btnClient['text']=='Off'):
+            txtName.configure(state='disabled',disabledbackground='powder blue')
             if recentRole == 1:
                 default('Client')
             elif recentRole == 2:
@@ -516,12 +533,22 @@ def configuration():
 
             btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
             btnConfig.grid(row=0,column=1)
+            btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=changeModeClient)
+            btnClient.grid(row=1,column=1)
         elif whatRole == 2:
             btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
             btnConfig.grid(row=0,column=1)
-        
-        btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
-        btnClient.grid(row=1,column=1)
+            btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=changeModeClient)
+            btnClient.grid(row=1,column=1)
+        elif whatRole == 3:
+            if recentRole == 1:
+                btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
+                btnConfig.grid(row=0,column=1)
+            elif recentRole == 2:
+                btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
+                btnConfig.grid(row=0,column=1)
+            btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
+            btnClient.grid(row=1,column=1)
         btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).pack(side=BOTTOM)
         made.mainloop()
     except:
@@ -547,7 +574,7 @@ def default(role):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         modeMainFrame.set('Client')
         modeNow.set('Server')
-        
+        txtName.configure(state='disabled',disabledbackground='powder blue')
     elif role =="Server":
         print("Server mode")
         allowServerSend = False
@@ -556,7 +583,7 @@ def default(role):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         modeMainFrame.set('Server')
         modeNow.set('Client')
-
+        txtName.configure(state='disabled',disabledbackground='powder blue')
     elif role == "CtoC":
         whatRole = 3
         print("CtoC mode")
@@ -975,7 +1002,7 @@ txtPort.grid(row=2,column=1)
 lblName = Label(f1,font=font1, text="Name"
                  ,bd=16,anchor='w',bg="powder blue").grid(row=3,column=0)  
 txtName = Entry(f1,font=font1,textvariable=name_Input,
-                     bd=10,insertwidth=4,bg='white',justify='right',state='disabled',disabledbackground='powder blue')
+                     bd=10,insertwidth=4,bg='white',justify='right')
 txtName.grid(row=3,column=1)  
 
 
