@@ -249,8 +249,11 @@ class clientHandler(Thread):
                     broadcastMessage = str.encode(message)
                     socket.send(broadcastMessage)
                     print('set==========================')
+                except ConnectionAbortedError:
+                    print('ConnectionAbortedError')
+                    server.close()
                     
-                except ConnectionAbortedError and ConnectionResetError:
+                except ConnectionResetError:
                     print("Client {%s} is offline"%self._address)
                     broadCastingMessage(socket,("Client (%s) is offline" %self._address))
                     print('!!!!!!!SSSSSS!!!!!!!')

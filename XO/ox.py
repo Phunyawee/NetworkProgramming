@@ -1145,6 +1145,7 @@ def getStart(playTime):
                 stateServer.set("Server not response")
                 print("UnboundLocalError ")
                 actionWindow("ip/port error")
+            
         elif whatRole == 2:
             try:
                 if playTime == 1:
@@ -1207,6 +1208,7 @@ def getStart(playTime):
                 try:
                     ADDRESS = (server,port)
                     socker.connect(ADDRESS)
+                    statePlayer.set("Your turn")
                     print('pass')
                 except:
                     print('reconect')
@@ -1225,6 +1227,10 @@ def getStart(playTime):
                     offConnection()
                 except ConnectionResetError:
                     print("Server disconnected")
+                    state_CtoC = False
+                except OSError:
+                    stateServer.set("Pls re-open this mode")
+                    print("OSError ")
                     state_CtoC = False
                 if state_CtoC:
                     playWithClient()
