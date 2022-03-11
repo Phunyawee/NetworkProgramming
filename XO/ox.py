@@ -137,9 +137,10 @@ def check_CtoC(touch):
             if count == 9:
                 print ("   Draw !!!!!!!!!!!!!!")
                 EndGame(99)#sp case
+                default("CtoC")
         else:
             count = 0
-    print('turn: '+str(count))
+    #print('turn: '+str(count))
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
@@ -147,7 +148,7 @@ def check_CtoC(touch):
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        
+        default("CtoC")
         
                      
     if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
@@ -157,7 +158,7 @@ def check_CtoC(touch):
         if (msg[3] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        
+        default("CtoC")
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
         if (msg[6] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
@@ -165,6 +166,7 @@ def check_CtoC(touch):
         if (msg[6] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
+        default("CtoC")
     if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
@@ -172,6 +174,7 @@ def check_CtoC(touch):
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
+        default("CtoC")
     if (msg[1] == msg[4]) and (msg[4] == msg[7]):
         if (msg[1] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")  
@@ -179,6 +182,7 @@ def check_CtoC(touch):
         if (msg[1] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)  
+        default("CtoC")
     if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
         if (msg[2] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
@@ -186,6 +190,7 @@ def check_CtoC(touch):
         if (msg[2] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
+        default("CtoC")
     if (msg[0] == msg[4]) and (msg[4] == msg[8]):
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
@@ -193,7 +198,7 @@ def check_CtoC(touch):
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-                  
+        default("CtoC")
     if (msg[2] == msg[4]) and (msg[4] == msg[6]):
         if (msg[2] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
@@ -201,6 +206,7 @@ def check_CtoC(touch):
         if (msg[2] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
+        default("CtoC")
                         
 
 
@@ -301,48 +307,61 @@ def clientPlay1(touch):#my self
 
 
 def playWithClient():
-    global endGame
+    global endGame,opponent
     
     if endGame==False:
         print('endGame1')
-        
-    try:
-        print('receiveMessage')
-        print_table(msg)
-        getMessage = bytes.decode(s.recv(4096))#wait mess
-        print('getMessage'+getMessage)
-        onButton()
-        if getMessage == '0':
-            receiveMessage=0
-        else:
-            unZip = extract(getMessage)
-            receiveMessage = unZip[1] #get num from opponent
+    else:
+        try:
+            print('receiveMessage')
+            print_table(msg)
+            getMessage = bytes.decode(s.recv(4096))#wait mess
+            print('getMessage'+getMessage)
+            onButton()
+            if getMessage == '0':
+                receiveMessage=0
+            else:
+                unZip = extract(getMessage)
+                receiveMessage = unZip[1] #get num from opponent
+                
+                opponent = unZip[0] # get opponent's name
+                if receiveMessage == '99':#signal draw
+                    position = 0
+                    for element in msg:#find element not x,y
+                        if element.isnumeric()==True:
+                            (msg[int(position)]) = 'o'
+                            number[int(position)-1]=' O '
+                            putSlot(int(position))
+                            endGame = False
+                            print ("   Draw !!!!!!!!!!!!!!")
+                            s.close()
+                            break
+                        else:
+                            position +=1
+                else:
+                    number[int(receiveMessage)-1]=' O '
+                upDate()
+            print('lllllllllllllllllllll')
+            print('getValue'+str(receiveMessage))
             
-            opponent = unZip[0] # get opponent's name
+            # print_table(msg)
+        except ConnectionAbortedError:
+            print('deny access')#full player in server wait server reset
             
-            number[int(getMessage)-1]=' X '
-            upDate()
-        print('lllllllllllllllllllll')
-        print('getValue'+str(receiveMessage))
-        
-        # print_table(msg)
-    except ConnectionAbortedError:
-        print('deny access')#full player in server wait server reset
-        
-    except ConnectionResetError:
-        print("Server disconnected")
-        endGame = False
-        s.close()
+        except ConnectionResetError:
+            print("Server disconnected")
+            endGame = False
+            s.close()
         
     
-    if receiveMessage == 'disconnected':
-        print(opponent+" : "+receiveMessage)
-        endGame = False
-        s.close()
-        
-    else:
-        print(str(receiveMessage)+'\n')
-        clientPlay2(receiveMessage)
+        if receiveMessage == 'disconnected':
+            print(opponent+" : "+receiveMessage)
+            endGame = False
+            s.close()
+            
+        else:
+            print(str(receiveMessage)+'\n')
+            clientPlay2(receiveMessage)
     
     
     
@@ -664,9 +683,7 @@ def serverPlay(tmp):
             upDate()
             try:
                 c.send(tmp.encode('ascii'))
-                
                 statePlayer.set("Your turn")
-                
                 clientPlay(0)
             except ValueError:
                 print("Client disconnect")
@@ -832,7 +849,7 @@ def default(role):
         whatRole = 3
         count=0
         endGame = True
-        
+        txtName.configure(state='normal')
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print("CtoC mode")
         
@@ -913,7 +930,6 @@ def onButton():
 def communication():
     print('communication call')
     global numberToSend,count,allowServerSend,endGame
-   
     if whatRole == 1:
         if count== 10:
             s.close()
@@ -923,7 +939,6 @@ def communication():
             clientPlay(numberToSend)#server -1 แล้ว
             serverPlay(numberToSend)
             onButton()
-            
     elif whatRole == 2:
         if count== 10:
             c.close()
@@ -939,19 +954,16 @@ def communication():
                 serverPlay(numberToSend)
                 allowServerSend = False
     elif whatRole == 3:
+        print('role 3')
         if endGame:#=================================================================
             try:
                 sendMessage =  numberToSend
-                
-                if putSlot(sendMessage)==False:
-                    print("used")
-                    print_table(msg)
-                else:
-                    count+=1
-                    clientPlay1(sendMessage)
-                    if endGame:
-                        sendMessage = str(sendMessage)
-                        s.send(str.encode(sendMessage))
+                print('sendMessage'+str(sendMessage))
+                count+=1
+                clientPlay1(sendMessage)
+                if endGame:
+                    sendMessage = str(sendMessage)
+                    s.send(str.encode(sendMessage))
             
             except:
                 print("Server disconnected")
