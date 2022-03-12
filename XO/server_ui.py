@@ -620,9 +620,10 @@ def upDate():
 
 def default():
     global record,server,threadLock,CONNECTIONS_LIST,PORT,BUFSIZE
-    global msg,msg_monitor,nameSet
+    global msg,msg_monitor,nameSet,count,stopState
     hallOfFrame()
-    
+    stopState = False
+    count = 0
     nameSet = True 
     runnerServer = False
     player1Label.set('Name')
