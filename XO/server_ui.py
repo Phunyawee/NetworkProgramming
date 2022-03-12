@@ -26,7 +26,7 @@ try:
         exploreDataStatus = True
         j.close()
 except :
-    with open('./XO/statics.json','w') as file:
+    with open('statics.json','w',encoding='utf-8') as file:
         json.dump(getdata,file)
         file.close()
     print('New File created!')

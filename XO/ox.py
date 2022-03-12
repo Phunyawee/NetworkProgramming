@@ -368,7 +368,7 @@ def playWithClient():
                 upDate()
             print('lllllllllllllllllllll')
             print('getValue'+str(receiveMessage))
-            
+            statePlayer.set("Your turn")
             # print_table(msg)
         except ConnectionAbortedError:
             print('deny access')#full player in server wait server reset
