@@ -47,7 +47,7 @@ f0b = Frame(Tops,bg="powder blue",relief=SUNKEN)
 f0b.grid(row=0,column=2)
 
 lblHall = Label(f0b,font=('Microsoft YaHei Light',50,'bold'),
-                text="Hall of frame",fg="Blue",bd=10,background='powder blue')
+                text="Hall of Fame",fg="Blue",bd=10,background='powder blue')
 lblHall.grid(row=0,column=0)
 lblHall2 = Label(f0b,font=('Microsoft YaHei Light',40,'bold'),
                 text="Client",fg="Blue",bd=10,background='powder blue')
@@ -125,22 +125,15 @@ def EndGame(touch):
    # sendMessage = str(touch)
     socker.send(str.encode(str(touch)))
     socker.close()
+    default('CtoC')
 
 def check_CtoC(touch):
     global count
     global msg
     global useSlot,endGame,opponent,myself
     count=0
-    for i in msg:
-        if i.isnumeric()==False:
-            count+=1
-            if count == 9:
-                print ("   Draw !!!!!!!!!!!!!!")
-                EndGame(99)#sp case
-                default("CtoC")
-        else:
-            count = 0
-    #print('turn: '+str(count))
+    
+    print('turn: '+str(count))
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
@@ -148,69 +141,69 @@ def check_CtoC(touch):
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        default("CtoC")
+        
         
                      
-    if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
+    elif (msg[3] == msg[4]) and (msg[4] == msg[5]):        
         if (msg[3] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)
         if (msg[3] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        default("CtoC")
-    if (msg[6] == msg[7]) and (msg[7] == msg[8]):
+        
+    elif (msg[6] == msg[7]) and (msg[7] == msg[8]):
         if (msg[6] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch) 
         if (msg[6] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        default("CtoC")
-    if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
+    elif (msg[0] == msg[3]) and (msg[3] == msg[6]):        
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)  
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        default("CtoC")
-    if (msg[1] == msg[4]) and (msg[4] == msg[7]):
+    elif (msg[1] == msg[4]) and (msg[4] == msg[7]):
         if (msg[1] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")  
             EndGame(touch)  
         if (msg[1] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)  
-        default("CtoC")
-    if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
+    elif (msg[2] == msg[5]) and (msg[5] == msg[8]):        
         if (msg[2] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)
         if (msg[2] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        default("CtoC")
-    if (msg[0] == msg[4]) and (msg[4] == msg[8]):
+    elif (msg[0] == msg[4]) and (msg[4] == msg[8]):
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        default("CtoC")
-    if (msg[2] == msg[4]) and (msg[4] == msg[6]):
+                  
+    elif (msg[2] == msg[4]) and (msg[4] == msg[6]):
         if (msg[2] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
             EndGame(touch)  
         if (msg[2] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
-        default("CtoC")
-                        
-
-
-
+    else:
+        for i in msg:
+            if i.isnumeric()==False:
+                count+=1
+                if count == 9:
+                    print ("   Draw !!!!!!!!!!!!!!")
+                    EndGame(99)#sp case
+            else:
+                count = 0
 
 
 def clientPlay2(touch):#opponent
@@ -226,10 +219,11 @@ def clientPlay2(touch):#opponent
         position = 0
         for element in msg:#find element not x,y
             if element.isnumeric()==True:
-                (msg[int(position)]) = 'x'
+                (msg[int(position)]) = 'o'
                 putSlot(int(position))
-                endGame = False
-                print ("   Draw !!!!!!!!!!!!!!")
+                check_CtoC(position)
+                #endGame = False
+                #print ("   Draw !!!!!!!!!!!!!!")
                 socker.close()
                 break
             else:
@@ -276,6 +270,7 @@ def clientPlay1(touch):#my self
             if element.isnumeric()==True:
                 (msg[int(position)]) = 'o'
                 putSlot(int(position))
+                check_CtoC(position)
                 endGame = False
                 break
             else:
@@ -313,6 +308,7 @@ def playWithClient():
         print('endGame1')
         upDate()
         socker.close()
+        default('CtoC')
     else:
         try:
             print('receiveMessage')

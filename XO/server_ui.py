@@ -8,7 +8,16 @@ from tkinter import StringVar
 import tkinter.messagebox
 import socket
 import time
+import json
 
+exploreDataStatus = False
+try:
+    with open('statics.json','r',encoding='utf-8') as j:
+        getdata = json.load(j)
+        exploreDataStatus = True
+except FileNotFoundError:
+    exploreDataStatus = False
+    print('FileNotFoundError:')
 class Clock:
     def __init__(self):
         self.time1 = ''
@@ -25,6 +34,34 @@ class Clock:
         self.time2 = time.strftime('%H:%M:%S')
         self.watch.configure(text=self.time2)
         self.mFrame.after(200, self.changeLabel) #it'll call itself continuously
+
+#tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+def extract(x):
+    y = []
+    distance = 0 #name []
+    distance2 = 0 #number {}
+    state = False
+    state2 = False
+    for i in range(len(x)):
+        if x[i]=='[':
+            state = True
+        if x[i]==']':
+            state = False
+        if state:
+            distance+=1
+        if x[i]=='{':
+            state2 = True
+        if x[i]=='}':
+            state2 = False
+        if state2:
+            distance2+=1
+        
+    y.append(x[1:distance])
+    y.append(x[distance+2:distance+1+distance2])
+    distance = 0
+    distance2 = 0
+    return y
+#tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #Client
 root = Tk()
 root.geometry("1600x800+0+0")
@@ -90,12 +127,30 @@ text9 = StringVar()
 # lblRole3 = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
 #                 text="\t\t",fg="Blue",bd=10)
 # lblRole3.grid(row=1,column=2)
+def hallOfFrame():
+    if exploreDataStatus == False:
+        txtHall.insert(END,'No data')
+        txtHall.configure(state='disabled')
+    else:
+        pass
+
+
 
 def communication():
     pass
 
 def offButton():
-    pass
+    print('offButton')
+    btn1["state"] = "disabled"
+    btn2["state"] = "disabled"
+    btn3["state"] = "disabled"
+    btn4["state"] = "disabled"
+    btn5["state"] = "disabled"
+    btn6["state"] = "disabled"
+    btn7["state"] = "disabled"
+    btn8["state"] = "disabled"
+    btn9["state"] = "disabled"
+    return 0
 def closeGame():
     root.destroy()
     return 0
@@ -107,65 +162,37 @@ def playAgain():
 
 def disConnected():
     pass
-def default(mode):
+def default():
     pass
 Bottoms = Frame(root,width=1600,bg="powder blue",relief=SUNKEN)
 Bottoms.pack(side=BOTTOM)
 
 f1 = Frame(Bottoms,width=800,height=700,bg="",relief=SUNKEN)
-#f1.pack(side=LEFT)
-f1.grid(row=1,column=1)
+f1.grid(row=0,column=1)
 
 f2 = Frame(Bottoms,width=600,height=700,relief=SUNKEN)
-#f2.pack(side=LEFT)
-#f2.pack(side=RIGHT)
-f2.grid(row=1,column=2)
+f2.grid(row=0,column=2)
 f2.configure(background='powder blue')
 f3 = Frame(Bottoms,width=500,height=700,bg='powder blue')
-#f3.pack(side=RIGHT)
-f3.grid(row=1,column=3)
+f3.grid(row=0,column=3)
 lblInfox = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                text="ROW0\t      ",fg="Blue",bd=5,bg='powder blue')
+                text="      Hall of Fame",fg="Blue",bd=5,bg='powder blue')
 lblInfox.grid(row=0,column=0)
-lblRolex = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                text='ROW1\t      ',fg="Blue",bd=10,bg='powder blue')
-lblRolex.grid(row=1,column=0)
-lblRolex1 = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                text='ROW2\t      ',fg="Blue",bd=10,bg='powder blue')
-lblRolex1.grid(row=2,column=0)
-lblRolex2 = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                text='ROW3\t      ',fg="Blue",bd=10,bg='powder blue')
-lblRolex2.grid(row=3,column=0)
+txtHall = Text(f3,font=('TH Sarabun New',11,'bold'), bd=8,width=59,height=22,bg="powder blue")
+txtHall.grid(row=1,column=0)
+# lblRolex = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
+#                 text='ROW1\t      ',fg="Blue",bd=10,bg='powder blue')
+# lblRolex.grid(row=1,column=0)
+# lblRolex1 = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
+#                 text='ROW2\t      ',fg="Blue",bd=10,bg='powder blue')
+# lblRolex1.grid(row=2,column=0)
+# lblRolex2 = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
+#                 text='ROW3\t      ',fg="Blue",bd=10,bg='powder blue')
+#lblRolex2.grid(row=3,column=0)
 #f2.pack(side=RIGHT)
 chkTime = 0
 
-#tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-def extract(x):
-    y = []
-    distance = 0 #name []
-    distance2 = 0 #number {}
-    state = False
-    state2 = False
-    for i in range(len(x)):
-        if x[i]=='[':
-            state = True
-        if x[i]==']':
-            state = False
-        if state:
-            distance+=1
-        if x[i]=='{':
-            state2 = True
-        if x[i]=='}':
-            state2 = False
-        if state2:
-            distance2+=1
-        
-    y.append(x[1:distance])
-    y.append(x[distance+2:distance+1+distance2])
-    distance = 0
-    distance2 = 0
-    return y
-#tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 
 #==========================Fonts==========================================
 #font.Font(family='Helvetica', size=12, weight='bold')
@@ -190,37 +217,37 @@ btn1 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text1,width=btnWidth,
               height=btnHeight,
-              bg="#49A",command=lambda:btnClick(1))
+              bg="#49A")
 btn1.grid(row=3,column=0)
 
 btn2 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text2,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(2))
+              height=btnHeight,bg="#49A")
 btn2.grid(row=3,column=1)
 
 btn3 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text3,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(3))
+              height=btnHeight,bg="#49A")
 btn3.grid(row=3,column=2)
 #===============================Row4=======================================
 btn4 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text4,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(4))
+              height=btnHeight,bg="#49A")
 btn4.grid(row=4,column=0)
 
 btn5 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text5,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(5))
+              height=btnHeight,bg="#49A")
 btn5.grid(row=4,column=1)
 
 btn6 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text6,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(6))
+              height=btnHeight,bg="#49A")
 btn6.grid(row=4,column=2)
 
 #===============================Row3=======================================
@@ -228,19 +255,19 @@ btn6.grid(row=4,column=2)
 btn7 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text7,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(7))
+              height=btnHeight,bg="#49A")
 btn7.grid(row=5,column=0)
 
 btn8 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text8,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(8))
+              height=btnHeight,bg="#49A")
 btn8.grid(row=5,column=1)
 
 btn9 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text9,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(9))
+              height=btnHeight,bg="#49A")
 btn9.grid(row=5,column=2)
 
 btnSend = Button(f2,padx=16,pady=16,bd=8,fg="black",
@@ -286,5 +313,6 @@ filemenu.add_command(label="Exit", command = closeGame)
 root.config(menu=menubar)
 root.attributes('-fullscreen', True)  
 #root.resizable(False,False)
-default("Client")
+hallOfFrame()
+default()
 root.mainloop()  

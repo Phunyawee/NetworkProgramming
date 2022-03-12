@@ -252,10 +252,9 @@ class clientHandler(Thread):
                 except ConnectionAbortedError:
                     print('ConnectionAbortedError')
                     server.close()
-                    
                 except ConnectionResetError:
                     print("Client {%s} is offline"%self._address)
-                    broadCastingMessage(socket,("Client (%s) is offline" %self._address))
+                    #broadCastingMessage(socket,("Client (%s) is offline" %self._address))
                     print('!!!!!!!SSSSSS!!!!!!!')
                     packet = '['+self._name+']'+'{disconnected}' #send noti loss connect
                     record.countPlayer -= 1
