@@ -21,10 +21,19 @@ stopState = False
 BUFSIZE = 4096
 
 try:
+
+    #============================Sort data
     with open('statics.json','r') as j:
         getdata = json.load(j)
-        exploreDataStatus = True
         j.close()
+    sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
+    with open('statics.json','w') as file:
+        json.dump(sorted_dt,file)
+        file.close()
+    with open('statics.json','r') as j:
+        getdata = json.load(j)
+        j.close()
+    #============================Sort data
 except :
     with open('statics.json','w',encoding='utf-8') as file:
         json.dump(getdata,file)
@@ -221,11 +230,15 @@ def Monitor(touch,getNumPy,choose):#my self
             stopState = True
             stateServer.set('Server ready')
             chosen = getWinner
-            print(getdata)
+            #============================Sort data
+            with open('statics.json','r') as j:
+                getdata = json.load(j)
+                j.close()
             sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
             with open('statics.json','w') as file:
                 json.dump(sorted_dt,file)
                 file.close()
+            #============================Sort data
             with open('statics.json','r') as j:
                 getdata = json.load(j)
                 j.close()
