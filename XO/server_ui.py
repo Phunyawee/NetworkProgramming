@@ -21,7 +21,7 @@ stopState = False
 BUFSIZE = 4096
 
 try:
-    with open('statics.json','r',encoding='utf-8') as j:
+    with open('statics.json','r') as j:
         getdata = json.load(j)
         exploreDataStatus = True
         j.close()
@@ -153,6 +153,7 @@ def check():
     return 'None'
 def resetToDefault():
     print('resetToDefault')
+    statePlayer.set('')
     global gameRunning,msg,msg_monitor
     gameRunning = True
     msg = ['1','2','3','4','5','6','7','8','9']
@@ -231,7 +232,7 @@ def Monitor(touch,getNumPy,choose):#my self
                         break
             try:
 
-                with open('statics.json','w') as file:
+                with open('statics.json','w',encoding='utf-8') as file:
                     json.dump(getdata,file)
                     file.close()
             except FileNotFoundError:
