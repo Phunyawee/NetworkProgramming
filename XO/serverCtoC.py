@@ -11,15 +11,14 @@ from time import ctime
 
 count= 0
 gameRunning = True
+haveWinner = True
 def check():
     global count
     global msg,gameRunning,msg_monitor 
     global useSlot,endGame
     count+=1
     print("turn :"+str(count))
-    if count == 9:
-        gameRunning = False
-        return 'Draw'
+    
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):     
         gameRunning = False
         if (msg[0] == 'x'):
@@ -93,6 +92,11 @@ def check():
         if (msg[2] == 'o'):
             print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
             return record.player2
+    else:
+        if count == 9:
+            gameRunning = False
+            haveWinner = False
+        return 'Draw'
     return 'None'
 def resetToDefault():
     global gameRunning,msg,msg_monitor
@@ -151,7 +155,7 @@ def Monitor(touch,getNumPy,choose):#my self
     print_table_monitor(msg)
     getWinner = check()
     if gameRunning == False: 
-        if count == 9:
+        if count == 9 and haveWinner==False:
             print("Draw !!!!!")
         else:
             print (getWinner+" winner !!!")  
@@ -237,14 +241,31 @@ class clientHandler(Thread):
                     select = extractMessage[1]
                     print("console: "+ name + " select: "+select)
                     if gameRunning == True:
-                        if record.boolTable == True:
-                            record.player1 = str(name)
-                            record.boolTable = False
-                            Monitor(select,name,'x')
+                        if select == 99:
+                            position = 0
+                            for element in msg:#find element not x,y
+                                if element.isnumeric()==True:
+                                    if record.boolTable == True:
+                                        record.player1 = str(name)
+                                        record.boolTable = False
+                                        Monitor(position,name,'x')
+                                    else:
+                                        record.player2 = str(name)
+                                        record.boolTable = True
+                                        Monitor(position,name,'o')
+                                    
+                                    break
+                                else:
+                                    position +=1
                         else:
-                            record.player2 = str(name)
-                            record.boolTable = True
-                            Monitor(select,name,'o')
+                            if record.boolTable == True:
+                                record.player1 = str(name)
+                                record.boolTable = False
+                                Monitor(select,name,'x')
+                            else:
+                                record.player2 = str(name)
+                                record.boolTable = True
+                                Monitor(select,name,'o')
                    
                     broadcastMessage = str.encode(message)
                     socket.send(broadcastMessage)
