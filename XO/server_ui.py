@@ -221,6 +221,14 @@ def Monitor(touch,getNumPy,choose):#my self
             stopState = True
             stateServer.set('Server ready')
             chosen = getWinner
+            print(getdata)
+            sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
+            with open('statics.json','w') as file:
+                json.dump(sorted_dt,file)
+                file.close()
+            with open('statics.json','r') as j:
+                getdata = json.load(j)
+                j.close()
             if len(getdata)==0:
                 getdata[chosen]=1
             else:
@@ -232,7 +240,8 @@ def Monitor(touch,getNumPy,choose):#my self
                         break
             try:
 
-                with open('statics.json','w',encoding='utf-8') as file:
+                with open('statics.json','w') as file:#play first time
+                    getdata[chosen]=1
                     json.dump(getdata,file)
                     file.close()
             except FileNotFoundError:
