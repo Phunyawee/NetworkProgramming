@@ -6,32 +6,38 @@ from tkinter import *
 import tkinter.font as TkFont
 from tkinter import StringVar
 import tkinter.messagebox
+import codecs
 import time
 import json
-
-
+getdata = {}
+#start value
 count= 0
 gameRunning = True
 haveWinner = True
 nameSet = True 
 exploreDataStatus = False
+runnerServer = False
+stopState = False
+BUFSIZE = 4096
+
 try:
     with open('statics.json','r',encoding='utf-8') as j:
         getdata = json.load(j)
         exploreDataStatus = True
-except FileNotFoundError:
-    exploreDataStatus = False
-    print('FileNotFoundError:')
+        j.close()
+except :
+    with open('./XO/statics.json','w') as file:
+        json.dump(getdata,file)
+        file.close()
+    print('New File created!')
 class Clock:
     def __init__(self):
         self.time1 = ''
         self.time2 = time.strftime('%H:%M:%S')
         self.mFrame = Frame()
         self.mFrame.pack(side=TOP)
-
         self.watch = Label(self.mFrame, text=self.time2,font=('Microsoft YaHei Light',30,'bold'),fg="Blue",bg='powder blue')
         self.watch.pack()
-
         self.changeLabel() #first call it manually
 
     def changeLabel(self): 
@@ -75,7 +81,6 @@ def check():
     global useSlot,endGame
     count+=1
     print("turn :"+str(count))
-    
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):     
         gameRunning = False
         if (msg[0] == 'x'):
@@ -84,8 +89,6 @@ def check():
         if (msg[0] == 'o'):
             print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
             return record.player2
-       
-
     if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
         gameRunning = False
         if (msg[3] == 'x'):
@@ -94,7 +97,6 @@ def check():
         if (msg[3] == 'o'):
             print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
             return record.player2
-    
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
         gameRunning = False
         if (msg[6] == 'x'):
@@ -111,7 +113,6 @@ def check():
         if (msg[0] == 'o'):
             print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
             return record.player2
-      
     if (msg[1] == msg[4]) and (msg[4] == msg[7]):
         gameRunning = False
         if (msg[1] == 'x'):
@@ -120,8 +121,6 @@ def check():
         if (msg[1] == 'o'):
             print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
             return record.player2
-        
-       
     if (msg[2] == msg[5]) and (msg[5] == msg[8]):   
         gameRunning = False
         if (msg[2] == 'x'):
@@ -130,7 +129,6 @@ def check():
         if (msg[2] == 'o'):
             print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
             return record.player2
-        
     if (msg[0] == msg[4]) and (msg[4] == msg[8]):
         gameRunning = False
         if (msg[0] == 'x'):
@@ -139,8 +137,6 @@ def check():
         if (msg[0] == 'o'):
             print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
             return record.player2
-        
-                  
     if (msg[2] == msg[4]) and (msg[4] == msg[6]):
         gameRunning = False
         if (msg[2] == 'x'):
@@ -181,7 +177,7 @@ def print_table_monitor(msg_monitor):
     print ("") 
 
 def Monitor(touch,getNumPy,choose):#my self
-    global gameRunning
+    global gameRunning,getdata,stopState
     if touch == 'disconnected':
         touch = 0
     touch = int(touch)
@@ -221,7 +217,25 @@ def Monitor(touch,getNumPy,choose):#my self
         else:
             print (getWinner+" winner !!!")  
             statePlayer.set(getWinner+" winner !!!")
-            statePlayer.set('Server ready')
+            stopState = True
+            stateServer.set('Server ready')
+            chosen = getWinner
+            if len(getdata)==0:
+                getdata[chosen]=1
+            else:
+                for key in getdata:
+                    if chosen == key:
+                        tempWin = getdata[chosen]+1
+                        getdata[chosen]=tempWin
+                        
+                        break
+            try:
+
+                with open('statics.json','w') as file:
+                    json.dump(getdata,file)
+                    file.close()
+            except FileNotFoundError:
+                stateServer.set('FileNotFoundError')
 
 class chatRecord():
     def __init__(self):
@@ -278,7 +292,8 @@ class clientHandler(Thread):
                     name = extractMessage[0]
                     select = extractMessage[1]
                     print("console: "+ name + " select: "+select)
-                    statePlayer.set(name + " select: "+select)
+                    if stopState == False:
+                        statePlayer.set(name + " select: "+select)
                     if gameRunning == True:
                         if select == 99:
                             position = 0
@@ -294,14 +309,12 @@ class clientHandler(Thread):
                                         record.boolTable = True
                                         Monitor(position,name,'o')
                                         upDate()
-                                    
                                     break
                                 else:
                                     position +=1
                         else:
                             if record.boolTable == True:
                                 record.player1 = str(name)
-                            
                                 record.boolTable = False
                                 Monitor(select,name,'x')
                                 upDate()
@@ -333,7 +346,6 @@ class clientHandler(Thread):
                     if len(CONNECTIONS_LIST)==1:
                         record.data.clear()
                         record.countPlayer = 0
-                        
                         print(record.countPlayer)
                         print('Clear')
                         server.close()
@@ -349,7 +361,6 @@ class clientHandler(Thread):
         global nameSet
         print('run')
         try:
-            
             self._client.send(str.encode('Welcome to the TIC TAC TOE room'))
             self._name = bytes.decode(self._client.recv(BUFSIZE))#get name client
             print('-'*20)
@@ -362,19 +373,15 @@ class clientHandler(Thread):
             print('-'*20)
             #allMessage = self._record.getMessage(0)
             if self._numPlayer % 2== 0:#statrt game signal
-                
                 print('*'*10)
                 print('Game start')
                 i = 0
                 self._client.send(str.encode(str(i)))
                 print('*'*10)
-            
-               
             goto = True
         except ConnectionResetError:
                 print(str(self._address)+' disconnectedC\n')
                 packet = '['+self._name+']'+'{disconnected}' #send noti loss connect
-                
                 record.countPlayer -= 1
                 self._record.addMessage(packet)
                 threadLock.acquire()
@@ -382,13 +389,11 @@ class clientHandler(Thread):
                 threadLock.release()
                 self._client.close()
                 CONNECTIONS_LIST.remove(self._client)
-                
                 print('!!!!!!!AAAAA!!!!!!!')
                 print(CONNECTIONS_LIST)
                 if len(CONNECTIONS_LIST)==1:
                     record.data.clear()
                     record.countPlayer = 0
-                  
                     print(record.countPlayer)
                     print('Clear')
                     server.close()
@@ -403,10 +408,8 @@ class clientHandler(Thread):
                     if not message or message =='bye':
                         print(str(self._address)+' left chat\n')
                         packet = '['+self._name+']'+'{disconnected}' #send noti loss connect
-                        
                         self._record.addMessage(packet)
                         #====================send disconect
-                        
                         record.countPlayer -= 1
                         self.broadCastingMessage(self._client,packet)
                         threadLock.acquire()
@@ -415,13 +418,10 @@ class clientHandler(Thread):
                         print('!!!!!!!QQQQQ!!!!!!!')
                         CONNECTIONS_LIST.remove(self._client)
                         threadLock.release()
-                      
-                    
                         print('user '+str(CONNECTIONS_LIST))
                         if len(CONNECTIONS_LIST)==1:
                             record.data.clear()
                             record.countPlayer = 0
-                            
                             print(record.countPlayer)
                             print('Clear')
                             server.close()
@@ -430,7 +430,6 @@ class clientHandler(Thread):
                         break
                     else:
                         #message = message
-                        
                         message = '['+self._name+']'+'{'+message+'}' #send mess from c to c
                         self._record.addMessage(message)
                         #====================send disconect
@@ -438,13 +437,10 @@ class clientHandler(Thread):
                         self.broadCastingMessage(self._client,message)
                         threadLock.release()
                         #====================send disconect
-                
-                
-                
                 except ConnectionAbortedError and ConnectionResetError and OSError:
                     print(str(self._address)+' disconnected\n')
                     packet = '['+self._name+']'+'{disconnected}' #send noti loss connect
-                   
+
                     record.countPlayer -= 1
                     self._record.addMessage(packet)
                     threadLock.acquire()
@@ -452,7 +448,6 @@ class clientHandler(Thread):
                     threadLock.release()
                     self._client.close()
                     CONNECTIONS_LIST.remove(self._client)
-                    
                     print('!!!!!!!!!!!!!!!!!!!')
                     print(CONNECTIONS_LIST)
                     if len(CONNECTIONS_LIST)==1:
@@ -475,12 +470,11 @@ class clientHandler(Thread):
 root = Tk()
 root.geometry("1600x800+0+0")
 #root.attributes('-fullscreen', True)  
-root.title("Tic-tac-toe")
+root.title("Tic-tac-toe(Server)")
 root.configure(background='powder blue')
 messagetry = StringVar()
 modeNow = StringVar()
 modeMainFrame = StringVar()
-
 player1Label = StringVar()
 player2Label = StringVar()
 player1Label.set('Name')
@@ -541,14 +535,22 @@ text9 = StringVar()
 # lblRole3 = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
 #                 text="\t\t",fg="Blue",bd=10)
 # lblRole3.grid(row=1,column=2)
-BUFSIZE = 4096
+
+
+def setNameWinner(name):
+    global winner_name
+    pass
+
+
 
 def hallOfFrame():
-    if exploreDataStatus == False:
-        txtHall.insert(END,'No data')
-        txtHall.configure(state='disabled')
-    else:
-        pass
+    global getdata
+    txtHall.delete("1.0","end")
+    txtHall.insert(END,"Name"  +'\t\t\t\t\t'+  "Win" + '\n')
+    for played in getdata :
+            txtHall.insert(END,str(played)  +'\t\t\t\t\t   '+ str(getdata[played]) + '\n')
+    txtHall.configure(state='disabled')
+    
 
 
 
@@ -569,6 +571,9 @@ def offButton():
     btn9["state"] = "disabled"
     return 0
 def closeGame():
+    global server,runnerServer
+    if runnerServer:
+        server.close()
     root.destroy()
     return 0
 
@@ -616,24 +621,23 @@ def upDate():
 def default():
     global record,server,threadLock,CONNECTIONS_LIST,PORT,BUFSIZE
     global msg,msg_monitor,nameSet
+    hallOfFrame()
+    
     nameSet = True 
-
+    runnerServer = False
     player1Label.set('Name')
-    player2Label.set('Name')
-           
+    player2Label.set('Name')    
     msg_monitor = ['1','2','3','4','5','6','7','8','9']
     msg = ['1','2','3','4','5','6','7','8','9']
-    
     ip_Input.set('')
     port_Input.set('')
-    #HOSTNAME = gethostname()
-    #IPADDRESS = gethostbyname(gethostname())
     
 
 
 
 def startServer():
-    global threadLock,CONNECTIONS_LIST,server,record,msg_monitor,nameSet
+    global threadLock,CONNECTIONS_LIST,server,record,msg_monitor,nameSet,runnerServer
+    runnerServer = True
     resetToDefault()
     if (len(ip_Input.get())==0 or len(port_Input.get())==0) :
         print('No input')
@@ -649,7 +653,6 @@ def startServer():
             server = socket(AF_INET,SOCK_STREAM)
             server.bind(ADDRESS)
             server.listen(10)
-            
             CONNECTIONS_LIST.append(server)
             print('List')
             print(CONNECTIONS_LIST)
@@ -666,24 +669,27 @@ def startServer():
         print('player now:'+ str(record.returnCount()))
         gamePlay = True
         while(1):
-            if (record.returnCount())<2:
-                client,address = server.accept()
-                record.countPlayer+=1
-                print('Player: '+str(record.countPlayer))
-                print("...connected from:"+str(client)+" addr "+str(address))
-                
-                threadLock.acquire()
-                CONNECTIONS_LIST.append(client)
-                print('xxxxxxxxxxxxxxx')
-                print(CONNECTIONS_LIST)
-                threadLock.release()
-                handler = clientHandler(client,record,address)
-                handler.start()
-            else:
-                gamePlay=False
-                print('full')
-                break
-        stateServer.set('server currently running')
+            try:
+                if (record.returnCount())<2:
+                    client,address = server.accept()
+                    record.countPlayer+=1
+                    print('Player: '+str(record.countPlayer))
+                    print("...connected from:"+str(client)+" addr "+str(address))
+                    
+                    threadLock.acquire()
+                    CONNECTIONS_LIST.append(client)
+                    print('xxxxxxxxxxxxxxx')
+                    print(CONNECTIONS_LIST)
+                    threadLock.release()
+                    handler = clientHandler(client,record,address)
+                    handler.start()
+                else:
+                    gamePlay=False
+                    print('full')
+                    break
+            except OSError:
+                stateServer.set('detect error pls restart.')
+        stateServer.set('Server currently running')
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>server manage<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -701,7 +707,7 @@ f3.grid(row=0,column=3)
 lblInfox = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
                 text="      Hall of Fame",fg="Blue",bd=5,bg='powder blue')
 lblInfox.grid(row=0,column=0)
-txtHall = Text(f3,font=('TH Sarabun New',11,'bold'), bd=8,width=59,height=22,bg="powder blue")
+txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="powder blue")
 txtHall.grid(row=1,column=0)
 
 chkTime = 0
@@ -825,7 +831,8 @@ filemenu.add_command(label="Config",command=configuration)
 filemenu.add_command(label="End",command=disConnected)
 filemenu.add_command(label="Exit", command = closeGame)
 root.config(menu=menubar)
-#root.attributes('-fullscreen', True)  
+root.attributes('-fullscreen', True)  
 #root.resizable(False,False)
 hallOfFrame()
+upDate()
 root.mainloop()  

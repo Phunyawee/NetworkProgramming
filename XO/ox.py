@@ -8,7 +8,9 @@ from tkinter import StringVar
 import tkinter.messagebox
 import socket
 import time
+import json
 from turtle import update
+exploreDataStatus = True
 class Clock:
     def __init__(self):
         self.time1 = ''
@@ -25,6 +27,17 @@ class Clock:
         self.time2 = time.strftime('%H:%M:%S')
         self.watch.configure(text=self.time2)
         self.mFrame.after(200, self.changeLabel) #it'll call itself continuously
+
+
+try:
+    with open('statics.json','r',encoding='utf-8') as j:
+        getdata = json.load(j)
+        exploreDataStatus = True
+        j.close()
+except :
+    exploreDataStatus = False
+
+
 #Client
 root = Tk()
 root.geometry("1600x800+0+0")
@@ -93,7 +106,7 @@ f3.grid(row=1,column=3)
 lblInfox = Label(f3,font=('Microsoft YaHei Light',50,'bold'),
                 text="Hall of Fame",fg="Blue",bd=10,anchor='w',bg="powder blue")
 lblInfox.grid(row=0,column=0)
-txtHall = Text(f3,font=('TH Sarabun New',11,'bold'), bd=8,width=59,height=22,bg="powder blue")
+txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="powder blue")
 txtHall.grid(row=1,column=0)
 
 chkTime = 0
@@ -758,6 +771,7 @@ def changeModeClient():
     if configAllow == True:
         if(btnClient['text']=='On'):
             default('CtoC')
+            modeMainFrame.set('Client')
             txtName.configure(state='normal')
             btnClient['text']='Off'
         elif(btnClient['text']=='Off'):
@@ -818,9 +832,23 @@ def configuration():
     except:
         print('Tk exception')
 allowServerSend = False
+
+def hallOfFrame():
+    global getdata
+    txtHall.delete("1.0","end")
+    if exploreDataStatus:
+        txtHall.insert(END,"Name"  +'\t\t\t\t\t'+  "Win" + '\n')
+        for played in getdata :
+                txtHall.insert(END,str(played)  +'\t\t\t\t\t   '+ str(getdata[played]) + '\n')
+    else:
+        txtHall.insert(END,'No Data Detected')
+    txtHall.configure(state='disabled')
+
+
 #Default
 def default(role):
     print("default call")
+    hallOfFrame()
     # every global
     global ip_Input,port_Input
     #global role
@@ -1038,6 +1066,7 @@ def btnClick(numbers):
                     btnSend["state"]= "normal"
                     allowServerSend = True
     elif whatRole == 3:
+       statePlayer.set("wait opponent")
        if stateBtn[numbers-1]==False:
         if putSlot(numbers)==False:
             print("used")
@@ -1360,11 +1389,11 @@ menubar= Menu(root)
 filemenu = Menu(menubar, tearoff =0,font= 'Helvetica 30 bold')
 menubar.add_cascade(label="File",menu=filemenu)
 filemenu.add_command(label="Config",command=configuration)
-filemenu.add_command(label="test",command=playAgain)
 filemenu.add_command(label="End",command=disConnected)
 filemenu.add_command(label="Exit", command = closeGame)
 root.config(menu=menubar)
-#root.attributes('-fullscreen', True)  
+root.attributes('-fullscreen', True)  
 #root.resizable(False,False)
+hallOfFrame()
 default("Client")
 root.mainloop()  
