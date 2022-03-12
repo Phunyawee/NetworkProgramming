@@ -230,22 +230,27 @@ def Monitor(touch,getNumPy,choose):#my self
                 getdata = json.load(j)
                 j.close()
             if len(getdata)==0:
-                getdata[chosen]=1
+                try:
+                    with open('statics.json','w') as file:#play first time
+                        getdata[chosen]=1
+                        json.dump(getdata,file)
+                        file.close()
+                except FileNotFoundError:
+                    stateServer.set('FileNotFoundError')
             else:
                 for key in getdata:
                     if chosen == key:
                         tempWin = getdata[chosen]+1
                         getdata[chosen]=tempWin
+                        try:
+                            with open('statics.json','w') as file:#play first time
+                                json.dump(getdata,file)
+                                file.close()
+                        except FileNotFoundError:
+                            stateServer.set('FileNotFoundError')
                         
                         break
-            try:
-
-                with open('statics.json','w') as file:#play first time
-                    getdata[chosen]=1
-                    json.dump(getdata,file)
-                    file.close()
-            except FileNotFoundError:
-                stateServer.set('FileNotFoundError')
+            
 
 class chatRecord():
     def __init__(self):
