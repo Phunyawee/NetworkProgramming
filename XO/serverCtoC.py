@@ -152,7 +152,7 @@ def Monitor(touch,getNumPy,choose):#my self
         print("Server disconnect")
     except ConnectionResetError:
         print("Server disconnect")
-    print_table_monitor(msg)
+    print_table_monitor(msg_monitor)
     getWinner = check()
     if gameRunning == False: 
         if count == 9 and haveWinner==False:

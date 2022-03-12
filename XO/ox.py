@@ -9,6 +9,22 @@ import tkinter.messagebox
 import socket
 import time
 from turtle import update
+class Clock:
+    def __init__(self):
+        self.time1 = ''
+        self.time2 = time.strftime('%H:%M:%S')
+        self.mFrame = Frame()
+        self.mFrame.pack(side=TOP)
+
+        self.watch = Label(self.mFrame, text=self.time2,font=('Microsoft YaHei Light',30,'bold'),fg="Blue",bg='powder blue')
+        self.watch.pack()
+
+        self.changeLabel() #first call it manually
+
+    def changeLabel(self): 
+        self.time2 = time.strftime('%H:%M:%S')
+        self.watch.configure(text=self.time2)
+        self.mFrame.after(200, self.changeLabel) #it'll call itself continuously
 #Client
 root = Tk()
 root.geometry("1600x800+0+0")
@@ -29,29 +45,29 @@ lblInfo = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
                 text="TIC-TAC-TOE",fg="Blue",bd=10,background='powder blue')
 lblInfo.grid(row=0,column=0)
 lblRole = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
-                text="Client",fg="Blue",bd=10,background='powder blue')
+                textvariable=modeMainFrame,fg="Blue",bd=10,background='powder blue')
 lblRole.grid(row=1,column=0)
 #bank zone
 #===============================================================
 f0a = Frame(Tops,bg="powder blue",relief=SUNKEN)
 f0a.grid(row=0,column=1)
 lblAir = Label(f0a,font=('Microsoft YaHei Light',50,'bold'),
-                text="\t     ",fg="Blue",bd=10,background='powder blue')
-lblAir.grid(row=0,column=0)
+                text="\t",fg="Blue",bd=10,background='powder blue')
+lblAir.grid(row=1,column=0)
 lblAir2 = Label(f0a,font=('Microsoft YaHei Light',40,'bold'),
-                text="\t     ",fg="Blue",bd=10,background='powder blue')
+                text="\t",fg="Blue",bd=10,background='powder blue')
 lblAir2.grid(row=1,column=0)
 #===============================================================
 #hall
 f0b = Frame(Tops,bg="powder blue",relief=SUNKEN)
 f0b.grid(row=0,column=2)
-
+clock = Clock()
 lblHall = Label(f0b,font=('Microsoft YaHei Light',50,'bold'),
-                text="Hall of Fame",fg="Blue",bd=10,background='powder blue')
+                textvariable=str(clock),fg="Blue",background='powder blue')
 lblHall.grid(row=0,column=0)
 lblHall2 = Label(f0b,font=('Microsoft YaHei Light',40,'bold'),
-                text="Client",fg="Blue",bd=10,background='powder blue')
-lblHall2.grid(row=1,column=0)
+                text='\t'*2,fg="Blue",bd=10,background='powder blue')
+lblHall2.grid(row=2,column=0)
 
 
 
@@ -67,27 +83,19 @@ lblHall2.grid(row=1,column=0)
 
 Bottoms = Frame(root,width=1600,bg="powder blue",relief=SUNKEN)
 Bottoms.pack(side=BOTTOM)
-
 f1 = Frame(Bottoms,width=800,height=700,bg="",relief=SUNKEN)
-#f1.pack(side=LEFT)
 f1.grid(row=1,column=1)
-
 f2 = Frame(Bottoms,width=600,height=700,relief=SUNKEN)
-#f2.pack(side=LEFT)
-#f2.pack(side=RIGHT)
 f2.grid(row=1,column=2)
 f2.configure(background='powder blue')
-f3 = Frame(Bottoms,width=500,height=700,relief=SUNKEN)
-#f3.pack(side=RIGHT)
+f3 = Frame(Bottoms,width=500,height=700,relief=SUNKEN,bg="powder blue")
 f3.grid(row=1,column=3)
 lblInfox = Label(f3,font=('Microsoft YaHei Light',50,'bold'),
-                text="TIC-TAC-TOE",fg="Blue",bd=10,anchor='w')
+                text="Hall of Fame",fg="Blue",bd=10,anchor='w',bg="powder blue")
 lblInfox.grid(row=0,column=0)
-lblRolex = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                textvariable=modeMainFrame,fg="Blue",bd=10,anchor='w')
-lblRolex.grid(row=1,column=0)
+txtHall = Text(f3,font=('TH Sarabun New',11,'bold'), bd=8,width=59,height=22,bg="powder blue")
+txtHall.grid(row=1,column=0)
 
-#f2.pack(side=RIGHT)
 chkTime = 0
 
 #tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -302,7 +310,7 @@ def clientPlay1(touch):#my self
 
 
 def playWithClient():
-    global endGame,opponent,socker
+    global endGame,opponent,socker,receiveMessage
     
     if endGame==False:
         print('endGame1')
@@ -732,7 +740,6 @@ def configMode():
             default('Client')
             btnConfig['text']='Client'
         elif whatRole==3:
-
             txtName.configure(state='disabled',disabledbackground='powder blue')
             btnClient['text']='On'
             if recentRole == 1:
@@ -759,8 +766,6 @@ def changeModeClient():
                 default('Client')
             elif recentRole == 2:
                 default('Server')
-
-            
             btnClient['text']='On'
     else:
         print("Not allow")
@@ -790,7 +795,6 @@ def configuration():
         txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="powder blue")
         txtCh2.grid(row=1,column=0)
         if whatRole == 1:
-
             btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
             btnConfig.grid(row=0,column=1)
             btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=changeModeClient)
@@ -846,7 +850,6 @@ def default(role):
         allowServerSend = False
         whatRole = 2
         recentRole = whatRole
-        
         modeMainFrame.set('Server')
         modeNow.set('Client')
         txtName.configure(state='disabled',disabledbackground='powder blue')
@@ -857,7 +860,6 @@ def default(role):
         count=0
         endGame = True
         txtName.configure(state='normal')
-        
         print("CtoC mode")
         
         
@@ -1001,8 +1003,6 @@ def btnClick(numbers):
             default("Client")
             count=0
         else:
-
-
             if stateBtn[numbers-1]==False:
                 if putSlot(numbers)==False:
                     print("used")
