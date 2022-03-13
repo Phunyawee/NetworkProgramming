@@ -668,16 +668,21 @@ def default():
 
 def startServer():
     global threadLock,CONNECTIONS_LIST,server,record,msg_monitor,nameSet,runnerServer
-    runnerServer = True
+    
     resetToDefault()
     if (len(ip_Input.get())==0 or len(port_Input.get())==0) :
         print('No input')
+        stateServer.set('Error ip/port')
     else:
-
-        IPADDRESS =ip_Input.get()
-        PORT =  int(port_Input.get())
-        ADDRESS = (IPADDRESS,PORT)
-        CONNECTIONS_LIST = []
+        try:
+            runnerServer = True
+            IPADDRESS =ip_Input.get()
+            PORT =  int(port_Input.get())
+            ADDRESS = (IPADDRESS,PORT)
+            CONNECTIONS_LIST = []
+        except ValueError:
+            runnerServer = False
+            stateServer.set('invalid input')
         try:
             threadLock = threading.Lock()
             record = chatRecord()
@@ -688,8 +693,10 @@ def startServer():
             print('List')
             print(CONNECTIONS_LIST)
         except OSError:
+            runnerServer = False
             print('OSError')
         except TypeError:
+            runnerServer = False
             print('TypeError')
         print("Chat server started on IP Address : ",IPADDRESS)
         print("Chat server started on port : "+str(PORT))
@@ -706,7 +713,7 @@ def startServer():
                     record.countPlayer+=1
                     print('Player: '+str(record.countPlayer))
                     print("...connected from:"+str(client)+" addr "+str(address))
-                    
+                    runnerServer = True
                     threadLock.acquire()
                     CONNECTIONS_LIST.append(client)
                     print('xxxxxxxxxxxxxxx')
@@ -719,6 +726,7 @@ def startServer():
                     print('full')
                     break
             except OSError:
+                runnerServer = False
                 stateServer.set('detect error pls restart.')
         stateServer.set('Server currently running')
 
