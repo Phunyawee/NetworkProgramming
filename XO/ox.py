@@ -836,10 +836,13 @@ allowServerSend = False
 def hallOfFrame():
     global getdata
     txtHall.delete("1.0","end")
+    
     if exploreDataStatus:
-        txtHall.insert(END,"Name"  +'\t\t\t\t\t'+  "Win" + '\n')
+        ranking = 0
+        txtHall.insert(END,"Rank"+'\t\t'+"Name"  +'\t\t\t'+  "Win" + '\n')
         for played in getdata :
-                txtHall.insert(END,str(played)  +'\t\t\t\t\t   '+ str(getdata[played]) + '\n')
+                ranking += 1
+                txtHall.insert(END,str(ranking)+'\t\t'+str(played)  +'\t\t\t   '+ str(getdata[played]) + '\n')
     else:
         txtHall.insert(END,'No Data Detected')
     txtHall.configure(state='disabled')

@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb  3 14:45:33 2022
-6230300613
-@author: MISTER_M
-"""
 from socket import *
 from threading import Thread
 import threading
