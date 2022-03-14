@@ -19,7 +19,8 @@ exploreDataStatus = False
 runnerServer = False
 stopState = False
 BUFSIZE = 4096
-
+namelst=[]
+walklst=[]
 try:
 
     #============================Sort data
@@ -263,7 +264,15 @@ def Monitor(touch,getNumPy,choose):#my self
                             stateServer.set('FileNotFoundError')
                         
                         break
-            
+                else:
+                    try:
+                        with open('statics.json','w') as file:# add newplayer
+                            getdata[chosen]=1
+                            json.dump(getdata,file)
+                            file.close()
+                    except FileNotFoundError:
+                        stateServer.set('FileNotFoundError')
+                
 
 class chatRecord():
     def __init__(self):
@@ -320,7 +329,9 @@ class clientHandler(Thread):
                     name = extractMessage[0]
                     select = extractMessage[1]
                     print("console: "+ name + " select: "+select)
+                    
                     if stopState == False:
+                        addHistory(name,select)
                         statePlayer.set(name + " select: "+select)
                     if gameRunning == True:
                         if select == 99:
@@ -626,12 +637,38 @@ def offConnection():
 def configuration():
     print("configuration")
     pass
-def playAgain():
-    print("playAgain")
-    pass
-
-def disConnected():
-    print("disConnected")
+def addHistory(name,walk):
+    global namelst,walklst
+    print('addHistory call')
+    namelst.append(name)
+    walklst.append(walk)
+def logWalk():
+    print("logWalk call")
+    global txtWalk
+    try:
+        made = Toplevel(root)
+        made.geometry('400x500')
+        made.title("Config")
+        made.configure(bg="powder blue")
+        fr1 = Frame(made,width=1000,height=200,bg="powder blue",relief=SUNKEN)
+        fr1.pack(side=TOP)
+        txtWalkLabel = Label(fr1,text='History',font=('TH Sarabun New',17,'bold'),bg="powder blue")
+        txtWalkLabel.grid(row=0,column=0)
+        fr2 = Frame(made,width=1000,height=200,bg="powder blue",relief=SUNKEN)
+        txtWalk = Text(fr2,font=('TH Sarabun New',18,'bold'), bd=8,width=25,height=15,bg="powder blue")
+        txtWalk.grid(row=0,column=0)
+        txtWalk.insert(END,'=======================')
+        txtWalk.insert(END,'Name\t\tWalk\n')
+        for i in range(len(namelst)):
+            txtWalk.insert(END,str(namelst[i])+' \t\t'+str(walklst[i])+' \n')
+        txtWalk.configure(state='disabled')
+        namelst.clear()
+        walklst.clear()
+        fr2.pack(side=BOTTOM)
+        
+        made.mainloop()
+    except:
+        print('Tk exception')
     pass
 def upDate():
     print("update call")
@@ -650,7 +687,7 @@ def upDate():
 
 def default():
     global record,server,threadLock,CONNECTIONS_LIST,PORT,BUFSIZE
-    global msg,msg_monitor,nameSet,count,stopState
+    global msg,msg_monitor,nameSet,count,stopState,runnerServer
     hallOfFrame()
     stopState = False
     count = 0
@@ -749,6 +786,7 @@ lblInfox.grid(row=0,column=0)
 txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="powder blue")
 txtHall.grid(row=1,column=0)
 
+
 chkTime = 0
 
 
@@ -840,7 +878,8 @@ btnClear.grid(row=6,columnspan=3)
 lblReference = Label(f1,font=font1, text="State",
                      bd=16,anchor='w',bg="powder blue").grid(row=0,column=0)  
 txtReference = Entry(f1,font=font1,textvariable=stateServer,
-                     bd=10,insertwidth=4,bg='#49A',justify='right',state='disabled',disabledbackground='powder blue').grid(row=0,column=1)
+                     bd=10,insertwidth=4,bg='#49A',justify='right'
+                     ,state='disabled',disabledbackground='powder blue').grid(row=0,column=1)
 
 #-----------------------------------------------------------------------------------------------------
 lblIp = Label(f1,font=font1, text="ip"
@@ -865,10 +904,10 @@ btnTry = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
 btnTry.grid(row=8,column=1)
 menubar= Menu(root)
 filemenu = Menu(menubar, tearoff =0,font= 'Helvetica 30 bold')
-menubar.add_cascade(label="File",menu=filemenu)
-filemenu.add_command(label="Config",command=configuration)
-filemenu.add_command(label="End",command=disConnected)
+menubar.add_cascade(label="File",font= 'Helvetica 30 bold',menu=filemenu)
+filemenu.add_command(label="Walk History ",command=logWalk)
 filemenu.add_command(label="Exit", command = closeGame)
+
 root.config(menu=menubar)
 root.attributes('-fullscreen', True)  
 #root.resizable(False,False)

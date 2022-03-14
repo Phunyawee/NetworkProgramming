@@ -827,7 +827,8 @@ def configuration():
                 btnConfig.grid(row=0,column=1)
             btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
             btnClient.grid(row=1,column=1)
-        btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).pack(side=BOTTOM)
+        socket.AI_NUMERICSERV=Label(fr2,font=('Microsoft YaHei Light',11,'bold'),text='\n\n\n\n\n\n\n\n\n\n\n\n',bg='powder blue').grid(row=2,column=2)
+        btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).grid(row=2,column=2)
         made.mainloop()
     except:
         print('Tk exception')
