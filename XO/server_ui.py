@@ -45,7 +45,7 @@ class Clock:
         self.time1 = ''
         self.time2 = time.strftime('%H:%M:%S')
         self.mFrame = Frame()
-        self.mFrame.pack(side=TOP)
+        self.mFrame.pack()
         self.watch = Label(self.mFrame, text=self.time2,font=('Microsoft YaHei Light',30,'bold'),fg="Blue",bg='powder blue')
         self.watch.pack()
         self.changeLabel() #first call it manually
@@ -164,6 +164,8 @@ def check():
 def resetToDefault():
     print('resetToDefault')
     statePlayer.set('')
+    namelst.clear()
+    walklst.clear()
     global gameRunning,msg,msg_monitor
     gameRunning = True
     msg = ['1','2','3','4','5','6','7','8','9']
@@ -366,6 +368,9 @@ class clientHandler(Thread):
                     broadcastMessage = str.encode(message)
                     socket.send(broadcastMessage)
                     print('set==========================')
+                except RuntimeError:
+                    print('RuntimeError')
+                    server.close()
                 except ConnectionAbortedError:
                     print('ConnectionAbortedError')
                     server.close()
@@ -538,20 +543,20 @@ f0a.grid(row=0,column=2)
 lblAir = Label(f0a,font=('Microsoft YaHei Light',50,'bold'),
                 text="Player2",fg="Blue",bd=10,background='powder blue')
 lblAir.grid(row=0,column=0)
-lblAir2 = Label(f0a,font=('Microsoft YaHei Light',40,'bold'),
+lblRole2 = Label(f0a,font=('Microsoft YaHei Light',40,'bold'),
                 textvariable=player2Label,fg="Blue",bd=10,background='powder blue')
-lblAir2.grid(row=1,column=0)
+lblRole2.grid(row=1,column=0)
 #===============================================================
 #hall
 f0b = Frame(Tops,bg="powder blue",relief=SUNKEN)
 f0b.grid(row=0,column=1)
 
 lblHall = Label(f0b,font=('Microsoft YaHei Light',50,'bold'),
-                text="\tMonitor\t\t",fg="Blue",bd=10,background='powder blue')
+                text="\tMonitor\t\t",fg="Blue",background='powder blue')
 lblHall.grid(row=0,column=0)
 lblHall2 = Label(f0b,font=('Microsoft YaHei Light',40,'bold'),
-                textvariable=str(Clock()),fg="Blue",bd=10,background='powder blue')
-lblHall2.grid(row=1,column=0)
+                textvariable=str(Clock()),fg="Blue",background='powder blue')
+lblHall2.grid(row=2,column=0)
 
 statePlayer=StringVar()
 stateServer=StringVar()
@@ -580,7 +585,16 @@ def setNameWinner(name):
     global winner_name
     pass
 
-
+def clearHall():
+    End = tkinter.messagebox.askyesno("TIC TAC TOE","Confirm clear?")
+    if End > 0:
+        emptyDict = {}
+        with open('statics.json','w',encoding='utf-8') as file:
+            json.dump(emptyDict,file)
+            file.close()
+        print('clear hall data. ')
+        return
+    
 
 def hallOfFrame():
     global getdata
@@ -613,9 +627,13 @@ def offButton():
     return 0
 def closeGame():
     global server,runnerServer
-    if runnerServer:
-        server.close()
-    root.destroy()
+    End = tkinter.messagebox.askyesno("TIC TAC TOE","Confirm exit")
+    if End > 0:
+        if runnerServer:
+            server.close()
+        root.destroy()
+        return
+    
     return 0
 
 def onConnection():
@@ -658,12 +676,16 @@ def logWalk():
         txtWalk = Text(fr2,font=('TH Sarabun New',18,'bold'), bd=8,width=25,height=15,bg="powder blue")
         txtWalk.grid(row=0,column=0)
         txtWalk.insert(END,'=======================')
-        txtWalk.insert(END,'Name\t\tWalk\n')
+
+        
+        if len(namelst)==0:
+            txtWalk.insert(END,'No history\n')
+        else:
+            txtWalk.insert(END,'Name\t\tWalk\n')
         for i in range(len(namelst)):
             txtWalk.insert(END,str(namelst[i])+' \t\t'+str(walklst[i])+' \n')
+        txtWalk.insert(END,'=======================')
         txtWalk.configure(state='disabled')
-        namelst.clear()
-        walklst.clear()
         fr2.pack(side=BOTTOM)
         
         made.mainloop()
@@ -689,6 +711,7 @@ def default():
     global record,server,threadLock,CONNECTIONS_LIST,PORT,BUFSIZE
     global msg,msg_monitor,nameSet,count,stopState,runnerServer
     hallOfFrame()
+    
     stopState = False
     count = 0
     nameSet = True 
@@ -781,7 +804,7 @@ f2.configure(background='powder blue')
 f3 = Frame(Bottoms,width=500,height=700,bg='powder blue')
 f3.grid(row=0,column=3)
 lblInfox = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                text="      Hall of Fame",fg="Blue",bd=5,bg='powder blue')
+                text="Hall of Fame",fg="Blue",bd=5,bg='powder blue')
 lblInfox.grid(row=0,column=0)
 txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="powder blue")
 txtHall.grid(row=1,column=0)
@@ -906,6 +929,7 @@ menubar= Menu(root)
 filemenu = Menu(menubar, tearoff =0,font= 'Helvetica 30 bold')
 menubar.add_cascade(label="File",font= 'Helvetica 30 bold',menu=filemenu)
 filemenu.add_command(label="Walk History ",command=logWalk)
+filemenu.add_command(label="Clear hall of  fame",command=clearHall)
 filemenu.add_command(label="Exit", command = closeGame)
 
 root.config(menu=menubar)
