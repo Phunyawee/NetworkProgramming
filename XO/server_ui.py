@@ -725,7 +725,7 @@ def startServer():
             record = chatRecord()
             server = socket(AF_INET,SOCK_STREAM)
             server.bind(ADDRESS)
-            server.listen(10)
+            server.listen(2)
             CONNECTIONS_LIST.append(server)
             print('List')
             print(CONNECTIONS_LIST)
