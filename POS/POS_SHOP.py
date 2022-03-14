@@ -3,92 +3,32 @@ import time
 import json
 from ftplib import FTP
 import codecs
-
 hour = ""
 minute= ""
 second= ""
+shopname = ""
 #===========================================TMP SHOP================================================================
 
 
 
 #================================FTP Server============================================================
 def downloadFile(ftp,filename):
-    filename = 'NetProScore.txt'
     localfile = open(filename,'wb')
     ftp.retrbinary('RETR '+filename,localfile.write,1024)
     localfile.close()
 
 def uploadFile(ftp,filename):
     ftp.encoding="utf-8"
-    filename = '6230300923.txt'
     ftp.storbinary('STOR '+filename,open(filename,'rb'))
 
 def ConnectFTPServer(FTPServer,Username,Password):
+    global ftp
     try:
-        with open('LoginFTPServer.json','r') as j:
-            FTPLogin = json.load(j)
-            print("FTPServer:", FTPServer)
-            print("Username:", Username)
-            print("Password:", Password)
-
         ftp = FTP(FTPServer)
         ftp.login(user=Username,passwd = Password)
         ftp.retrlines('LIST')
-        try:
-            downloadFile()
-        except:
-            print("File not found")
-
-        Dict_Allscore = {}
-        try:
-            input = open("NetProScore.txt")
-            for line in input:
-                no, id, Score_P1, Score_P2 = line.split()
-                Dict_Allscore[id] = int(Score_P1)+int(Score_P2)
-        except ValueError:
-            print("ValueError")
-        except NameError:
-            print("NameError")
-
-        AllScore = Dict_Allscore.values()
-        Max_Score = max(AllScore)
-        Min_Score = min(AllScore)
-        Avg_Score = int(sum(AllScore)/len(AllScore))
-        My_Score = int(Dict_Allscore["6230300923"])
-
-        try:
-            outfile = codecs.open('6230300923.txt',"w","utf-8")
-
-            outfile.write("คะเเนนสูงสุด "+str(Max_Score)+" คะเเนน\n")
-            outfile.write("คะเเนนต่ำสุด "+str(Min_Score)+" คะเเนน\n")
-            outfile.write("คะเเนนเฉลี่ย "+str(Avg_Score)+" คะเเนน\n")
-            outfile.write("รหัส 6230300923 ได้คะเนนรวม "+str(My_Score)+" คะเเนน\n")
-            outfile.write("ได้น้อยกว่าคะเเนนสูงสุด "+ str(Max_Score-My_Score)+" คะเเนน\n")
-            outfile.write("ได้มากกว่ากว่าคะเเนนต่ำสุด "+ str(My_Score-Min_Score)+" คะเเนน\n")
-            if My_Score >= Avg_Score:
-                outfile.write("ได้มากกว่าคะเเนนเฉลี่ย "+str(My_Score-Avg_Score)+" คะเเนน\n")
-            else:
-                outfile.write("ได้น้อยกว่าคะเเนนเฉลี่ย "+str(Avg_Score-My_Score)+" คะเเนน\n")
-            outfile.close()
-        except IOError:
-            print("IOError")
-        except NameError:
-            print("NameError")
-
-        try:
-            ftp.mkd('6230300923')
-            ftp.cwd('6230300923')
-
-        except:
-            ftp.cwd('6230300923')
-
-        try:
-            uploadFile()
-        except FileNotFoundError:
-            print("No such file or directory")
-
+        ftp.cwd('FTP')
         ftp.retrlines('LIST')
-        ftp.quit()
     except TimeoutError:
         print("TimeoutError")
     except ConnectionRefusedError:
@@ -161,7 +101,7 @@ def clock():
 def Running():
     shopname_Output.set("กรุณาตั้งชื่อร้านของคุณ")
     loginbtn_Input.set("login")
-    text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tสถานะ\n")
+    text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tร้าน\tสถานะ\n")
     Receipt()
 
 #General Function
@@ -171,11 +111,12 @@ jsonDict =  {"id":"SE015",
              "Email":"suphapong.b@ku.th",
              "Telno":"0956321391"}
 
-def CarDict(order,carPlate,timeIn,cost,status):
+def CarDict(order,carPlate,timeIn,cost,shop,status):
     jsonDict =  {"order":order,
                  "carPlate":carPlate,
                  "timeIn":timeIn,
                  "cost":cost,
+                 "shop":shop,
                  "status":status}
     return jsonDict
 
@@ -212,9 +153,10 @@ def toggleText(varBtn,txt1,txt2):
         password_entry.config(state='normal')
         ShowLogin("logout เสร็จสิ้น")
 
-
 def Login():
+    global shopname
     showlogin_Output.set("")
+    shopname = shopname_Input.get()
     ftpServer = ftpserver_Input.get()
     username = username_Input.get()
     password = password_Input.get()
@@ -222,14 +164,15 @@ def Login():
     #FTPServer(ftpServer,username,password)
 
     if(CheckSpace(shopname_Input.get()) & CheckSpace(ftpServer) & CheckSpace(username) & CheckSpace(password)):
-        shopname_Output.set(shopname_Input.get())
+        ConnectFTPServer(ftpServer,username,password)
+        shopname_Output.set(shopname)
         shopname_entry.config(state='disabled')
         ftpserver_entry.config(state='disabled')
         username_entry.config(state='disabled')
         password_entry.config(state='disabled')
-        ShowLogin("สำเร็จ")
         toggleText(loginbtn_Input,"login","logout")
-        print()
+        ShowLogin("login to FTP Server สำเร็จ !")
+        print("login สำเร็จ")
     else:
         showlogin_Output.set("กรุณากรอกให้ครบ")
 
@@ -240,24 +183,52 @@ def Login():
 
 #f2 Function
 dict_arr = []
+carplateList = []
 car_order = -1
+
+def CheckCarPlate(customer):
+    global carplateList
+    userdata = ReadFile('Check.json')
+    for car in userdata:
+        if car["carPlate"] == customer:
+            if car["status"] == 1:
+                print(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
+                carrecent_Output.set(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
+            else:
+                carplateList.append(customer)
+                print(str(customer)+" เพิ่มไปเเล้ว")
+                #carrecent_Output.set(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
+                return True
+    return False
+
+
+
 def Summit():
-    global dict_arr
+    global dict_arr, car_order, shopname
     license = license_Input.get()
     cost  = amount_Input.get()
 
     if(CheckSpace(license) & CheckSpace(cost)):
-        timeIn = hour+":"+minute+":"+second
-        carrecent_Output.set(timeIn+" ทบล: "+license+" จ่าย: "+cost+" บาท")
-        dict_arr = ReadFile('Write.json')
-        dict_arr.append(CarDict((car_order+1),license,timeIn,cost,0))
-        WriteFile('Write.json',dict_arr)
-        Receipt()
-        print(dict_arr)
+            if CheckCarPlate(license):
+                print("car_order",car_order)
+                timeIn = hour+":"+minute+":"+second
+                carrecent_Output.set(timeIn+" ทบล: "+license+" จ่าย: "+cost+" บาท")
+                dict_arr = ReadFile('Write.json')
+                car_order = int(dict_arr[len(dict_arr)-1]["order"])+1
+                dict_arr.append(CarDict(car_order,license,timeIn,cost,shopname,0))
+                WriteFile('Write.json',dict_arr)
+                Receipt()
+                print(dict_arr)
 
-        #Clear & Reset
-        license_Input.set("")
-        amount_Input.set("")
+                uploadFile(ftp,'Write.json')
+                print('Write.json ถูกอัปเเล้ว')
+                ftp.retrlines('LIST')
+
+                #Clear & Reset
+                license_Input.set("")
+                amount_Input.set("")
+            else:
+                carrecent_Output.set(license+" ไม่มีทะเบียนนี้อยู่ในระบบ")
 
     else:
         root = Tk()
@@ -275,11 +246,13 @@ def Summit():
 def Receipt():
     data = ReadFile('Write.json')
     text_Receipt.delete("1.0","end")
-    text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tสถานะ\n")
+    text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tร้าน\t\t      สถานะ\n")
     for list in data:
         print(list["order"])
+        print(list["shop"])
         text_Receipt.insert(END,str(list["order"])+"           "+str(list["timeIn"])+
-                            "\t\t"+str(list["carPlate"])+"\t   "+str(list["cost"])+"\t "+str(list["status"])+"\n")
+                            "\t\t"+str(list["carPlate"])+"\t   "+str(list["cost"])+
+                            "\t"+str(list["shop"])+"\t\t       "+str(list["status"])+"\n")
 
 
 #--------------------------------TOPS-------------------------------
@@ -361,8 +334,8 @@ send_btn = Button(f2,padx=30, fg="black",font=('TH Sarabun New',18,'bold'),width
 label_Receipt = Label(f3,font=('TH Sarabun New',20,'bold'),
                       text="ประวัติ",bd=2,justify='right')
 label_Receipt.grid(column=0,row=1,sticky=W)
-text_Receipt = Text(f3,font=('TH Sarabun New',14,'bold'),
-                    bd=5,width=50,height=30,bg="#e5dcdc")
+text_Receipt = Text(f3,font=('TH Sarabun New',12,'bold'),
+                    bd=5,width=60,height=30,bg="#e5dcdc")
 text_Receipt.grid(column=0,row=2,sticky=W)
 
 

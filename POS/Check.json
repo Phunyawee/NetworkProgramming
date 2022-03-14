@@ -1,0 +1,23 @@
+[
+  {
+    "order": 0,
+    "carPlate": "111",
+    "timeIn": "21:13:15",
+    "cost": "1000",
+    "status": 1
+  },
+  {
+    "order": 1,
+    "carPlate": "222",
+    "timeIn": "21:13:27",
+    "cost": "2000",
+    "status": 0
+  },
+  {
+    "order": 2,
+    "carPlate": "333",
+    "timeIn": "21:13:27",
+    "cost": "2000",
+    "status": 0
+  }
+]

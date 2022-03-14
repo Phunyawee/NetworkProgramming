@@ -3,63 +3,32 @@
         "order": 0,
         "carPlate": "a",
         "timeIn": "18:54:11",
-        "cost": "aa",
+        "cost": "500",
+        "shop": "shop1",
         "status": 0
     },
     {
-        "order": 0,
-        "carPlate": "a",
-        "timeIn": "18:54:13",
-        "cost": "aa",
-        "status": 0
-    },
-    {
-        "order": 0,
-        "carPlate": "b",
-        "timeIn": "18:57:16",
-        "cost": "b",
-        "status": 0
-    },
-    {
-        "order": 0,
-        "carPlate": "s",
-        "timeIn": "19:00:15",
-        "cost": "s",
-        "status": 0
-    },
-    {
-        "order": 0,
-        "carPlate": "s",
-        "timeIn": "19:00:16",
-        "cost": "s",
-        "status": 0
-    },
-    {
-        "order": 0,
-        "carPlate": "s",
-        "timeIn": "19:00:17",
-        "cost": "s",
-        "status": 0
-    },
-    {
-        "order": 0,
-        "carPlate": "\u0e01\u0e02 4000",
-        "timeIn": "19:01:36",
-        "cost": "5000",
-        "status": 0
-    },
-    {
-        "order": 0,
-        "carPlate": "555",
-        "timeIn": "19:03:23",
+        "order": 1,
+        "carPlate": "222",
+        "timeIn": "22:38:38",
         "cost": "1000",
+        "shop": "shop2",
         "status": 0
     },
     {
-        "order": 0,
-        "carPlate": "111",
-        "timeIn": "19:05:39",
-        "cost": "222",
+        "order": 2,
+        "carPlate": "222",
+        "timeIn": "22:38:52",
+        "cost": "2000",
+        "shop": "shop3",
+        "status": 0
+    },
+    {
+        "order": 3,
+        "carPlate": "333",
+        "timeIn": "22:56:50",
+        "cost": "77",
+        "shop": "\u0e44\u0e2d\u0e49\u0e42\u0e2d\u0e21",
         "status": 0
     }
 ]
