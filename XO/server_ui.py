@@ -87,7 +87,7 @@ msg_monitor = ['1','2','3','4','5','6','7','8','9']
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>server manage<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 def check():
     global count
-    global msg,gameRunning,msg_monitor 
+    global msg,gameRunning,msg_monitor
     global useSlot,endGame
     count+=1
     print("turn :"+str(count))
@@ -189,7 +189,7 @@ def print_table_monitor(msg_monitor):
     print (" "+str(msg_monitor[6])+" |"+str(msg_monitor[7])+"|"+str(msg_monitor[8])+" ")
     print ("") 
 
-def Monitor(touch,getNumPy,choose):#my self
+def Monitor(touch,getNamePlayer,choose):#my self
     global gameRunning,getdata,stopState
     if touch == 'disconnected':
         touch = 0
@@ -200,9 +200,28 @@ def Monitor(touch,getNumPy,choose):#my self
     print("Monitor")
     
     if touch == 99:
-        pass
+        print('draw occur')
+        position = 0
+        for element in msg:#find element not x,y
+            if element.isnumeric()==True:
+                print('element not x,y'+str(position))
+                if record.boolTable == True:
+                    record.player1 = str(getNamePlayer)
+                    record.boolTable = False
+                    Monitor(position+1,getNamePlayer,'x')
+                    upDate()
+                else:
+                    record.player2 = str(getNamePlayer)
+                    record.boolTable = True
+                    
+                    Monitor(position+1,getNamePlayer,'o')
+                    upDate()
+                break
+            else:
+                position +=1
     elif touch != 0:
-        (msg_monitor[int(touch)-1]) = getNumPy
+        addHistory(getNamePlayer,touch)
+        (msg_monitor[int(touch)-1]) = getNamePlayer
         (msg[int(touch)-1]) = choose
         #====================================AttributeError: 'int' object has no attribute 'encode'
         #touch = str(touch)
@@ -332,36 +351,23 @@ class clientHandler(Thread):
                     select = extractMessage[1]
                     print("console: "+ name + " select: "+select)
                     
-                    if stopState == False:
-                        addHistory(name,select)
+                    if stopState == False: 
                         statePlayer.set(name + " select: "+select)
                     if gameRunning == True:
                         if select == 99:
-                            position = 0
-                            for element in msg:#find element not x,y
-                                if element.isnumeric()==True:
-                                    if record.boolTable == True:
-                                        record.player1 = str(name)
-                                        record.boolTable = False
-                                        Monitor(position,name,'x')
-                                        upDate()
-                                    else:
-                                        record.player2 = str(name)
-                                        record.boolTable = True
-                                        Monitor(position,name,'o')
-                                        upDate()
-                                    break
-                                else:
-                                    position +=1
+                            pass
                         else:
+                            print('continue')
                             if record.boolTable == True:
                                 record.player1 = str(name)
                                 record.boolTable = False
+                                
                                 Monitor(select,name,'x')
                                 upDate()
                             else:
                                 record.player2 = str(name)
                                 record.boolTable = True
+                                
                                 Monitor(select,name,'o')
                                 upDate()
                    
