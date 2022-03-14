@@ -103,7 +103,10 @@ def Running():
     loginbtn_Input.set("login")
     text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tร้าน\tสถานะ\n")
     Receipt()
-
+    license_plate_entry .config(state='disabled')
+    amount_entry .config(state='disabled')
+    send_btn.config(state='disabled')
+    refresh_btn.config(state='disabled')
 #General Function
 jsonDict =  {"id":"SE015",
              "carPlate":"532eaabd9574880dbf76b9b8cc00832c20a6ec113d682299550d7a6e0f345e25",
@@ -170,7 +173,14 @@ def Login():
         ftpserver_entry.config(state='disabled')
         username_entry.config(state='disabled')
         password_entry.config(state='disabled')
+
+        license_plate_entry .config(state='normal')
+        amount_entry .config(state='normal')
+        send_btn.config(state='normal')
+        refresh_btn.config(state='normal')
+
         toggleText(loginbtn_Input,"login","logout")
+        downloadFile(ftp,'Write.json')
         ShowLogin("login to FTP Server สำเร็จ !")
         print("login สำเร็จ")
     else:
@@ -242,8 +252,11 @@ def Summit():
         root.mainloop()
 
     print(shopname_Output)
-#f3 Function
 
+def Refresh():
+    downloadFile(ftp,'Write.json')
+
+#f3 Function
 def Receipt():
     data = ReadFile('Write.json')
     text_Receipt.delete("1.0","end")
@@ -329,8 +342,12 @@ amount_entry = Entry(f2,font=('TH Sarabun New',20,'bold'),
 amount_entry.grid(columnspan=4,row=5,sticky=N)
 
 send_btn = Button(f2,padx=30, fg="black",font=('TH Sarabun New',18,'bold'),width=8,
-                    text="ส่ง",command=lambda:Summit()).grid(padx=20, pady=20,columnspan=4,row=6)
+                    text="ส่ง",command=lambda:Summit())
+send_btn .grid(padx=20, pady=20,columnspan=4,row=6)
 
+refresh_btn = Button(f2,padx=30, fg="black",font=('TH Sarปabun New',18,'bold'),width=8,
+                  text="รีเฟรช",command=lambda:Refresh())
+refresh_btn.grid(padx=20, pady=20,columnspan=4,row=7)
 #------------------------f3 Right-----------------------------
 label_Receipt = Label(f3,font=('TH Sarabun New',20,'bold'),
                       text="ประวัติ",bd=2,justify='right')
