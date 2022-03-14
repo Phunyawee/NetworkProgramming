@@ -204,7 +204,7 @@ def Monitor(touch,getNamePlayer,choose):#my self
         position = 0
         for element in msg:#find element not x,y
             if element.isnumeric()==True:
-                print('element not x,y'+str(position))
+                print('element not x,y : '+str(position))
                 if record.boolTable == True:
                     record.player1 = str(getNamePlayer)
                     record.boolTable = False
@@ -672,7 +672,7 @@ def logWalk():
     try:
         made = Toplevel(root)
         made.geometry('400x500')
-        made.title("Config")
+        made.title("Walk log")
         made.configure(bg="powder blue")
         fr1 = Frame(made,width=1000,height=200,bg="powder blue",relief=SUNKEN)
         fr1.pack(side=TOP)
@@ -693,7 +693,7 @@ def logWalk():
         txtWalk.insert(END,'=======================')
         txtWalk.configure(state='disabled')
         fr2.pack(side=BOTTOM)
-        
+        made.resizable(False,False)
         made.mainloop()
     except:
         print('Tk exception')
