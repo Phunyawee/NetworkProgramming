@@ -1,0 +1,65 @@
+[
+    {
+        "order": 0,
+        "carPlate": "a",
+        "timeIn": "18:54:11",
+        "cost": "aa",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "a",
+        "timeIn": "18:54:13",
+        "cost": "aa",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "b",
+        "timeIn": "18:57:16",
+        "cost": "b",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "s",
+        "timeIn": "19:00:15",
+        "cost": "s",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "s",
+        "timeIn": "19:00:16",
+        "cost": "s",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "s",
+        "timeIn": "19:00:17",
+        "cost": "s",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "\u0e01\u0e02 4000",
+        "timeIn": "19:01:36",
+        "cost": "5000",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "555",
+        "timeIn": "19:03:23",
+        "cost": "1000",
+        "status": 0
+    },
+    {
+        "order": 0,
+        "carPlate": "111",
+        "timeIn": "19:05:39",
+        "cost": "222",
+        "status": 0
+    }
+]
