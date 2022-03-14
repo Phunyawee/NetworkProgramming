@@ -426,7 +426,10 @@ def default():
     
     record = chatRecord()
     server = socket(AF_INET,SOCK_STREAM)
+    
     server.bind(ADDRESS)
+    
+
     server.listen(10)
     
     CONNECTIONS_LIST.append(server)

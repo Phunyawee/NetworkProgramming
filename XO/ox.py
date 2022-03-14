@@ -11,6 +11,7 @@ import time
 import json
 from turtle import update
 exploreDataStatus = True
+unpredict = True
 class Clock:
     def __init__(self):
         self.time1 = ''
@@ -659,7 +660,7 @@ def whoWin(winner):
 
 def serverPlay(tmp):
     print("serverPlay")
-    global msg
+    global msg,unpredict
     global count
     
     if whatRole == 1:
@@ -672,6 +673,11 @@ def serverPlay(tmp):
         else:    
             try:
                 tmp = s.recv(20)
+                if tmp == 'unknown':
+                    statePlayer.set("pls check mode")
+                    stateServer.set("pls check mode")
+                    s.close()
+                
                 putSlot(int(tmp))
                 print(useSlot)
                 (msg[int(tmp)-1]) = 'o'
@@ -680,7 +686,13 @@ def serverPlay(tmp):
                 print(number)
                 upDate()
             except ValueError:
-                print("ValueError")
+                 
+                 s.close()
+
+                 default('client')
+                 stateServer.set('detect error')
+                 unpredict =True
+                 
             except ConnectionAbortedError:
                 print("ConnectionAbortedError") 
             except UnboundLocalError:
@@ -718,9 +730,9 @@ def serverPlay(tmp):
                 print("Client disconnect")
             except ConnectionResetError :
                 print("Client disconnect")
-        
-    print_table(msg)
-    check()
+    if unpredict==False:
+        print_table(msg)
+        check()
 
 #OX code =======================================================================
 #Variable
@@ -854,7 +866,7 @@ def default(role):
     print("default call")
     hallOfFrame()
     # every global
-    global ip_Input,port_Input
+    global ip_Input,port_Input,unpredict
     #global role
     # 1 = client
     # 2 = server
@@ -868,6 +880,7 @@ def default(role):
     #global client to client 
     global endGame,ADDRESS,name,userName,state,socker
     global opponent,myself
+    unpredict =False
     if role == "Client":
         print("Client mode")
         whatRole = 1
@@ -918,6 +931,7 @@ def default(role):
     number = ['    ','    ','    ','    ','    ','    ','    ','    ','    ']
     stateBtn=[False,False,False,False,False,False,False,False,False]
     onConnection()
+    offButton()
     btnSend["state"]= "disabled"
     stateServer.set("Input Ip/Port")
 
@@ -970,7 +984,7 @@ def onButton():
 
 def communication():
     print('communication call')
-    global numberToSend,count,allowServerSend,endGame
+    global numberToSend,count,allowServerSend,endGame,unpredict
     if whatRole == 1:
         if count== 10:
             s.close()
@@ -979,7 +993,8 @@ def communication():
         else:
             clientPlay(numberToSend)#server -1 แล้ว
             serverPlay(numberToSend)
-            onButton()
+            if unpredict==False:
+                onButton()
     elif whatRole == 2:
         if count== 10:
             c.close()
@@ -1125,152 +1140,162 @@ def getStart(playTime):
                 if playTime == 1:
                     server = ip_Input.get()
                     port = int(port_Input.get())
-                    ip_recent = ip_Input.get()
-                    port_recent = port_Input.get()
-                elif playTime == 2:
-                    time.sleep(10)
-                    server = ip_recent
-                    port = int(port_recent)
-                    ip_Input.set(server)
-                    port_Input.set(port_recent)
-                    default("Client")
+                    if port >1025 and port < 65535:
+                        try:
+                            connected = False  
+                            #s.connect((server, port))
+                            tryToConnect = 0
+                            while not connected:  
+                            # attempt to reconnect, otherwise sleep for 2 seconds  
+                                try:  
+
+                                    s.connect((server, port))
+                                    connected = True  
+                                    print( "re-connection successful" )  
+                                except socket.error: 
+                                    stateServer.set("try to connect")
+                                    print( "connect failed" )   
+                                    tryToConnect+=1
+                                    time.sleep(1)
+                                    if tryToConnect == 3:
+                                        try:
+                                            c.close()
+                                        except NameError:
+                                            stateServer.set('try again')
+                                except TypeError:
+                                    stateServer.set('invalid input')
+                               
+                            onButton()
+                            offConnection()
+                            stateServer.set("Welcome to XO Game")
+                            statePlayer.set("Your turn")
+                        except TimeoutError:
+                            stateServer.set("Server not response")
+                            print("TimeoutError")
+                            actionWindow("ip/port error")
+                        except ConnectionRefusedError:
+                            stateServer.set("Server not response")
+                            print("ConnectionRefusedError ")
+                            actionWindow("ip/port error")
+                        except ConnectionResetError :
+                            stateServer.set("Server not response")
+                            print("ConnectionResetError")
+                            actionWindow("ip/port error")
+                        except OSError:
+                            stateServer.set("Server not response")
+                            print("OSError")
+                            actionWindow("ip/port error")
+                        
+                        except UnboundLocalError:
+                            stateServer.set("Server not response")
+                            print("UnboundLocalError ")
+                            actionWindow("ip/port error")
+                        
+                    else:
+                        stateServer.set("invalid input")
+            except TypeError:
+                stateServer.set("invalid input")
             except ValueError:
-                stateServer.set("Server not response")
-            try:
-                connected = False  
-                #s.connect((server, port))
-                while not connected:  
-                # attempt to reconnect, otherwise sleep for 2 seconds  
-                    try:  
-                        s.connect((server, port))
-                        connected = True  
-                        print( "re-connection successful" )  
-                    except socket.error: 
-                        stateServer.set("try to connect")
-                        print( "connect failed" )   
-                        time.sleep(2)
-                onButton()
-                offConnection()
-                stateServer.set("Welcome to XO Game")
-                statePlayer.set("Your turn")
-            except TimeoutError:
-                stateServer.set("Server not response")
-                print("TimeoutError")
-                actionWindow("ip/port error")
-            except ConnectionRefusedError:
-                stateServer.set("Server not response")
-                print("ConnectionRefusedError ")
-                actionWindow("ip/port error")
-            except ConnectionResetError :
-                stateServer.set("Server not response")
-                print("ConnectionResetError")
-                actionWindow("ip/port error")
-            except OSError:
-                stateServer.set("Server not response")
-                print("OSError")
-                actionWindow("ip/port error")
+                stateServer.set("invalid input")
             
-            except UnboundLocalError:
-                stateServer.set("Server not response")
-                print("UnboundLocalError ")
-                actionWindow("ip/port error")
             
         elif whatRole == 2:
-            try:
+           
                 if playTime == 1:
                     ip = ip_Input.get()
                     port = int(port_Input.get())
-                    ip_recent = ip_Input.get()
-                    port_recent = int(port_Input.get())
-                elif playTime == 2:
-                    ip = ip_recent
-                    port = port_recent
-                    ip_Input.set(ip)
-                    port_Input.set(port)
-                    default("Server")
-                serversocket.bind((ip, port))
-                serversocket.listen(5)
-            except ValueError:
-                stateServer.set("Server not response")
-            try:
-                c,addr = serversocket.accept()
-                offButton()
-                offConnection()
-                stateServer.set("Welcome to XO Game")
-                statePlayer.set("your turn")
-                clientPlay(0)
-                #upDate()
-                #onButton()
-            # sentToServer()
-            except TimeoutError:
-                stateServer.set("Client not response")
-                print("TimeoutError")
-                actionWindow("ip/port error")
-            except ConnectionRefusedError:
-                stateServer.set("Client not response")
-                print("ConnectionRefusedError ")
-                actionWindow("ip/port error")
-            except ConnectionResetError :
-                stateServer.set("Client not response")
-                print("ConnectionResetError")
-                actionWindow("ip/port error")
-            except OSError:
-                stateServer.set("Client not response")
-                print("OSError")
-                actionWindow("ip/port error")
+                    if port <1025 or port > 65535:
+                        port = "x"
+
+                    try:
+                        ip = ip_Input.get()
+                        port = int(port_Input.get())
+                        ip_recent = ip_Input.get()
+                        port_recent = port_Input.get()
+                    except TypeError:
+                        stateServer.set("invalid input")
+
+                        
+                      
+                    try:
+                        serversocket.bind((ip, port))
+                        serversocket.listen(5)
+                        c,addr = serversocket.accept()
+                        offButton()
+                        offConnection()
+                        stateServer.set("Welcome to XO Game")
+                        statePlayer.set("your turn")
+                        clientPlay(0)
+                
+                    except TimeoutError:
+                        stateServer.set("ip/port error")
+                        print("TimeoutError")
+                        actionWindow("ip/port error")
+                    except ConnectionRefusedError:
+                        stateServer.set("ip/port error")
+                        print("ConnectionRefusedError ")
+                        actionWindow("ip/port error")
+                    except ConnectionResetError :
+                        stateServer.set("ip/port error")
+                        print("ConnectionResetError")
+                        actionWindow("ip/port error")
+                    except OSError:
+                        stateServer.set("ip/port error")
+                        print("OSError")
+                        actionWindow("ip/port error")
         if whatRole == 3:
             server = ip_Input.get()
             port = int(port_Input.get())
             nameOfPlayer = name_Input.get()
-            for scan in nameOfPlayer:
-                if scan =='[' or scan == ']' or scan == '{' or scan == '}':
-                    print('forbidden')
-                    name_Input.set("")
-                    nameOfPlayer=""
-                    allowPlay = False
-                    actionWindow("Name can't contain [ ] or {""}")
-                else:
-                    print('Allow Connect')
-                    allowPlay = True
-            if allowPlay:
-           
-                try:
-                    ADDRESS = (server,port)
-                    socker.connect(ADDRESS)
-                    statePlayer.set("Your turn")
-                    print('pass')
-                except:
-                    print('reconect')
-                else:
-                    print('end connecting')
-                    
-                try:
-                    messageFromServer = bytes.decode(socker.recv(4096))
-                    print('messageFromServer'+str(messageFromServer))
-                    name = nameOfPlayer
-                    myself = nameOfPlayer
-                    userName = str.encode(name)
-                    state_CtoC = True
-                    socker.send(userName)
-                    offButton()
-                    offConnection()
-                except ConnectionResetError:
-                    print("Server disconnected")
-                    state_CtoC = False
-                except OSError:
-                    stateServer.set("Pls re-open this mode")
-                    print("OSError ")
-                    state_CtoC = False
-                if state_CtoC:
-                    playWithClient()
-                
-            #print("Name: "+nameOfPlayer)
+            if len(nameOfPlayer)==1 and nameOfPlayer.isnumeric():
+                print('forbidden')
+                name_Input.set("")
+                nameOfPlayer=""
+                allowPlay = False
+                actionWindow("Name can't 1 number")
+            else:
+                for scan in nameOfPlayer:
+                    if scan =='[' or scan == ']' or scan == '{' or scan == '}':
+                        print('forbidden')
+                        name_Input.set("")
+                        nameOfPlayer=""
+                        allowPlay = False
+                        actionWindow("Name can't contain [ ] or {""}")
+                    else:
+                        print('Allow Connect')
+                        allowPlay = True
+                if allowPlay:
             
-        # except UnboundLocalError:
-            #  stateServer.set("Client not response")
-            #  print("UnboundLocalError ")
-            # actionWindow("ip/port error")
-    
+                    try:
+                        ADDRESS = (server,port)
+                        socker.connect(ADDRESS)
+                        statePlayer.set("Your turn")
+                        print('pass')
+                    except:
+                        print('reconect')
+                    else:
+                        print('end connecting')
+                        
+                    try:
+                        messageFromServer = bytes.decode(socker.recv(4096))
+                        print('messageFromServer'+str(messageFromServer))
+                        name = nameOfPlayer
+                        myself = nameOfPlayer
+                        userName = str.encode(name)
+                        state_CtoC = True
+                        socker.send(userName)
+                        offButton()
+                        offConnection()
+                    except ConnectionResetError:
+                        print("Server disconnected")
+                        state_CtoC = False
+                    except OSError:
+                        stateServer.set("Pls re-open this mode")
+                        print("OSError ")
+                        state_CtoC = False
+                    if state_CtoC:
+                        playWithClient()
+            
     
 #==========================Fonts==========================================
 #font.Font(family='Helvetica', size=12, weight='bold')

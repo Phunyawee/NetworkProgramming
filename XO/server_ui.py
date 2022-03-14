@@ -10,6 +10,7 @@ import codecs
 import time
 import json
 getdata = {}
+getStatic = {}
 #start value
 count= 0
 gameRunning = True
@@ -34,9 +35,15 @@ try:
     with open('statics.json','r') as j:
         getdata = json.load(j)
         j.close()
+    with open('statics_players.json','r') as j:
+        getStatic = json.load(j)
+        j.close()
     #============================Sort data
 except :
     with open('statics.json','w',encoding='utf-8') as file:
+        json.dump(getdata,file)
+        file.close()
+    with open('statics_players.json','w',encoding='utf-8') as file:
         json.dump(getdata,file)
         file.close()
     print('New File created!')
@@ -81,6 +88,54 @@ def extract(x):
     distance = 0
     distance2 = 0
     return y
+def TheTrain(x):
+    result = []
+    distance = 0
+    distanceWin = 0
+    distancelose = 0
+    distancedraw = 0
+    state = False
+    stateWin = False
+    statelose = False
+    statedraw = False
+    for i in range(len(x)):
+        if x[i]=='[':
+            state = True
+        if x[i]==']':
+            state = False
+        if state:
+            distance+=1
+
+        if x[i]=='{':
+            stateWin = True
+        if x[i]=='}':
+            stateWin = False
+        if stateWin:
+            distanceWin+=1
+
+        if x[i]=='<':
+            statelose = True
+        if x[i]=='>':
+            statelose = False
+        if statelose:
+            distancelose+=1
+
+        if x[i]=='(':
+            statedraw = True
+        if x[i]==')':
+            statedraw = False
+        if statedraw:
+            distancedraw+=1
+        
+    result.append(x[1:distance])
+    result.append(x[distance+2:distance+1+distanceWin])
+    result.append(x[distance+1+distanceWin+2:distance+1+distanceWin+1+distancelose])
+    result.append(x[distance+1+distanceWin+1+distancelose+2:distance+1+distanceWin+1+distancelose+1+distancedraw])
+    distance = 0
+    distanceWin = 0
+    distancelose = 0
+    distancedraw = 0
+    return result
 #tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 msg = ['1','2','3','4','5','6','7','8','9']
 msg_monitor = ['1','2','3','4','5','6','7','8','9']
@@ -88,7 +143,7 @@ msg_monitor = ['1','2','3','4','5','6','7','8','9']
 def check():
     global count
     global msg,gameRunning,msg_monitor
-    global useSlot,endGame
+    global useSlot,endGame,haveWinner
     count+=1
     print("turn :"+str(count))
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):     
@@ -248,51 +303,88 @@ def Monitor(touch,getNamePlayer,choose):#my self
 
         else:
             print (getWinner+" winner !!!")  
+            loser=""
+            if getWinner==record.player1:
+                print('loser :'+ str(record.player2))
+                loser =  str(record.player2)
+            else:
+                print('loser : '+ str(record.player1))
+                loser =  str(record.player2)
+
             statePlayer.set(getWinner+" winner !!!")
             stopState = True
             stateServer.set('Server ready')
             chosen = getWinner
-            #============================Sort data
-            with open('statics.json','r') as j:
-                getdata = json.load(j)
-                j.close()
-            sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
-            with open('statics.json','w') as file:
-                json.dump(sorted_dt,file)
-                file.close()
-            #============================Sort data
-            with open('statics.json','r') as j:
-                getdata = json.load(j)
-                j.close()
-            if len(getdata)==0:
-                try:
-                    with open('statics.json','w') as file:#play first time
-                        getdata[chosen]=1
-                        json.dump(getdata,file)
-                        file.close()
-                except FileNotFoundError:
-                    stateServer.set('FileNotFoundError')
-            else:
-                for key in getdata:
-                    if chosen == key:
-                        tempWin = getdata[chosen]+1
-                        getdata[chosen]=tempWin
-                        try:
+            if chosen != 'Draw':
+                #============================Sort data
+                with open('statics.json','r') as j:
+                    getdata = json.load(j)
+                    j.close()
+                sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
+                with open('statics.json','w') as file:
+                    json.dump(sorted_dt,file)
+                    file.close()
+                #============================Sort data
+                with open('statics.json','r') as j:
+                    getdata = json.load(j)
+                    j.close()
+                if len(getdata)==0:
+                    try:#firstime play
+                        with open('statics.json','w') as file:#play first time
+                            getdata[chosen]=1
+                            json.dump(getdata,file)
+                            file.close()
+                        with open('statics.json','w') as file:#play first time
+                            getdata[loser]=0
+                            json.dump(getdata,file)
+                            file.close()   
+                            
+                        with open('statics_players.json','w') as file:#play first time
+                            getdata[chosen]='[1]{1}<0>(0)'
+                            json.dump(getdata,file)
+                            file.close()
+                        with open('statics_players.json','w') as file:#play first time
+                            getdata[loser]='[1]{0}<1>(0)'
+                            json.dump(getdata,file)
+                            file.close()
+                            
+                            
+                    except FileNotFoundError:
+                        stateServer.set('FileNotFoundError')
+                else:#other time
+                    for key in getdata:
+                        if chosen == key:
+                            tempWin = getdata[chosen]+1
+                            getdata[chosen]=tempWin
+                            try:
+                                with open('statics.json','w') as file:#play first time
+                                    json.dump(getdata,file)
+                                    file.close()
+                            except FileNotFoundError:
+                                stateServer.set('FileNotFoundError')
+                            
+                            break
+                    else:#not exist in file
+                        try:#firstime play
                             with open('statics.json','w') as file:#play first time
+                                getdata[chosen]=1
+                                json.dump(getdata,file)
+                                file.close()
+                            with open('statics.json','w') as file:#play first time
+                                getdata[loser]=0
+                                json.dump(getdata,file)
+                                file.close()   
+                                
+                            with open('statics_players.json','w') as file:#play first time
+                                getdata[chosen]='[1]{1}<0>(0)'
+                                json.dump(getdata,file)
+                                file.close()
+                            with open('statics_players.json','w') as file:#play first time
+                                getdata[loser]='[1]{0}<1>(0)'
                                 json.dump(getdata,file)
                                 file.close()
                         except FileNotFoundError:
                             stateServer.set('FileNotFoundError')
-                        
-                        break
-                else:
-                    try:
-                        with open('statics.json','w') as file:# add newplayer
-                            getdata[chosen]=1
-                            json.dump(getdata,file)
-                            file.close()
-                    except FileNotFoundError:
-                        stateServer.set('FileNotFoundError')
                 
 
 class chatRecord():
@@ -415,6 +507,12 @@ class clientHandler(Thread):
             self._name = bytes.decode(self._client.recv(BUFSIZE))#get name client
             print('-'*20)
             print(str(self._name)+ '  joined the game')
+            if (self._name).isnumeric()==True:
+                if 1<= int(self._name) and int(self._name)<10:
+                    self.broadCastingMessage(self._client,'unknown')
+                    record.countPlayer=3
+                    server.close()
+                
             if nameSet:
                 nameSet = False
                 player1Label.set(self._name)
@@ -744,11 +842,14 @@ def startServer():
             runnerServer = True
             IPADDRESS =ip_Input.get()
             PORT =  int(port_Input.get())
+            if PORT <1025 or PORT > 65535:
+                PORT = "x"
             ADDRESS = (IPADDRESS,PORT)
             CONNECTIONS_LIST = []
         except ValueError:
             runnerServer = False
             stateServer.set('invalid input')
+    
         try:
             threadLock = threading.Lock()
             record = chatRecord()
@@ -758,21 +859,28 @@ def startServer():
             CONNECTIONS_LIST.append(server)
             print('List')
             print(CONNECTIONS_LIST)
+            gamePlay = True
         except OSError:
             runnerServer = False
-            print('OSError')
+            stateServer.set('Ip/port already in use')
+            gamePlay = False
         except TypeError:
             runnerServer = False
+            gamePlay = False
             print('TypeError')
-        print("Chat server started on IP Address : ",IPADDRESS)
-        print("Chat server started on port : "+str(PORT))
+            stateServer.set('invalid input')
+        if gamePlay:
+            print("Chat server started on IP Address : ",IPADDRESS)
+            print("Chat server started on port : "+str(PORT))
+            
+            offConnection()
+            #====================================
+            print('Waiting for connection...')
+            print('player now:'+ str(record.returnCount()))
+            stateServer.set('Server currently running')
+
         
-        offConnection()
-        #====================================
-        print('Waiting for connection...')
-        print('player now:'+ str(record.returnCount()))
-        gamePlay = True
-        while(1):
+        while(gamePlay):
             try:
                 if (record.returnCount())<2:
                     client,address = server.accept()
@@ -794,8 +902,9 @@ def startServer():
             except OSError:
                 runnerServer = False
                 stateServer.set('detect error pls restart.')
-        stateServer.set('Server currently running')
-
+                server.close()
+                onConnection()
+        
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>server manage<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 Bottoms = Frame(root,width=1600,bg="powder blue",relief=SUNKEN)
