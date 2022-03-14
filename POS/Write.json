@@ -1,13 +1,5 @@
 [
     {
-        "order": 0,
-        "carPlate": "a",
-        "timeIn": "18:54:11",
-        "cost": "500",
-        "shop": "shop1",
-        "status": 0
-    },
-    {
         "order": 1,
         "carPlate": "222",
         "timeIn": "22:38:38",
@@ -18,17 +10,9 @@
     {
         "order": 2,
         "carPlate": "222",
-        "timeIn": "22:38:52",
-        "cost": "2000",
-        "shop": "shop3",
-        "status": 0
-    },
-    {
-        "order": 3,
-        "carPlate": "333",
-        "timeIn": "22:56:50",
-        "cost": "77",
-        "shop": "\u0e44\u0e2d\u0e49\u0e42\u0e2d\u0e21",
+        "timeIn": "23:48:08",
+        "cost": "1000",
+        "shop": "ohmShop",
         "status": 0
     }
 ]

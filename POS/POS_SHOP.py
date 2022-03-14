@@ -207,6 +207,7 @@ def Summit():
     global dict_arr, car_order, shopname
     license = license_Input.get()
     cost  = amount_Input.get()
+    downloadFile(ftp,'Write.json')
 
     if(CheckSpace(license) & CheckSpace(cost)):
             if CheckCarPlate(license):
@@ -246,13 +247,13 @@ def Summit():
 def Receipt():
     data = ReadFile('Write.json')
     text_Receipt.delete("1.0","end")
-    text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tร้าน\t\t      สถานะ\n")
+    text_Receipt.insert(END,"ลำดับ      เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\t     ร้าน\t\t      สถานะ\n")
     for list in data:
         print(list["order"])
         print(list["shop"])
-        text_Receipt.insert(END,str(list["order"])+"           "+str(list["timeIn"])+
+        text_Receipt.insert(END,"   "+str(list["order"])+"         "+str(list["timeIn"])+
                             "\t\t"+str(list["carPlate"])+"\t   "+str(list["cost"])+
-                            "\t"+str(list["shop"])+"\t\t       "+str(list["status"])+"\n")
+                            " ฿\t     "+str(list["shop"])+"\t\t       "+str(list["status"])+"\n")
 
 
 #--------------------------------TOPS-------------------------------
