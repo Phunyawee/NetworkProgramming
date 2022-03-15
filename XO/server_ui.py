@@ -228,6 +228,7 @@ def check():
 def resetToDefault():
     print('resetToDefault')
     statePlayer.set('')
+
     namelst.clear()
     walklst.clear()
     playerCollector.clear()
@@ -970,11 +971,12 @@ def upDate():
 
 
 def default():
+    print('default call')
     global record,server,threadLock,CONNECTIONS_LIST,PORT,BUFSIZE
     global msg,msg_monitor,nameSet,count,stopState,runnerServer
     global getdata,getStatic
     #hallOfFrame()
-    
+    stateServer.set('Server ready')
     stopState = False
     count = 0
     nameSet = True 

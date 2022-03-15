@@ -9,7 +9,7 @@ import tkinter.messagebox
 import socket
 import time
 import json
-from turtle import update
+from turtle import clear, update
 exploreDataStatus = True
 unpredict = True
 class Clock:
@@ -68,12 +68,26 @@ lblRole.grid(row=1,column=0)
 #===============================================================
 f0a = Frame(Tops,bg="powder blue",relief=SUNKEN)
 f0a.grid(row=0,column=1)
-lblAir = Label(f0a,font=('Microsoft YaHei Light',50,'bold'),
-                text="\t",fg="Blue",bd=10,background='powder blue')
-lblAir.grid(row=1,column=0)
-lblAir2 = Label(f0a,font=('Microsoft YaHei Light',40,'bold'),
-                text="\t",fg="Blue",bd=10,background='powder blue')
+lblAir = Label(f0a,font=('Microsoft YaHei Light',25,'bold'),
+                text="\t\t\tMode",fg="Blue",bd=10,background='powder blue')
+lblAir.grid(row=0,column=0)
+lblAir2 = Label(f0a,font=('Microsoft YaHei Light',25,'bold'),
+                text="\t\tClient to Client",fg="Blue",bd=10,background='powder blue')
 lblAir2.grid(row=1,column=0)
+
+
+
+
+
+
+
+
+# lblAir3 = Label(f0a,font=('Microsoft YaHei Light',30,'bold'),
+#                 text="Button1",fg="Blue",bd=10,background='powder blue')
+# lblAir3.grid(row=1,column=1)
+# lblAir4 = Label(f0a,font=('Microsoft YaHei Light',30,'bold'),
+#                 text="Button2",fg="Blue",bd=10,background='powder blue')
+# lblAir4.grid(row=2,column=1)
 #===============================================================
 #hall
 f0b = Frame(Tops,bg="powder blue",relief=SUNKEN)
@@ -465,8 +479,9 @@ def check():
     print("check")
     global count
     global msg
-    global useSlot,c
-    if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
+    global useSlot,c,allowButton
+    if (msg[0] == msg[1]) and (msg[1] == msg[2]):     
+        allowButton = False
         if (msg[0] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
             whoWin(1)            
@@ -483,7 +498,8 @@ def check():
             messagetry.set('')
             playAgain() 
             default("Server")   
-    if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
+    if (msg[3] == msg[4]) and (msg[4] == msg[5]):  
+        allowButton = False      
         if (msg[3] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
             whoWin(1)
@@ -501,6 +517,7 @@ def check():
             playAgain() 
             default("Server")
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
+        allowButton = False
         if (msg[6] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
             whoWin(1)            
@@ -517,7 +534,8 @@ def check():
             c.close()   
             playAgain()
             default("Server")               
-    if (msg[0] == msg[3]) and (msg[3] == msg[6]):        
+    if (msg[0] == msg[3]) and (msg[3] == msg[6]): 
+        allowButton = False       
         if (msg[0] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
             whoWin(1)
@@ -535,6 +553,7 @@ def check():
             playAgain()
             default("Server")          
     if (msg[1] == msg[4]) and (msg[4] == msg[7]):
+        allowButton = False
         if (msg[1] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
             whoWin(1)            
@@ -551,7 +570,8 @@ def check():
             messagetry.set('')
             playAgain()
             default("Server")       
-    if (msg[2] == msg[5]) and (msg[5] == msg[8]):        
+    if (msg[2] == msg[5]) and (msg[5] == msg[8]): 
+        allowButton = False       
         if (msg[2] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
             whoWin(1)
@@ -569,6 +589,7 @@ def check():
             playAgain()
             default("Server")    
     if (msg[0] == msg[4]) and (msg[4] == msg[8]):
+        allowButton = False
         if (msg[0] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")  
             whoWin(1)          
@@ -586,6 +607,7 @@ def check():
             playAgain()
             default("Server")                       
     if (msg[2] == msg[4]) and (msg[4] == msg[6]):
+        allowButton = False
         if (msg[2] == 'x'):
             print ("Client WIN !!!!!!!!!!!!!!")
             whoWin(1)          
@@ -651,6 +673,11 @@ def clientPlay(tmp):
             print("Server disconnect")
             statePlayer.set("Server disconnect")
             default("Client")
+        except OSError:
+            print("Server disconnect")
+            statePlayer.set("Server disconnect")
+            offButton()
+            clearButton()
     elif whatRole == 2:
         count+=1
         print("Count"+str(count))
@@ -669,6 +696,7 @@ def clientPlay(tmp):
                 number[int(tmpS)-1]=' O '
                 print(number)
                 upDate()
+                
                 onButton()
             except ValueError:
                 print("ValueError")
@@ -711,7 +739,7 @@ def whoWin(winner):
 
 def serverPlay(tmp):
     print("serverPlay")
-    global msg,unpredict
+    global msg,unpredict,allowButton
     global count
     
     if whatRole == 1:
@@ -751,7 +779,9 @@ def serverPlay(tmp):
             except ConnectionResetError :
                 print("ConnectionResetError")
             except OSError :
-                print("OSError")
+                print('OSError')
+                unpredict =True
+                allowButton = False
     elif whatRole == 2:
         count+=1
         print("Count"+str(count))
@@ -783,7 +813,9 @@ def serverPlay(tmp):
                 print("Client disconnect")
     if unpredict==False:
         print_table(msg)
-        check()
+        if allowButton:
+            print('<=====>')
+            check()
 
 #OX code =======================================================================
 #Variable
@@ -834,7 +866,7 @@ def changeModeClient():
     if configAllow == True:
         if(btnClient['text']=='On'):
             default('CtoC')
-            modeMainFrame.set('Client')
+            modeMainFrame.set('Client to Client')
             txtName.configure(state='normal')
             btnClient['text']='Off'
         elif(btnClient['text']=='Off'):
@@ -848,53 +880,53 @@ def changeModeClient():
         print("Not allow")
     
 configAllow = True
-def configuration():
-    print("configuration call")
-    global btnConfig,btnClient
-    def close():
-        changeModeLabel.set("")
-        made.destroy()
-    try:
-        made = Toplevel(root)
-        made.geometry('300x300')
-        made.title("Config")
-        made.configure(bg="powder blue")
-        fr1 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
-        fr1.pack(side=TOP)
-        txtLabel=Label(fr1,font=('Microsoft YaHei Light',13,'bold'),text="Config",bg="powder blue")
-        txtLabel.grid(row=0,column=0)
-        fr2 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
-        fr2.pack(side=TOP)
-        txtCh=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Mode\t",bg="powder blue")
-        txtCh.grid(row=0,column=0)
-        txtAir=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="\n\n",bg="powder blue")
-        txtAir.grid(row=1,column=0)
-        txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="powder blue")
-        txtCh2.grid(row=1,column=0)
-        if whatRole == 1:
-            btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
-            btnConfig.grid(row=0,column=1)
-            btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=changeModeClient)
-            btnClient.grid(row=1,column=1)
-        elif whatRole == 2:
-            btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
-            btnConfig.grid(row=0,column=1)
-            btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=changeModeClient)
-            btnClient.grid(row=1,column=1)
-        elif whatRole == 3:
-            if recentRole == 1:
-                btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
-                btnConfig.grid(row=0,column=1)
-            elif recentRole == 2:
-                btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
-                btnConfig.grid(row=0,column=1)
-            btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
-            btnClient.grid(row=1,column=1)
-        socket.AI_NUMERICSERV=Label(fr2,font=('Microsoft YaHei Light',11,'bold'),text='\n\n\n\n\n\n\n\n\n\n\n\n',bg='powder blue').grid(row=2,column=2)
-        btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).grid(row=2,column=2)
-        made.mainloop()
-    except:
-        print('Tk exception')
+# def configuration():
+#     print("configuration call")
+#     global btnConfig,btnClient
+#     def close():
+#         changeModeLabel.set("")
+#         made.destroy()
+#     try:
+#         made = Toplevel(root)
+#         made.geometry('300x300')
+#         made.title("Config")
+#         made.configure(bg="powder blue")
+#         fr1 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+#         fr1.pack(side=TOP)
+#         txtLabel=Label(fr1,font=('Microsoft YaHei Light',13,'bold'),text="Config",bg="powder blue")
+#         txtLabel.grid(row=0,column=0)
+#         fr2 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+#         fr2.pack(side=TOP)
+#         txtCh=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Mode\t",bg="powder blue")
+#         txtCh.grid(row=0,column=0)
+#         txtAir=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="\n\n",bg="powder blue")
+#         txtAir.grid(row=1,column=0)
+#         txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="powder blue")
+#         txtCh2.grid(row=1,column=0)
+#         if whatRole == 1:
+#             btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
+#             btnConfig.grid(row=0,column=1)
+#             btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=changeModeClient)
+#             btnClient.grid(row=1,column=1)
+#         elif whatRole == 2:
+#             btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
+#             btnConfig.grid(row=0,column=1)
+#             btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=changeModeClient)
+#             btnClient.grid(row=1,column=1)
+#         elif whatRole == 3:
+#             if recentRole == 1:
+#                 btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
+#                 btnConfig.grid(row=0,column=1)
+#             elif recentRole == 2:
+#                 btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=configMode)
+#                 btnConfig.grid(row=0,column=1)
+#             btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
+#             btnClient.grid(row=1,column=1)
+#         socket.AI_NUMERICSERV=Label(fr2,font=('Microsoft YaHei Light',11,'bold'),text='\n\n\n\n\n\n\n\n\n\n\n\n',bg='powder blue').grid(row=2,column=2)
+#         btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).grid(row=2,column=2)
+#         made.mainloop()
+#     except:
+#         print('Tk exception')
 allowServerSend = False
 
 def hallOfFrame():
@@ -932,9 +964,10 @@ def default(role):
     global serversocket,c,addr,allowServerSend
     
     #global client to client 
-    global endGame,ADDRESS,name,userName,state,socker
+    global endGame,ADDRESS,name,userName,state,socker,allowButton
     global opponent,myself
     unpredict =False
+    allowButton = True
     if role == "Client":
         print("Client mode")
         whatRole = 1
@@ -962,15 +995,7 @@ def default(role):
         print("CtoC mode")
         
         
-    text1.set('    ')
-    text2.set('    ')
-    text3.set('    ')
-    text4.set('    ')
-    text5.set('    ')
-    text6.set('    ')
-    text7.set('    ')
-    text8.set('    ')
-    text9.set('    ')
+    clearButton()
     if chkTime == 1:
         ip_Input.set('')
         port_Input.set('')
@@ -1007,32 +1032,59 @@ def onConnection():
     btnStart["state"] = "normal"
     configAllow = True
     
-
+def clearButton():
+    text1.set('    ')
+    text2.set('    ')
+    text3.set('    ')
+    text4.set('    ')
+    text5.set('    ')
+    text6.set('    ')
+    text7.set('    ')
+    text8.set('    ')
+    text9.set('    ')
 
 def offButton():
     print('offButton')
     btn1["state"] = "disabled"
+    btn1.configure(bg="#49A")
     btn2["state"] = "disabled"
+    btn2.configure(bg="#49A")
     btn3["state"] = "disabled"
+    btn3.configure(bg="#49A")
     btn4["state"] = "disabled"
+    btn4.configure(bg="#49A")
     btn5["state"] = "disabled"
+    btn5.configure(bg="#49A")
     btn6["state"] = "disabled"
+    btn6.configure(bg="#49A")
     btn7["state"] = "disabled"
+    btn7.configure(bg="#49A")
     btn8["state"] = "disabled"
+    btn8.configure(bg="#49A")
     btn9["state"] = "disabled"
+    btn9.configure(bg="#49A")
     return 0
     
 def onButton():
     print('onButton')
     btn1["state"] = "normal"
+    btn1.configure(bg="Green")
     btn2["state"] = "normal"
+    btn2.configure(bg="Green")
     btn3["state"] = "normal"
+    btn3.configure(bg="Green")
     btn4["state"] = "normal"
+    btn4.configure(bg="Green")
     btn5["state"] = "normal"
+    btn5.configure(bg="Green")
     btn6["state"] = "normal"
+    btn6.configure(bg="Green")
     btn7["state"] = "normal"
+    btn7.configure(bg="Green")
     btn8["state"] = "normal"
+    btn8.configure(bg="Green")
     btn9["state"] = "normal"
+    btn9.configure(bg="Green")
     return 0 
 
 
@@ -1197,6 +1249,7 @@ def getStart(playTime):
                     if port >1025 and port < 65535:
                         try:
                             connected = False  
+                            passConnect = False
                             #s.connect((server, port))
                             tryToConnect = 0
                             while not connected:  
@@ -1204,25 +1257,27 @@ def getStart(playTime):
                                 try:  
 
                                     s.connect((server, port))
-                                    connected = True  
+                                    connected = True 
+                                    passConnect =  connected
                                     print( "re-connection successful" )  
                                 except socket.error: 
                                     stateServer.set("try to connect")
                                     print( "connect failed" )   
                                     tryToConnect+=1
-                                    time.sleep(1)
+                                    print(tryToConnect)
                                     if tryToConnect == 3:
-                                        try:
-                                            c.close()
-                                        except NameError:
-                                            stateServer.set('try again')
+                                        s.close()
+                                        connected = True 
+                                        passConnect = False
+                                        stateServer.set('re-open this mode')
                                 except TypeError:
                                     stateServer.set('invalid input')
-                               
-                            onButton()
-                            offConnection()
-                            stateServer.set("Welcome to XO Game")
-                            statePlayer.set("Your turn")
+
+                            if passConnect:  
+                                onButton()
+                                offConnection()
+                                stateServer.set("Welcome to XO Game")
+                                statePlayer.set("Your turn")
                         except TimeoutError:
                             stateServer.set("Server not response")
                             print("TimeoutError")
@@ -1357,7 +1412,7 @@ font1 = TkFont.Font(family="Microsoft YaHei Light",size = 20,weight = 'bold')
 
 #===============================Calculator Frame===========================
 txtDisplayState = Label(f2,font=font1,
-                text="State",fg="Blue",bd=10,anchor='w')
+                text="State",fg="Blue",bd=10,anchor='w',bg='powder blue')
 
 
 txtDisplayState.grid(columnspan=4)
@@ -1365,6 +1420,53 @@ txtDisplay = Entry(f2,font=font1,
                    textvariable=statePlayer,bd=30,insertwidth=4,
                    bg="#49A",justify='right',state='disabled',disabledbackground='powder blue')
 txtDisplay.grid(columnspan=4)
+
+
+
+#=======================================================================================================
+whatRole = 1
+fr1 = Frame(f0a,width=10,height=10,bg="powder blue",relief=SUNKEN)
+fr1.grid(row=0,column=1)
+fr2 = Frame(f0a,width=10,height=10,bg="powder blue",relief=SUNKEN)
+fr2.grid(row=1,column=1)
+
+
+if whatRole == 1:
+    btnConfig=Button(fr1,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=lambda:configMode())
+    btnConfig.grid(row=0,column=1)
+    
+    
+    txtEmpty=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="",bg="powder blue")
+    txtEmpty.grid(row=0,column=1)
+
+    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=lambda:changeModeClient())
+    btnClient.grid(row=1,column=1)
+    
+elif whatRole == 2:
+    btnConfig=Button(fr1,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=lambda:configMode())
+    btnConfig.grid(row=0,column=1)
+
+    txtEmpty=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="",bg="powder blue")
+    txtEmpty.grid(row=0,column=1)
+
+    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=lambda:changeModeClient())
+    btnClient.grid(row=1,column=1)
+elif whatRole == 3:
+    if recentRole == 1:
+        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=lambda:configMode())
+        btnConfig.grid(row=0,column=1)
+    elif recentRole == 2:
+        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=lambda:configMode())
+        btnConfig.grid(row=0,column=1)
+    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=lambda:changeModeClient())
+    btnClient.grid(row=1,column=1)
+
+
+#=======================================================================================================
+
+
+
+
 
 btnWidth = 5
 btnHeight = 1
@@ -1471,7 +1573,6 @@ btnTry.grid(row=8,column=1)
 menubar= Menu(root)
 filemenu = Menu(menubar, tearoff =0,font= 'Helvetica 30 bold')
 menubar.add_cascade(label="File",menu=filemenu)
-filemenu.add_command(label="Config",command=configuration)
 filemenu.add_command(label="End",command=disConnected)
 filemenu.add_command(label="Exit", command = closeGame)
 root.config(menu=menubar)
