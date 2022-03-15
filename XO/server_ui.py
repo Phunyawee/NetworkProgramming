@@ -149,70 +149,78 @@ def check():
     print("turn :"+str(count))
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):     
         gameRunning = False
+        haveWinner = True
         if (msg[0] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")    
+            print (str(record.player1)+"   1WIN !!!!!!!!!!!!!!")    
             return record.player1
         if (msg[0] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   2WIN !!!!!!!!!!!!!!")
             return record.player2
     if (msg[3] == msg[4]) and (msg[4] == msg[5]):        
         gameRunning = False
+        haveWinner = True
         if (msg[3] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player1)+"   3WIN !!!!!!!!!!!!!!")
             return record.player1
         if (msg[3] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   4WIN !!!!!!!!!!!!!!")
             return record.player2
     if (msg[6] == msg[7]) and (msg[7] == msg[8]):
         gameRunning = False
+        haveWinner = True
         if (msg[6] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player1)+"   5WIN !!!!!!!!!!!!!!")
             return record.player1
         if (msg[6] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   6WIN !!!!!!!!!!!!!!")
             return record.player2
     if (msg[0] == msg[3]) and (msg[3] == msg[6]):     
         gameRunning = False
+        haveWinner = True
         if (msg[0] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player1)+"   7WIN !!!!!!!!!!!!!!")
             return record.player1
         if (msg[0] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   8WIN !!!!!!!!!!!!!!")
             return record.player2
     if (msg[1] == msg[4]) and (msg[4] == msg[7]):
         gameRunning = False
+        haveWinner = True
         if (msg[1] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")      
+            print (str(record.player1)+"   9WIN !!!!!!!!!!!!!!")      
             return record.player1
         if (msg[1] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   10WIN !!!!!!!!!!!!!!")
             return record.player2
     if (msg[2] == msg[5]) and (msg[5] == msg[8]):   
         gameRunning = False
+        haveWinner = True
         if (msg[2] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player1)+"   11WIN !!!!!!!!!!!!!!")
             return record.player1
         if (msg[2] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   12WIN !!!!!!!!!!!!!!")
             return record.player2
     if (msg[0] == msg[4]) and (msg[4] == msg[8]):
         gameRunning = False
+        haveWinner = True
         if (msg[0] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player1)+"   13WIN !!!!!!!!!!!!!!")
             return record.player1
         if (msg[0] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   14WIN !!!!!!!!!!!!!!")
             return record.player2
     if (msg[2] == msg[4]) and (msg[4] == msg[6]):
         gameRunning = False
+        haveWinner = True
         if (msg[2] == 'x'):
-            print (str(record.player1)+"   WIN !!!!!!!!!!!!!!")    
+            print (str(record.player1)+"   15WIN !!!!!!!!!!!!!!")    
             return record.player1
         if (msg[2] == 'o'):
-            print (str(record.player2)+"   WIN !!!!!!!!!!!!!!")
+            print (str(record.player2)+"   16WIN !!!!!!!!!!!!!!")
             return record.player2
     else:
-        if count == 9:
+        if count == 9 and haveWinner == False:
             gameRunning = False
             haveWinner = False
         return 'Draw'
@@ -264,14 +272,11 @@ def Monitor(touch,getNamePlayer,choose):#my self
                 print('element not x,y : '+str(position))
                 if record.boolTable == True:
                     record.player1 = str(getNamePlayer)
-                    record.boolTable = False
-                    Monitor(position+1,getNamePlayer,'x')
+                    Monitor(position+1,getNamePlayer,'o')
                     upDate()
                 else:
                     record.player2 = str(getNamePlayer)
-                    record.boolTable = True
-                    
-                    Monitor(position+1,getNamePlayer,'o')
+                    Monitor(position+1,getNamePlayer,'x')
                     upDate()
                 break
             else:
@@ -333,9 +338,11 @@ def Monitor(touch,getNamePlayer,choose):#my self
             for key in getdata:
                 getDataList.append(key)
             if chosen != 'Draw':
-                
+                print('Winner: '+chosen)
+                print('Loser: '+loser)
                 if chosen not in getDataList:
-                    ####################################################################
+                    print('add winner')
+                    print('####################################################################')
                     with open('statics.json','r') as j:
                         getdata = json.load(j)
                         j.close()
@@ -351,7 +358,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         json.dump(getdata,file)
                         file.close()
                     if loser not in getDataList:
-                        ####################################################################
+                        print('add loser')
+                        print('####################################################################')
                         with open('statics.json','r') as j:
                             getdata = json.load(j)
                             j.close()
@@ -368,6 +376,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             file.close()
                         ####################################################################
                     else:
+                        print('update loser')
+                        print('####################################################################')
                         with open('statics_players.json','r') as file:##other time
                             getStatic=json.load(file)
                             file.close()
@@ -381,6 +391,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             json.dump(getStatic,file)
                             file.close()
                 if loser not in getDataList:
+                    print('add loser')
+                    print('####################################################################')
                     ####################################################################
                     with open('statics.json','r') as j:
                             getdata = json.load(j)
@@ -414,6 +426,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             file.close()
                         ####################################################################
                     else:
+                        print('update winner')
+                        print('####################################################################')
                         with open('statics_players.json','r') as file:##other time
                             getStatic=json.load(file)
                             file.close()
