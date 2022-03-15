@@ -42,21 +42,21 @@ def ConnectFTPServer(FTPServer,Username,Password):
 root = Tk()
 root.geometry("1600x800+0+0")
 root.title("Parking Of Service SHOP")
-root.configure(background="#ffecad")
+root.configure(background="#2b2d42")
 
-Tops = Frame(root, width=1600, height=150, bg="powder blue", relief=SUNKEN)
+Tops = Frame(root, width=1600, height=150, bg="#d90429", relief=SUNKEN, bd=20)
 Tops.pack(side=TOP,anchor=N)
 
 #Bottom = Frame(root, width=1600, height=450, bg="powder blue", relief=SUNKEN)
 #Bottom.pack(side=BOTTOM)
 
-f1 = Frame(root, width=500, height=650, bg="red", relief=SUNKEN)
+f1 = Frame(root, width=500, height=650, bg="#d90429", relief=SUNKEN)
 f1.pack(side=LEFT)
 
-f2 = Frame(root, width=500, height=650, bg="blue", relief=RAISED)
+f2 = Frame(root, width=500, height=650, bg="#2b2d42", relief=SUNKEN  , bd=10)
 f2.pack(side=LEFT)
 
-f3 = Frame(root, width=600, height=650,bg="yellow", relief=GROOVE)
+f3 = Frame(root, width=600, height=650,bg="#d90429", relief=GROOVE)
 f3.pack(side=LEFT)
 
 #------------------------------Varible----------------------
@@ -71,6 +71,7 @@ ftpserver_Input = StringVar()
 username_Input = StringVar()
 password_Input = StringVar()
 
+modelogin_Input = IntVar()
 loginbtn_Input = StringVar()
 #f2 Varible
 carrecent_Output = StringVar()
@@ -102,7 +103,9 @@ def Running():
     shopname_Output.set("กรุณาตั้งชื่อร้านของคุณ")
     loginbtn_Input.set("login")
     text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tร้าน\tสถานะ\n")
-    Receipt()
+    modelogin_Input.set(1)
+    LoginMode()
+    #Receipt()
     license_plate_entry .config(state='disabled')
     amount_entry .config(state='disabled')
     send_btn.config(state='disabled')
@@ -154,7 +157,72 @@ def toggleText(varBtn,txt1,txt2):
         ftpserver_entry.config(state='normal')
         username_entry.config(state='normal')
         password_entry.config(state='normal')
+
+        modelogin1_radio.config(state='normal')
+        modelogin2_radio.config(state='normal')
+
         ShowLogin("logout เสร็จสิ้น")
+
+
+def LoginMode():
+    selection = "selected " + str(modelogin_Input.get())
+    showlogin_Output.set(selection)
+    if modelogin_Input.get()==1:
+        ftpserver_label.grid_forget()
+        ftpserver_entry.grid_forget()
+        username_label.grid_forget()
+        username_entry.grid_forget()
+        password_label.grid_forget()
+        password_entry.grid_forget()
+        return 1
+
+    else:
+        ftpserver_label.grid(column=0, row=3, sticky=W)
+        ftpserver_entry.grid(columnspan=4, row=4)
+        username_label.grid(column=0, row=5, sticky=W)
+        username_entry.grid(columnspan=4, row=6)
+        password_label.grid(column=0, row=7, sticky=W)
+        password_entry.grid(columnspan=4,row=8)
+        return 2
+
+def LoginBtn():
+    if LoginMode() == 1:
+        AutoLogin()
+    else:
+        Login()
+
+def AutoLogin():
+    global shopname
+    showlogin_Output.set("ShopTEST")
+    shopname = shopname_Input.get()
+    ftpServer = "10.64.39.141"
+    username = "NetPro"
+    password = "800"
+
+    #FTPServer(ftpServer,username,password)
+
+    if CheckSpace(shopname_Input.get()):
+        ConnectFTPServer(ftpServer,username,password)
+        shopname_Output.set(shopname)
+        shopname_entry.config(state='disabled')
+        modelogin1_radio.config(state='disabled')
+        modelogin2_radio.config(state='disabled')
+
+        license_plate_entry .config(state='normal')
+        amount_entry .config(state='normal')
+        send_btn.config(state='normal')
+        refresh_btn.config(state='normal')
+
+        toggleText(loginbtn_Input,"login","logout")
+        downloadFile(ftp,'Write.json')
+        ShowLogin("login to FTP Server สำเร็จ !")
+        print("login สำเร็จ")
+    else:
+        showlogin_Output.set("กรุณากรอกให้ครบ")
+
+    print("ftpServer:",ftpServer)
+    print("username:",username)
+    print("password:",password)
 
 def Login():
     global shopname
@@ -173,6 +241,8 @@ def Login():
         ftpserver_entry.config(state='disabled')
         username_entry.config(state='disabled')
         password_entry.config(state='disabled')
+        modelogin1_radio.config(state='disabled')
+        modelogin2_radio.config(state='disabled')
 
         license_plate_entry .config(state='normal')
         amount_entry .config(state='normal')
@@ -255,6 +325,7 @@ def Summit():
 
 def Refresh():
     downloadFile(ftp,'Write.json')
+    Receipt()
 
 #f3 Function
 def Receipt():
@@ -270,61 +341,71 @@ def Receipt():
 
 
 #--------------------------------TOPS-------------------------------
-lblInfo = Label(Tops,font=('TH Sarabun New',50,'bold'),
-                textvariable=shopname_Output,fg="Blue",bd=10,anchor='w')
+lblInfo = Label(Tops,font=('TH Sarabun New',60,'bold'),
+                    textvariable=shopname_Output,fg="#2b2d42",bd=10,anchor='w',bg="#8d99ae",relief=SUNKEN)
 lblInfo.grid(row=0,column=0)
 
-lblInfo = Label(Tops,font=('TH Sarabun New',50,'bold'),
-                text="",fg="Blue",bd=10,anchor='w')
+lblInfo = Label(Tops,font=('TH Sarabun New',30,'bold'),
+                text="",fg="white",bg="#8d99ae",bd=10,anchor='w',relief=SUNKEN)
 lblInfo.grid(row=1,column=0)
 
 lblBlank = Label(f2,font=('TH Sarabun New',50,'bold'),
-                text="",fg="Blue",bd=10,anchor='w')
+                text="",fg="#2b2d42",bd=10,anchor='w')
 lblBlank.grid(row=7,column=0)
 
 #------------------------f1 Left-----------------------------
-showlogin_entry = Entry(f1,font=('TH Sarabun New',30,'bold'),state='disable',disabledbackground='red',
+showlogin_entry = Entry(f1,font=('TH Sarabun New',30,'bold'),state='disable',disabledbackground='#ef233c',
                         disabledforeground='white',textvariable=showlogin_Output,bd=20,insertwidth=10,
                         bg="powder blue",justify='right')
 showlogin_entry.grid(columnspan=4, row=0)
 
-shopname_label = Label(f1, text="ชื่อร้าน:", font=('TH Sarabun New',20,'bold'))
+shopname_label = Label(f1, text="ชื่อร้าน:", font=('TH Sarabun New',16,'bold'))
 shopname_label.grid(column=0, row=1, sticky=W)
 shopname_entry = Entry(f1,font=('TH Sarabun New',16,'bold'),
                        textvariable=shopname_Input,bd=20,insertwidth=5,width=30,
                        bg="white",justify='right')
 shopname_entry.grid(columnspan=4, row=2)
 
-ftpserver_label = Label(f1, text="FTP-Server:", font=('TH Sarabun New',20,'bold'))
+ftpserver_label = Label(f1, text="FTP-Server:", font=('TH Sarabun New',16,'bold'))
 ftpserver_label.grid(column=0, row=3, sticky=W)
 ftpserver_entry = Entry(f1,font=('TH Sarabun New',16,'bold'),
                         textvariable=ftpserver_Input,bd=20,insertwidth=5,width=30,
                         bg="white",justify='right')
 ftpserver_entry.grid(columnspan=4, row=4)
 
-username_label = Label(f1, text="Username:", font=('TH Sarabun New',20,'bold'))
+username_label = Label(f1, text="Username:", font=('TH Sarabun New',16,'bold'))
 username_label.grid(column=0, row=5, sticky=W)
 username_entry = Entry(f1,font=('TH Sarabun New',16,'bold'),
                        textvariable=username_Input,bd=20,insertwidth=5,width=30,
                        bg="white",justify='right')
 username_entry.grid(columnspan=4, row=6)
 
-password_label = Label(f1, text="Password:", font=('TH Sarabun New',20,'bold'))
+password_label = Label(f1, text="Password:", font=('TH Sarabun New',16,'bold'))
 password_label.grid(column=0, row=7, sticky=W)
 password_entry = Entry(f1,font=('TH Sarabun New',16,'bold'),
                        textvariable=password_Input,bd=20,insertwidth=5,width=30,
                        bg="white",justify='right')
 password_entry.grid(columnspan=4,row=8)
 
-login_btn = Button(f1,padx=16, fg="black",font=('TH Sarabun New',18,'bold'),width=8,
-                   textvariable=loginbtn_Input,command=lambda:Login()).grid(padx=20, pady=20,columnspan=4,row=9)
+modelogin_label = Label(f1, text="login mode:", font=('TH Sarabun New',14,'bold'))
+modelogin_label.grid(column=0, row=9, sticky=W,pady=10)
+modelogin1_radio = Radiobutton(f1, text="Auto", variable=modelogin_Input, value=1,command=lambda:LoginMode())
+modelogin1_radio.grid(column=1,row=9)
+modelogin2_radio = Radiobutton(f1, text="Manual", variable=modelogin_Input, value=2,command=lambda:LoginMode())
+modelogin2_radio.grid(column=2,row=9)
 
+login_btn = Button(f1,padx=16, fg="black",font=('TH Sarabun New',18,'bold'),width=8,
+                   textvariable=loginbtn_Input,command=lambda:LoginBtn()).grid(padx=20,pady=10,column=0,row=10)
+"""
+autologin_btn = Button(f1,padx=16, fg="black",font=('TH Sarabun New',18,'bold'),width=8,
+                   textvariable=loginbtn_Input,command=lambda:AutoLogin()).grid(padx=20, pady=20,column=1,row=10)
+"""
 #------------------------f2 Center-----------------------------
 carrecent_label = Label(f2, text="ลูกค้าที่เข้ามาล่าสุด: ", font=('TH Sarabun New',20,'bold'))
 carrecent_label.grid(column=0,row=0,sticky=W)
-carrecent_entry = Entry(f2,font=('TH Sarabun New',20,'bold'),state='disable',disabledbackground='powder blue',
+carrecent_entry = Entry(f2,font=('TH Sarabun New',20,'bold'),state='disable',disabledbackground='#8d99ae',
                             disabledforeground='black',textvariable=carrecent_Output,bd=30,insertwidth=4,width=30,
-                            bg="powder blue",justify='right')
+                            bg="#8d99ae",justify='right')
 carrecent_entry.grid(columnspan=4,row=1,sticky=N)
 
 license_plate_labal = Label(f2, text="ป้ายทะเบียนรถ: ", font=('TH Sarabun New',20,'bold'))
@@ -359,11 +440,6 @@ text_Receipt.grid(column=0,row=2,sticky=W)
 
 Running()
 clock()
-
-
-
-
-
 
 
 
