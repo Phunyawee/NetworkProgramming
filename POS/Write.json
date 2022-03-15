@@ -150,5 +150,13 @@
         "cost": "5000",
         "shop": "FoodSHOP1",
         "status": 0
+    },
+    {
+        "order": 20,
+        "carPlate": "111",
+        "timeIn": "16:06:39",
+        "cost": "1222",
+        "shop": "WWW",
+        "status": 0
     }
 ]

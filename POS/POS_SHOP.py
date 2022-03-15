@@ -42,9 +42,9 @@ def ConnectFTPServer(FTPServer,Username,Password):
 root = Tk()
 root.geometry("1600x800+0+0")
 root.title("Parking Of Service SHOP")
-root.configure(background="#2b2d42")
+root.configure(background="#8d99ae")
 
-Tops = Frame(root, width=1600, height=150, bg="#d90429", relief=SUNKEN, bd=20)
+Tops = Frame(root, width=1600, height=150, bg="#2b2d42", relief=SUNKEN, bd=20,padx=400)
 Tops.pack(side=TOP,anchor=N)
 
 #Bottom = Frame(root, width=1600, height=450, bg="powder blue", relief=SUNKEN)
@@ -161,6 +161,11 @@ def toggleText(varBtn,txt1,txt2):
         modelogin1_radio.config(state='normal')
         modelogin2_radio.config(state='normal')
 
+        license_plate_entry .config(state='disabled')
+        amount_entry .config(state='disabled')
+        send_btn.config(state='disabled')
+        refresh_btn.config(state='disabled')
+
         ShowLogin("logout เสร็จสิ้น")
 
 
@@ -168,15 +173,18 @@ def LoginMode():
     selection = "selected " + str(modelogin_Input.get())
     showlogin_Output.set(selection)
     if modelogin_Input.get()==1:
+
         ftpserver_label.grid_forget()
         ftpserver_entry.grid_forget()
         username_label.grid_forget()
         username_entry.grid_forget()
         password_label.grid_forget()
         password_entry.grid_forget()
+        f1.config(pady=150)
         return 1
 
     else:
+        f1.config(pady=0)
         ftpserver_label.grid(column=0, row=3, sticky=W)
         ftpserver_entry.grid(columnspan=4, row=4)
         username_label.grid(column=0, row=5, sticky=W)
@@ -216,6 +224,8 @@ def AutoLogin():
         toggleText(loginbtn_Input,"login","logout")
         downloadFile(ftp,'Write.json')
         ShowLogin("login to FTP Server สำเร็จ !")
+        downloadFile(ftp,'Write.json')
+        Receipt()
         print("login สำเร็จ")
     else:
         showlogin_Output.set("กรุณากรอกให้ครบ")
@@ -251,6 +261,7 @@ def Login():
 
         toggleText(loginbtn_Input,"login","logout")
         downloadFile(ftp,'Write.json')
+        Receipt()
         ShowLogin("login to FTP Server สำเร็จ !")
         print("login สำเร็จ")
     else:
@@ -274,11 +285,14 @@ def CheckCarPlate(customer):
             if car["status"] == 1:
                 print(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
                 carrecent_Output.set(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
+                return False
+
             else:
                 carplateList.append(customer)
                 print(str(customer)+" เพิ่มไปเเล้ว")
                 #carrecent_Output.set(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
                 return True
+    carrecent_Output.set(str(customer)+" ไม่มีทะเบียนนี้อยู่ในระบบ")
     return False
 
 
@@ -308,8 +322,6 @@ def Summit():
                 #Clear & Reset
                 license_Input.set("")
                 amount_Input.set("")
-            else:
-                carrecent_Output.set(license+" ไม่มีทะเบียนนี้อยู่ในระบบ")
 
     else:
         root = Tk()
@@ -422,11 +434,11 @@ amount_entry = Entry(f2,font=('TH Sarabun New',20,'bold'),
                      bg="white",justify='right')
 amount_entry.grid(columnspan=4,row=5,sticky=N)
 
-send_btn = Button(f2,padx=30, fg="black",font=('TH Sarabun New',18,'bold'),width=8,
+send_btn = Button(f2,padx=30,bg="#d90429", fg="white",font=('TH Sarabun New',18,'bold'),width=8,disabledforeground='white',
                     text="ส่ง",command=lambda:Summit())
 send_btn .grid(padx=20, pady=20,columnspan=4,row=6)
 
-refresh_btn = Button(f2,padx=30, fg="black",font=('TH Sarปabun New',18,'bold'),width=8,
+refresh_btn = Button(f2,padx=30,bg="#d90429" , fg="white",font=('TH Sarปabun New',18,'bold'),width=8,disabledforeground='white',
                   text="รีเฟรช",command=lambda:Refresh())
 refresh_btn.grid(padx=20, pady=20,columnspan=4,row=7)
 #------------------------f3 Right-----------------------------
