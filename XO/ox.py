@@ -35,6 +35,9 @@ try:
         getdata = json.load(j)
         exploreDataStatus = True
         j.close()
+    with open('statics_players.json','r') as j:
+        getStatic = json.load(j)
+        j.close()
 except :
     exploreDataStatus = False
 
@@ -138,6 +141,54 @@ def extract(x):
     distance = 0
     distance2 = 0
     return y
+def TheTrain(x):#data '[round]{win}<lose>(draw)'
+    result = []
+    distance = 0
+    distanceWin = 0
+    distancelose = 0
+    distancedraw = 0
+    state = False
+    stateWin = False
+    statelose = False
+    statedraw = False
+    for i in range(len(x)):
+        if x[i]=='[':
+            state = True
+        if x[i]==']':
+            state = False
+        if state:
+            distance+=1
+
+        if x[i]=='{':
+            stateWin = True
+        if x[i]=='}':
+            stateWin = False
+        if stateWin:
+            distanceWin+=1
+
+        if x[i]=='<':
+            statelose = True
+        if x[i]=='>':
+            statelose = False
+        if statelose:
+            distancelose+=1
+
+        if x[i]=='(':
+            statedraw = True
+        if x[i]==')':
+            statedraw = False
+        if statedraw:
+            distancedraw+=1
+        
+    result.append(x[1:distance])
+    result.append(x[distance+2:distance+1+distanceWin])
+    result.append(x[distance+1+distanceWin+2:distance+1+distanceWin+1+distancelose])
+    result.append(x[distance+1+distanceWin+1+distancelose+2:distance+1+distanceWin+1+distancelose+1+distancedraw])
+    distance = 0
+    distanceWin = 0
+    distancelose = 0
+    distancedraw = 0
+    return result
 #tool>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #OX CtoC code =======================================================================
 
@@ -847,15 +898,18 @@ def configuration():
 allowServerSend = False
 
 def hallOfFrame():
-    global getdata
+    global getdata,getStatic
     txtHall.delete("1.0","end")
     
     if exploreDataStatus:
         ranking = 0
-        txtHall.insert(END,"Rank"+'\t\t'+"Name"  +'\t\t\t'+  "Win" + '\n')
+        txtHall.insert(END,"Rank"+"\tName"+"\tRound"+"\tWin"+"\tLoss"+"\tDraw" + '\n')
+        ranking = 0
         for played in getdata :
+                bogie = TheTrain(getStatic[played])
                 ranking += 1
-                txtHall.insert(END,str(ranking)+'\t\t'+str(played)  +'\t\t\t   '+ str(getdata[played]) + '\n')
+                txtHall.insert(END,str(ranking)+'\t'+str(played)+'\t'+str(bogie[0]) +'\t'+ str(bogie[1]) +'\t'+ str(bogie[2]) +'\t'+ str(bogie[3]) + '\n')
+
     else:
         txtHall.insert(END,'No Data Detected')
     txtHall.configure(state='disabled')

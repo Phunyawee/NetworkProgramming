@@ -22,6 +22,7 @@ stopState = False
 BUFSIZE = 4096
 namelst=[]
 walklst=[]
+playerCollector = []
 try:
 
     #============================Sort data
@@ -88,7 +89,7 @@ def extract(x):
     distance = 0
     distance2 = 0
     return y
-def TheTrain(x):
+def TheTrain(x):#data '[round]{win}<lose>(draw)'
     result = []
     distance = 0
     distanceWin = 0
@@ -221,6 +222,7 @@ def resetToDefault():
     statePlayer.set('')
     namelst.clear()
     walklst.clear()
+    playerCollector.clear()
     global gameRunning,msg,msg_monitor
     gameRunning = True
     msg = ['1','2','3','4','5','6','7','8','9']
@@ -245,7 +247,7 @@ def print_table_monitor(msg_monitor):
     print ("") 
 
 def Monitor(touch,getNamePlayer,choose):#my self
-    global gameRunning,getdata,stopState
+    global gameRunning,getdata,stopState,getStatic
     if touch == 'disconnected':
         touch = 0
     touch = int(touch)
@@ -328,63 +330,118 @@ def Monitor(touch,getNamePlayer,choose):#my self
                 with open('statics.json','r') as j:
                     getdata = json.load(j)
                     j.close()
-                if len(getdata)==0:
-                    try:#firstime play
-                        with open('statics.json','w') as file:#play first time
-                            getdata[chosen]=1
-                            json.dump(getdata,file)
-                            file.close()
-                        with open('statics.json','w') as file:#play first time
-                            getdata[loser]=0
-                            json.dump(getdata,file)
-                            file.close()   
-                            
-                        with open('statics_players.json','w') as file:#play first time
-                            getdata[chosen]='[1]{1}<0>(0)'
-                            json.dump(getdata,file)
-                            file.close()
-                        with open('statics_players.json','w') as file:#play first time
-                            getdata[loser]='[1]{0}<1>(0)'
-                            json.dump(getdata,file)
-                            file.close()
-                            
-                            
-                    except FileNotFoundError:
-                        stateServer.set('FileNotFoundError')
-                else:#other time
+                getDataList = []
+                for key in getdata:
+                    getDataList.append(key)
+                if chosen not in getDataList:
+                    with open('statics.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics.json','w') as file:#play first time
+                        getdata[chosen]=1
+                        json.dump(getdata,file)
+                        file.close()
+                    with open('statics_players.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics_players.json','w') as file:#play first time
+                        getdata[chosen]='[1]{1}<0>(0)'
+                        json.dump(getdata,file)
+                        file.close()
+                elif loser not in getDataList:
+                    with open('statics.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics.json','w') as file:#play first time
+                        getdata[loser]=0
+                        json.dump(getdata,file)
+                        file.close()   
+                    with open('statics_players.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics_players.json','w') as file:#play first time
+                        getdata[loser]='[1]{0}<1>(0)'
+                        json.dump(getdata,file)
+                        file.close()
+
+
+                elif chosen in getDataList or loser in getDataList:
+                    with open('statics.json','w') as file:#other time
+                        json.dump(getdata,file)
+                        file.close()
+                    with open('statics_players.json','r') as j:
+                        getStatic = json.load(j)
+                        j.close()
                     for key in getdata:
-                        if chosen == key:
+                        if chosen == key:#winner
                             tempWin = getdata[chosen]+1
                             getdata[chosen]=tempWin
                             try:
-                                with open('statics.json','w') as file:#play first time
+                                with open('statics.json','w') as file:#winner file
                                     json.dump(getdata,file)
+                                    file.close()
+                                with open('statics_players.json','r') as file:##other time
+                                    getStatic=json.load(file)
+                                    file.close()
+                                unZip = TheTrain(getStatic[chosen])
+                                round = int(unZip[0])+1
+                                win = int(unZip[1])+1
+                                loss = int(unZip[2])+0
+                                draw = int(unZip[3])+0
+                                with open('statics_players.json','w') as file:##other time
+                                    getStatic[chosen]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                                    json.dump(getStatic,file)
                                     file.close()
                             except FileNotFoundError:
                                 stateServer.set('FileNotFoundError')
+                        elif loser == key:
+                            with open('statics_players.json','r') as file:##other time
+                                    getStatic=json.load(file)
+                                    file.close()
+                                    unZip = TheTrain(getStatic[loser])
+                                    round = int(unZip[0])+1
+                                    win = int(unZip[1])+0
+                                    loss = int(unZip[2])+1
+                                    draw = int(unZip[3])+0
+                            with open('statics_players.json','w') as file:##other time
+                                getStatic[loser]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                                json.dump(getStatic,file)
+                                file.close()
+                       
                             
-                            break
-                    else:#not exist in file
-                        try:#firstime play
-                            with open('statics.json','w') as file:#play first time
-                                getdata[chosen]=1
-                                json.dump(getdata,file)
-                                file.close()
-                            with open('statics.json','w') as file:#play first time
-                                getdata[loser]=0
-                                json.dump(getdata,file)
-                                file.close()   
-                                
-                            with open('statics_players.json','w') as file:#play first time
-                                getdata[chosen]='[1]{1}<0>(0)'
-                                json.dump(getdata,file)
-                                file.close()
-                            with open('statics_players.json','w') as file:#play first time
-                                getdata[loser]='[1]{0}<1>(0)'
-                                json.dump(getdata,file)
-                                file.close()
-                        except FileNotFoundError:
-                            stateServer.set('FileNotFoundError')
+                            
+            elif chosen == 'Draw':
+                print(str(playerCollector[0])+' vs '+str(playerCollector[1])+' = Draw')
+                with open('statics_players.json','r') as file:#play draw
+                    getStatic=json.load(file)
+                    file.close()
+                    unZip = TheTrain(getStatic[str(playerCollector[0])])
+                    round = int(unZip[0])+1
+                    win = int(unZip[1])+0
+                    loss = int(unZip[2])+0
+                    draw = int(unZip[3])+1
+                with open('statics_players.json','w') as file:#play draw
+                    getStatic[str(playerCollector[0])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                    json.dump(getStatic,file)
+                    file.close()
+                
+                
+                with open('statics_players.json','r') as file:#play draw
+                    getStatic=json.load(file)
+                    file.close()
+                    unZip = TheTrain(getStatic[str(playerCollector[1])])
+                    round = int(unZip[0])+1
+                    win = int(unZip[1])+0
+                    loss = int(unZip[2])+0
+                    draw = int(unZip[3])+1
+                with open('statics_players.json','w') as file:#play draw
+                    getStatic[str(playerCollector[1])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                    json.dump(getStatic,file)
+                    file.close()
+                            
+                            
+                        
+                
                 
 
 class chatRecord():
@@ -516,8 +573,11 @@ class clientHandler(Thread):
             if nameSet:
                 nameSet = False
                 player1Label.set(self._name)
+                if self._name not in playerCollector:playerCollector.append(self._name)
+                
             else:
                 player2Label.set(self._name)
+                if self._name not in playerCollector:playerCollector.append(self._name)
             print('-'*20)
             #allMessage = self._record.getMessage(0)
             if self._numPlayer % 2== 0:#statrt game signal
@@ -701,13 +761,14 @@ def clearHall():
     
 
 def hallOfFrame():
-    global getdata
+    global getdata,getStatic
     txtHall.delete("1.0","end")
-    txtHall.insert(END,"Rank"+'\t\t'+"Name"  +'\t\t\t'+  "Win" + '\n')
+    txtHall.insert(END,"Rank"+"\tName"+"\tRound"+"\tWin"+"\tLoss"+"\tDraw" + '\n')
     ranking = 0
     for played in getdata :
+            bogie = TheTrain(getStatic[played])
             ranking += 1
-            txtHall.insert(END,str(ranking)+'\t\t'+str(played)  +'\t\t\t   '+ str(getdata[played]) + '\n')
+            txtHall.insert(END,str(ranking)+'\t'+str(played)+'\t'+str(bogie[0]) +'\t'+ str(bogie[1]) +'\t'+ str(bogie[2]) +'\t'+ str(bogie[3]) + '\n')
     txtHall.configure(state='disabled')
     
 
