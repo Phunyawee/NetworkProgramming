@@ -224,9 +224,11 @@ def check_CtoC(touch):
     if (msg[0] == msg[1]) and (msg[1] == msg[2]):         
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
         
         
@@ -234,53 +236,67 @@ def check_CtoC(touch):
     elif (msg[3] == msg[4]) and (msg[4] == msg[5]):        
         if (msg[3] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)
         if (msg[3] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
         
     elif (msg[6] == msg[7]) and (msg[7] == msg[8]):
         if (msg[6] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch) 
         if (msg[6] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
     elif (msg[0] == msg[3]) and (msg[3] == msg[6]):        
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)  
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
     elif (msg[1] == msg[4]) and (msg[4] == msg[7]):
         if (msg[1] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")  
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)  
         if (msg[1] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)  
     elif (msg[2] == msg[5]) and (msg[5] == msg[8]):        
         if (msg[2] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)
         if (msg[2] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
     elif (msg[0] == msg[4]) and (msg[4] == msg[8]):
         if (msg[0] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)
         if (msg[0] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
                   
     elif (msg[2] == msg[4]) and (msg[4] == msg[6]):
         if (msg[2] == 'x'):
             print (str(myself)+"   WIN !!!!!!!!!!!!!!")    
+            statePlayer.set(str(myself)+"   WIN !!!!!!!!!!!!!!")
             EndGame(touch)  
         if (msg[2] == 'o'):
             print (str(opponent)+"   WIN !!!!!!!!!!!!!!")
+            statePlayer.set(str(opponent)+"   WIN !!!!!!!!!!!!!!")
             EndGame(0)
     else:
         for i in msg:
@@ -288,6 +304,7 @@ def check_CtoC(touch):
                 count+=1
                 if count == 9:
                     print ("   Draw !!!!!!!!!!!!!!")
+                    statePlayer.set(" Draw!!!!")
                     EndGame(99)#sp case
             else:
                 count = 0

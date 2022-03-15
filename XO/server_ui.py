@@ -341,6 +341,9 @@ def Monitor(touch,getNamePlayer,choose):#my self
             if chosen != 'Draw':
                 print('Winner: '+chosen)
                 print('Loser: '+loser)
+                
+
+
                 if chosen not in getDataList:
                     print('add winner')
                     print('####################################################################')
@@ -391,6 +394,7 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             getStatic[loser]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
                             json.dump(getStatic,file)
                             file.close()
+                
                 if loser not in getDataList:
                     print('add loser')
                     print('####################################################################')
@@ -411,6 +415,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         file.close()
                     ####################################################################
                     if chosen not in getDataList:
+                        print('add winner')
+                        print('####################################################################')
                         with open('statics.json','r') as j:
                             getdata = json.load(j)
                             j.close()
@@ -429,6 +435,15 @@ def Monitor(touch,getNamePlayer,choose):#my self
                     else:
                         print('update winner')
                         print('####################################################################')
+                        with open('statics.json','r') as file:#play first time
+                            getdata =json.load(file)
+                            file.close()
+                        with open('statics.json','w') as file:#play first time
+                            tempWin = getdata[chosen]
+                            getdata[chosen]= tempWin+1
+                            json.dump(getdata,file)
+                            file.close()
+
                         with open('statics_players.json','r') as file:##other time
                             getStatic=json.load(file)
                             file.close()
@@ -442,6 +457,48 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             json.dump(getStatic,file)
                             file.close()
                         ####################################################################
+                if loser in getDataList and chosen in getDataList:
+                    print('update loser')
+                    print('####################################################################')
+                    with open('statics_players.json','r') as file:##other time
+                        getStatic=json.load(file)
+                        file.close()
+                        unZip = TheTrain(getStatic[loser])
+                        round = int(unZip[0])+1
+                        win = int(unZip[1])+0
+                        loss = int(unZip[2])+1
+                        draw = int(unZip[3])+0
+                    with open('statics_players.json','w') as file:##other time
+                        getStatic[loser]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                        json.dump(getStatic,file)
+                        file.close()
+
+                    print('update winner')
+                    print('####################################################################')
+                    with open('statics.json','r') as file:#play first time
+                        getdata =json.load(file)
+                        file.close()
+                    with open('statics.json','w') as file:#play first time
+                        tempWin = getdata[chosen]
+                        getdata[chosen]= tempWin+1
+                        json.dump(getdata,file)
+                        file.close()
+
+                    with open('statics_players.json','r') as file:##other time
+                        getStatic=json.load(file)
+                        file.close()
+                        unZip = TheTrain(getStatic[chosen])
+                        round = int(unZip[0])+1
+                        win = int(unZip[1])+1
+                        loss = int(unZip[2])+0
+                        draw = int(unZip[3])+0
+                    with open('statics_players.json','w') as file:##other time
+                        getStatic[chosen]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                        json.dump(getStatic,file)
+                        file.close()
+
+                
+                
 
 
                 
