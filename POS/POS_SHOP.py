@@ -83,7 +83,6 @@ receipt = StringVar()
 
 #time
 now = time.time()
-
 #------------------------------Variable Function ----------------------
 #showshopname_Output.set("กรุณาตั้งชื่อร้านของคุณ")
 #Tops Function
@@ -138,7 +137,7 @@ def ReadFile(filename):
         print(userdata)
     return userdata
         
-
+#------------------------Login--------------------------------
 def ShowLogin(text):
     showlogin_Output.set(text)
 
@@ -396,7 +395,7 @@ password_label = Label(f1, text="Password:", font=('TH Sarabun New',16,'bold'))
 password_label.grid(column=0, row=7, sticky=W)
 password_entry = Entry(f1,font=('TH Sarabun New',16,'bold'),
                        textvariable=password_Input,bd=20,insertwidth=5,width=30,
-                       bg="white",justify='right')
+                       bg="white",justify='right',show='')
 password_entry.grid(columnspan=4,row=8)
 
 modelogin_label = Label(f1, text="login mode:", font=('TH Sarabun New',14,'bold'))
