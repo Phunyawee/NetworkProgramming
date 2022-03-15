@@ -317,23 +317,25 @@ def Monitor(touch,getNamePlayer,choose):#my self
             stopState = True
             stateServer.set('Server ready')
             chosen = getWinner
+            #============================Sort data
+            with open('statics.json','r') as j:
+                getdata = json.load(j)
+                j.close()
+            sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
+            with open('statics.json','w') as file:
+                json.dump(sorted_dt,file)
+                file.close()
+            #============================Sort data
+            with open('statics.json','r') as j:
+                getdata = json.load(j)
+                j.close()
+            getDataList = []
+            for key in getdata:
+                getDataList.append(key)
             if chosen != 'Draw':
-                #============================Sort data
-                with open('statics.json','r') as j:
-                    getdata = json.load(j)
-                    j.close()
-                sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
-                with open('statics.json','w') as file:
-                    json.dump(sorted_dt,file)
-                    file.close()
-                #============================Sort data
-                with open('statics.json','r') as j:
-                    getdata = json.load(j)
-                    j.close()
-                getDataList = []
-                for key in getdata:
-                    getDataList.append(key)
+                
                 if chosen not in getDataList:
+                    ####################################################################
                     with open('statics.json','r') as j:
                         getdata = json.load(j)
                         j.close()
@@ -348,10 +350,41 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         getdata[chosen]='[1]{1}<0>(0)'
                         json.dump(getdata,file)
                         file.close()
-                elif loser not in getDataList:
+                    if loser not in getDataList:
+                        ####################################################################
+                        with open('statics.json','r') as j:
+                            getdata = json.load(j)
+                            j.close()
+                        with open('statics.json','w') as file:#play first time
+                            getdata[loser]=0
+                            json.dump(getdata,file)
+                            file.close()   
+                        with open('statics_players.json','r') as j:
+                            getdata = json.load(j)
+                            j.close()
+                        with open('statics_players.json','w') as file:#play first time
+                            getdata[loser]='[1]{0}<1>(0)'
+                            json.dump(getdata,file)
+                            file.close()
+                        ####################################################################
+                    else:
+                        with open('statics_players.json','r') as file:##other time
+                            getStatic=json.load(file)
+                            file.close()
+                            unZip = TheTrain(getStatic[loser])
+                            round = int(unZip[0])+1
+                            win = int(unZip[1])+0
+                            loss = int(unZip[2])+1
+                            draw = int(unZip[3])+0
+                        with open('statics_players.json','w') as file:##other time
+                            getStatic[loser]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                            json.dump(getStatic,file)
+                            file.close()
+                if loser not in getDataList:
+                    ####################################################################
                     with open('statics.json','r') as j:
-                        getdata = json.load(j)
-                        j.close()
+                            getdata = json.load(j)
+                            j.close()
                     with open('statics.json','w') as file:#play first time
                         getdata[loser]=0
                         json.dump(getdata,file)
@@ -363,81 +396,125 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         getdata[loser]='[1]{0}<1>(0)'
                         json.dump(getdata,file)
                         file.close()
+                    ####################################################################
+                    if chosen not in getDataList:
+                        with open('statics.json','r') as j:
+                            getdata = json.load(j)
+                            j.close()
+                        with open('statics.json','w') as file:#play first time
+                            getdata[chosen]=1
+                            json.dump(getdata,file)
+                            file.close()
+                        with open('statics_players.json','r') as j:
+                            getdata = json.load(j)
+                            j.close()
+                        with open('statics_players.json','w') as file:#play first time
+                            getdata[chosen]='[1]{1}<0>(0)'
+                            json.dump(getdata,file)
+                            file.close()
+                        ####################################################################
+                    else:
+                        with open('statics_players.json','r') as file:##other time
+                            getStatic=json.load(file)
+                            file.close()
+                            unZip = TheTrain(getStatic[chosen])
+                            round = int(unZip[0])+1
+                            win = int(unZip[1])+1
+                            loss = int(unZip[2])+0
+                            draw = int(unZip[3])+0
+                        with open('statics_players.json','w') as file:##other time
+                            getStatic[chosen]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                            json.dump(getStatic,file)
+                            file.close()
+                        ####################################################################
 
 
-                elif chosen in getDataList or loser in getDataList:
-                    with open('statics.json','w') as file:#other time
-                        json.dump(getdata,file)
-                        file.close()
-                    with open('statics_players.json','r') as j:
-                        getStatic = json.load(j)
-                        j.close()
-                    for key in getdata:
-                        if chosen == key:#winner
-                            tempWin = getdata[chosen]+1
-                            getdata[chosen]=tempWin
-                            try:
-                                with open('statics.json','w') as file:#winner file
-                                    json.dump(getdata,file)
-                                    file.close()
-                                with open('statics_players.json','r') as file:##other time
-                                    getStatic=json.load(file)
-                                    file.close()
-                                unZip = TheTrain(getStatic[chosen])
-                                round = int(unZip[0])+1
-                                win = int(unZip[1])+1
-                                loss = int(unZip[2])+0
-                                draw = int(unZip[3])+0
-                                with open('statics_players.json','w') as file:##other time
-                                    getStatic[chosen]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                                    json.dump(getStatic,file)
-                                    file.close()
-                            except FileNotFoundError:
-                                stateServer.set('FileNotFoundError')
-                        elif loser == key:
-                            with open('statics_players.json','r') as file:##other time
-                                    getStatic=json.load(file)
-                                    file.close()
-                                    unZip = TheTrain(getStatic[loser])
-                                    round = int(unZip[0])+1
-                                    win = int(unZip[1])+0
-                                    loss = int(unZip[2])+1
-                                    draw = int(unZip[3])+0
-                            with open('statics_players.json','w') as file:##other time
-                                getStatic[loser]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                                json.dump(getStatic,file)
-                                file.close()
+                
                        
                             
                             
             elif chosen == 'Draw':
                 print(str(playerCollector[0])+' vs '+str(playerCollector[1])+' = Draw')
-                with open('statics_players.json','r') as file:#play draw
-                    getStatic=json.load(file)
-                    file.close()
-                    unZip = TheTrain(getStatic[str(playerCollector[0])])
-                    round = int(unZip[0])+1
-                    win = int(unZip[1])+0
-                    loss = int(unZip[2])+0
-                    draw = int(unZip[3])+1
-                with open('statics_players.json','w') as file:#play draw
-                    getStatic[str(playerCollector[0])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                    json.dump(getStatic,file)
-                    file.close()
+                if playerCollector[0] not in getDataList:
+                     #---------------------Set key statics.json-------------------------
+                    with open('statics.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics.json','w') as file:#play first time
+                        getdata[playerCollector[0]]=0
+                        json.dump(getdata,file)
+                        file.close()
+                     #---------------------Set key statics.json-------------------------
+                    with open('statics_players.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics_players.json','w') as file:#play first time
+                        getdata[playerCollector[0]]='[1]{0}<0>(1)'
+                        json.dump(getdata,file)
+                        file.close()
+                else: 
+                    #---------------------Set key statics.json-------------------------
+                    with open('statics.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics.json','w') as file:#play first time
+                        getdata[playerCollector[0]]=0
+                        json.dump(getdata,file)
+                        file.close()
+                    #---------------------Set key statics.json-------------------------
+                    with open('statics_players.json','r') as file:#play draw
+                        getStatic=json.load(file)
+                        file.close()
+                        unZip = TheTrain(getStatic[str(playerCollector[0])])
+                        round = int(unZip[0])+1
+                        win = int(unZip[1])+0
+                        loss = int(unZip[2])+0
+                        draw = int(unZip[3])+1
+                    with open('statics_players.json','w') as file:#play draw
+                        getStatic[str(playerCollector[0])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                        json.dump(getStatic,file)
+                        file.close()
                 
+                if playerCollector[1] not in getDataList:
+                    #---------------------Set key statics.json-------------------------
+                    with open('statics.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics.json','w') as file:#play first time
+                        getdata[playerCollector[1]]=0
+                        json.dump(getdata,file)
+                        file.close()
+                    #---------------------Set key statics.json-------------------------
+                    with open('statics_players.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics_players.json','w') as file:#play first time
+                        getdata[playerCollector[1]]='[1]{0}<0>(1)'
+                        json.dump(getdata,file)
+                        file.close()
+                else:
+                     #---------------------Set key statics.json-------------------------
+                    with open('statics.json','r') as j:
+                        getdata = json.load(j)
+                        j.close()
+                    with open('statics.json','w') as file:#play first time
+                        getdata[playerCollector[1]]=0
+                        json.dump(getdata,file)
+                        file.close()
+                     #---------------------Set key statics.json-------------------------
+                    with open('statics_players.json','r') as file:#play draw
+                        getStatic=json.load(file)
+                        file.close()
+                        unZip = TheTrain(getStatic[str(playerCollector[1])])
+                        round = int(unZip[0])+1
+                        win = int(unZip[1])+0
+                        loss = int(unZip[2])+0
+                        draw = int(unZip[3])+1
+                    with open('statics_players.json','w') as file:#play draw
+                        getStatic[str(playerCollector[1])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
+                        json.dump(getStatic,file)
+                        file.close()
                 
-                with open('statics_players.json','r') as file:#play draw
-                    getStatic=json.load(file)
-                    file.close()
-                    unZip = TheTrain(getStatic[str(playerCollector[1])])
-                    round = int(unZip[0])+1
-                    win = int(unZip[1])+0
-                    loss = int(unZip[2])+0
-                    draw = int(unZip[3])+1
-                with open('statics_players.json','w') as file:#play draw
-                    getStatic[str(playerCollector[1])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                    json.dump(getStatic,file)
-                    file.close()
                             
                             
                         
@@ -756,6 +833,9 @@ def clearHall():
         with open('statics.json','w',encoding='utf-8') as file:
             json.dump(emptyDict,file)
             file.close()
+        with open('statics_players.json','w',encoding='utf-8') as file:
+            json.dump(emptyDict,file)
+            file.close()
         print('clear hall data. ')
         return
     
@@ -765,6 +845,9 @@ def hallOfFrame():
     txtHall.delete("1.0","end")
     txtHall.insert(END,"Rank"+"\tName"+"\tRound"+"\tWin"+"\tLoss"+"\tDraw" + '\n')
     ranking = 0
+    with open('statics.json','r') as j:
+        getdata = json.load(j)
+        j.close()
     for played in getdata :
             bogie = TheTrain(getStatic[played])
             ranking += 1
@@ -875,7 +958,8 @@ def upDate():
 def default():
     global record,server,threadLock,CONNECTIONS_LIST,PORT,BUFSIZE
     global msg,msg_monitor,nameSet,count,stopState,runnerServer
-    hallOfFrame()
+    global getdata,getStatic
+    #hallOfFrame()
     
     stopState = False
     count = 0
