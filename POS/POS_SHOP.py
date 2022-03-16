@@ -3,23 +3,47 @@ import time
 import json
 from ftplib import FTP
 import codecs
+
+year = ""
+month = ""
+day = ""
 hour = ""
-minute= ""
-second= ""
+minute = ""
+second = ""
 shopname = ""
 #===========================================TMP SHOP================================================================
 
 
-
 #================================FTP Server============================================================
 def downloadFile(ftp,filename):
-    localfile = open(filename,'wb')
-    ftp.retrbinary('RETR '+filename,localfile.write,1024)
-    localfile.close()
+    try:
+        localfile = open(filename,'wb')
+        ftp.retrbinary('RETR '+filename,localfile.write,1024)
+        localfile.close()
+    except FileNotFoundError:
+        print("No such file or directory")
+        showlogin_Output.set("No such file or directory")
+        toggleText(loginbtn_Input,"login","logout")
+    except:
+        print("Error")
+        showlogin_Output.set("Error")
+        toggleText(loginbtn_Input,"login","logout")
 
 def uploadFile(ftp,filename):
-    ftp.encoding="utf-8"
-    ftp.storbinary('STOR '+filename,open(filename,'rb'))
+    try:
+        ftp.encoding="utf-8"
+        localfile = open(filename,'rb')
+        ftp.storbinary('STOR '+filename,localfile)
+        localfile.close()
+    except FileNotFoundError:
+        print("No such file or directory")
+        showlogin_Output.set("No such file or directory")
+        toggleText(loginbtn_Input,"login","logout")
+    except:
+        print("Error")
+        showlogin_Output.set("Error")
+        toggleText(loginbtn_Input,"login","logout")
+
 
 def ConnectFTPServer(FTPServer,Username,Password):
     global ftp
@@ -31,10 +55,32 @@ def ConnectFTPServer(FTPServer,Username,Password):
         ftp.retrlines('LIST')
     except TimeoutError:
         print("TimeoutError")
+        showlogin_Output.set("TimeoutError")
+        toggleText(loginbtn_Input,"login","logout")
+
     except ConnectionRefusedError:
         print("ConnectionRefusedError")
-    finally:
-        print("Success!!!")
+        ShowLogin("ConnectionRefusedError")
+        toggleText(loginbtn_Input,"login","logout")
+
+    except NameError:
+        print("NameError")
+        ShowLogin("NameError")
+        toggleText(loginbtn_Input,"login","logout")
+
+    except FileNotFoundError:
+        print("No such file or directory")
+        showlogin_Output.set("No such file or directory")
+        toggleText(loginbtn_Input,"login","logout")
+
+    except:
+        ShowLogin("ไม่สามารถเชื่อมต่อ FTP ได้")
+        toggleText(loginbtn_Input,"login","logout")
+
+
+
+
+
 
 
 
@@ -83,25 +129,30 @@ receipt = StringVar()
 
 #time
 now = time.time()
+
+#menubar
+
+addCarPlate_Output = StringVar()
+addCarPlate_Input = StringVar()
 #------------------------------Variable Function ----------------------
 #showshopname_Output.set("กรุณาตั้งชื่อร้านของคุณ")
 #Tops Function
 
 def clock():
-    global hour,minute,second
+    global day,year,month,year,hour,minute,second
     hour = time.strftime("%H")
     minute = time.strftime("%M")
     second = time.strftime("%S")
     day = time.strftime("%e")
-    month = time.strftime("%B")
-    year = time.strftime("%y")
-    lblInfo.config(text=day+" "+month+" 20"+year+" "+hour+":"+minute+":"+second)
+    month = time.strftime("%m")
+    year = "20"+time.strftime("%y")
+    lblInfo.config(text=day+" | "+month+" | 20"+year+" "+hour+":"+minute+":"+second)
     lblInfo.after(1000,clock)
 
 def Running():
     shopname_Output.set("กรุณาตั้งชื่อร้านของคุณ")
     loginbtn_Input.set("login")
-    text_Receipt.insert(END,"ลำดับ     เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\tร้าน\tสถานะ\n")
+    text_Receipt.insert(END,"ลำดับ    วัน/เวลา\t\t             ทะเบียนรถ\t"+"    จ่ายไป\t          ร้าน\t\t         สถานะ\n")
     modelogin_Input.set(1)
     LoginMode()
     #Receipt()
@@ -110,11 +161,6 @@ def Running():
     send_btn.config(state='disabled')
     refresh_btn.config(state='disabled')
 #General Function
-jsonDict =  {"id":"SE015",
-             "carPlate":"532eaabd9574880dbf76b9b8cc00832c20a6ec113d682299550d7a6e0f345e25",
-             "timeIn":"Suphapong Bunpunya",
-             "Email":"suphapong.b@ku.th",
-             "Telno":"0956321391"}
 
 def CarDict(order,carPlate,timeIn,cost,shop,status):
     jsonDict =  {"order":order,
@@ -126,34 +172,99 @@ def CarDict(order,carPlate,timeIn,cost,shop,status):
     return jsonDict
 
 def WriteFile(filename,dict):
-    with open(filename,'w') as file:
-        json_object = json.dumps(dict, indent = 4)
-        file.write(json_object)
+    try:
+        localfile = open(filename,'w')
+    except FileNotFoundError:
+        print("No such file or directory")
+        toggleText(loginbtn_Input,"login","logout")
+    except ValueError:
+        print("ValueError")
+        toggleText(loginbtn_Input,"login","logout")
+    except NameError:
+        print("NameError")
+        toggleText(loginbtn_Input,"login","logout")
+    except:
+        print("Error")
+        toggleText(loginbtn_Input,"login","logout")
+    else:
+        with localfile as file:
+            json_object = json.dumps(dict, indent = 4)
+            file.write(json_object)
+    finally:
+        localfile.close()
+
+def WriteFile2(filename,dict):
+    try:
+        localfile = open(filename,'w')
+    except FileNotFoundError:
+        print("No such file or directory")
+        toggleText(loginbtn_Input,"login","logout")
+    except ValueError:
+        print("ValueError")
+        toggleText(loginbtn_Input,"login","logout")
+    except NameError:
+        print("NameError")
+        toggleText(loginbtn_Input,"login","logout")
+    except:
+        print("Error")
+        toggleText(loginbtn_Input,"login","logout")
+    else:
+        with localfile as file:
+            json_object = json.dumps(dict, indent = 3)
+            file.write(json_object)
+    finally:
+        localfile.close()
+
+
 
 def ReadFile(filename):
-    with open(filename,'r') as j:
-        userdata = json.load(j)
-        print(type(userdata))
-        print(userdata)
-    return userdata
-        
-#------------------------Login--------------------------------
+    try:
+        localfile = open(filename,'r')
+    except FileNotFoundError:
+        print("No such file or directory")
+        toggleText(loginbtn_Input,"login","logout")
+    except ValueError:
+        print("ValueError")
+        toggleText(loginbtn_Input,"login","logout")
+    except NameError:
+        print("NameError")
+        toggleText(loginbtn_Input,"login","logout")
+    except:
+        print("Error")
+        toggleText(loginbtn_Input,"login","logout")
+    else:
+            try:
+                with localfile as j:
+                    userdata = json.load(j)
+            except:
+                print("Error")
+                toggleText(loginbtn_Input,"login","logout")
+            else:
+                print(type(userdata))
+                print(userdata)
+                return userdata
+            finally:
+                localfile.close()
+
 def ShowLogin(text):
     showlogin_Output.set(text)
 
 def CheckSpace(text):
-    if text!="":
+    if text!="" and not text.isspace():
         return True
     else:
         return False
 
 def toggleText(varBtn,txt1,txt2):
+    global addCar
     if varBtn.get() == txt1:
         varBtn.set(txt2)
+
     else:
         varBtn.set(txt1)
+        text_Receipt.delete("1.0","end")
         shopname_entry.config(state='normal')
-        ftpserver_entry.config(state='normal')
+
         username_entry.config(state='normal')
         password_entry.config(state='normal')
 
@@ -165,16 +276,27 @@ def toggleText(varBtn,txt1,txt2):
         send_btn.config(state='disabled')
         refresh_btn.config(state='disabled')
 
-        ShowLogin("logout เสร็จสิ้น")
+        shopname_Output.set("กรุณาตั้งชื่อร้านของคุณ")
+        ShowLogin("logout ออก")
+
+        if modelogin_Input == 2:
+            ftpserver_entry.config(state='normal')
+            modelogin_Input.set(2)
+        try:
+            addCar.destroy()
+        except:
+            print("addCar.destroy()")
+
+
 
 
 def LoginMode():
     selection = "selected " + str(modelogin_Input.get())
     showlogin_Output.set(selection)
     if modelogin_Input.get()==1:
-
-        ftpserver_label.grid_forget()
-        ftpserver_entry.grid_forget()
+        #ftpserver_label.grid_forget()
+        #ftpserver_entry.grid_forget()
+        ftpserver_entry.config(state='disabled')
         username_label.grid_forget()
         username_entry.grid_forget()
         password_label.grid_forget()
@@ -184,54 +306,97 @@ def LoginMode():
 
     else:
         f1.config(pady=0)
+        ftpserver_entry.config(state='normal')
         ftpserver_label.grid(column=0, row=3, sticky=W)
         ftpserver_entry.grid(columnspan=4, row=4)
         username_label.grid(column=0, row=5, sticky=W)
         username_entry.grid(columnspan=4, row=6)
         password_label.grid(column=0, row=7, sticky=W)
         password_entry.grid(columnspan=4,row=8)
+        ftpserver_entry.config(state='normal')
         return 2
 
 def LoginBtn():
     if LoginMode() == 1:
         AutoLogin()
-    else:
+    elif LoginMode() == 2:
         Login()
 
 def AutoLogin():
     global shopname
-    showlogin_Output.set("ShopTEST")
-    shopname = shopname_Input.get()
-    ftpServer = "10.64.39.141"
-    username = "NetPro"
-    password = "800"
-
-    #FTPServer(ftpServer,username,password)
-
-    if CheckSpace(shopname_Input.get()):
-        ConnectFTPServer(ftpServer,username,password)
-        shopname_Output.set(shopname)
-        shopname_entry.config(state='disabled')
-        modelogin1_radio.config(state='disabled')
-        modelogin2_radio.config(state='disabled')
-
-        license_plate_entry .config(state='normal')
-        amount_entry .config(state='normal')
-        send_btn.config(state='normal')
-        refresh_btn.config(state='normal')
-
+    #showlogin_Output.set("ShopTEST")
+    try:
+        file = open("ftp_ip.txt")
+        ip,user,passWD = file.read().split(";")
+    except IOError:
+        print("IOError")
+        showlogin_Output.set("IOError")
         toggleText(loginbtn_Input,"login","logout")
-        downloadFile(ftp,'Write.json')
-        ShowLogin("login to FTP Server สำเร็จ !")
-        downloadFile(ftp,'Write.json')
-        Receipt()
-        print("login สำเร็จ")
+    except FileNotFoundError:
+        print("No such file or directory")
+        showlogin_Output.set("No such file or directory")
+        toggleText(loginbtn_Input,"login","logout")
+    except:
+        print("Error")
+        showlogin_Output.set("Error")
+        toggleText(loginbtn_Input,"login","logout")
     else:
-        showlogin_Output.set("กรุณากรอกให้ครบ")
+        print(ip)
+        print(user)
+        print(passWD)
+        file.close()
 
-    print("ftpServer:",ftpServer)
-    print("username:",username)
-    print("password:",password)
+        shopname = shopname_Input.get()
+        ftpServer = ip
+        username = user
+        password = passWD
+        """
+        shopname = shopname_Input.get()
+        ftpServer = "10.64.39.141"
+        username = "NetPro"
+        password = "800"
+        """
+
+        #FTPServer(ftpServer,username,password)
+
+        if CheckSpace(shopname_Input.get()):
+            ConnectFTPServer(ftpServer,username,password)
+            try:
+                downloadFile(ftp,'Write.json')
+            except NameError:
+                print("NameError")
+                ShowLogin("NameError")
+                toggleText(loginbtn_Input,"login","logout")
+            except:
+                print("Error")
+                ShowLogin("Error")
+                toggleText(loginbtn_Input,"login","logout")
+            else:
+                shopname_Output.set(shopname)
+                ftpserver_Input.set(ftpServer)
+
+                shopname_entry.config(state='disabled')
+                ftpserver_entry.config(state='disabled')
+                modelogin1_radio.config(state='disabled')
+                modelogin2_radio.config(state='disabled')
+
+                license_plate_entry.config(state='normal')
+                amount_entry .config(state='normal')
+                send_btn.config(state='normal')
+                refresh_btn.config(state='normal')
+
+                filemenu.entryconfig("เพิ่มทะเบียนรถ",state="normal")
+                ShowLogin("login to FTP Server สำเร็จ !")
+                toggleText(loginbtn_Input,"login","logout")
+
+                #Receipt()
+                print("login สำเร็จ")
+        else:
+            showlogin_Output.set("กรุณากรอกให้ครบ")
+
+        print("ftpServer:",ftpServer)
+        print("username:",username)
+        print("password:",password)
 
 def Login():
     global shopname
@@ -245,26 +410,40 @@ def Login():
 
     if(CheckSpace(shopname_Input.get()) & CheckSpace(ftpServer) & CheckSpace(username) & CheckSpace(password)):
         ConnectFTPServer(ftpServer,username,password)
-        shopname_Output.set(shopname)
-        shopname_entry.config(state='disabled')
-        ftpserver_entry.config(state='disabled')
-        username_entry.config(state='disabled')
-        password_entry.config(state='disabled')
-        modelogin1_radio.config(state='disabled')
-        modelogin2_radio.config(state='disabled')
+        try:
+            downloadFile(ftp,'Write.json')
+        except NameError:
+            print("NameError")
+            ShowLogin("NameError")
+            toggleText(loginbtn_Input,"login","logout")
+        except:
+            print("Error")
+            ShowLogin("Error")
+            toggleText(loginbtn_Input,"login","logout")
+        else:
+            #Receipt()
 
-        license_plate_entry .config(state='normal')
-        amount_entry .config(state='normal')
-        send_btn.config(state='normal')
-        refresh_btn.config(state='normal')
+            #ShowLogin("ssssslogin to FTP Server สำเร็จ !")
+            shopname_Output.set(shopname)
+            shopname_entry.config(state='disabled')
+            ftpserver_entry.config(state='disabled')
+            username_entry.config(state='disabled')
+            password_entry.config(state='disabled')
+            modelogin1_radio.config(state='disabled')
+            modelogin2_radio.config(state='disabled')
 
-        toggleText(loginbtn_Input,"login","logout")
-        downloadFile(ftp,'Write.json')
-        Receipt()
-        ShowLogin("login to FTP Server สำเร็จ !")
-        print("login สำเร็จ")
+            license_plate_entry .config(state='normal')
+            amount_entry .config(state='normal')
+            send_btn.config(state='normal')
+            refresh_btn.config(state='normal')
+
+            filemenu.entryconfig("เพิ่มทะเบียนรถ",state="normal")
+            ShowLogin("login to FTP Server สำเร็จ !")
+            toggleText(loginbtn_Input,"login","logout")
+            modelogin_Input.set(1)
+            print("login สำเร็จ")
     else:
-        showlogin_Output.set("กรุณากรอกให้ครบ")
+        ShowLogin("กรุณากรอกให้ครบ")
 
     print("ftpServer:",ftpServer)
     print("username:",username)
@@ -274,14 +453,77 @@ def Login():
 #f2 Function
 dict_arr = []
 carplateList = []
+deleteReceipt = []
 car_order = -1
 
-def CheckCarPlate(customer):
+def CheckCarStatus():
     global carplateList
-    userdata = ReadFile('Check.json')
+    checkbill = False
+    carplateList = []
+    downloadFile(ftp,'carOutData.json')
+    downloadFile(ftp,'Write.json')
+
+    userdata = ReadFile('carOutData.json')
+    receiptdata = ReadFile('Write.json')
+    try:
+        for carplate in userdata:
+            if carplate["status"] == 0:
+                carplateList.append(carplate["carPlate"])#TypeError
+            elif carplate["status"] == 2:
+                deleteReceipt.append(carplate["carPlate"])
+        print("deleteReceipt",deleteReceipt)
+    except:
+        print("Error")
+        ShowLogin("Error")
+        toggleText(loginbtn_Input,"login","logout")
+
+    else:
+        try:
+            print(receiptdata)
+            for receipt in receiptdata:
+                for carplate in carplateList:
+                    print("receipt:",receipt["carPlate"],"carplate:",carplate)
+                    if receipt["carPlate"] == carplate:
+                        receipt["status"] = 0
+
+        #print("tmp_Delete",tmp_Delete)
+        except:
+            print("Error")
+            ShowLogin("Error")
+            toggleText(loginbtn_Input,"login","logout")
+        else:
+            tmp_Delete = receiptdata
+            try:
+                for index,receipt in enumerate(receiptdata):
+                    for carplatedel in deleteReceipt:
+                        if receipt["carPlate"] == carplatedel:
+                            tmp_Delete.pop(index)
+                receiptdata = tmp_Delete
+            except:
+               print("IndexError")
+               toggleText(loginbtn_Input,"login","logout")
+            else:
+                WriteFile('Write.json',receiptdata)
+                uploadFile(ftp,'Write.json')
+
+
+
+
+
+def isFloat(number):
+    try:
+        float(number)
+        return True
+    except ValueError:
+        return False
+
+def CheckCarPlate(customer):
+    downloadFile(ftp,'carInData.json')
+    #userdata = ReadFile('Check.json')
+    userdata = ReadFile('carInData.json')
     for car in userdata:
         if car["carPlate"] == customer:
-            if car["status"] == 1:
+            if car["status"] == 0:
                 print(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
                 carrecent_Output.set(str(customer)+" รถทะเบียนนี้ออกไปเเล้ว")
                 return False
@@ -297,19 +539,30 @@ def CheckCarPlate(customer):
 
 
 def Summit():
-    global dict_arr, car_order, shopname
+    global dict_arr, car_order, shopname, day,month,year,hour,minute,second
     license = license_Input.get()
     cost  = amount_Input.get()
+    CheckCarStatus()
     downloadFile(ftp,'Write.json')
+    Receipt()
 
-    if(CheckSpace(license) & CheckSpace(cost)):
+    if(CheckSpace(license) & CheckSpace(cost) & isFloat(cost)):
             if CheckCarPlate(license):
                 print("car_order",car_order)
-                timeIn = hour+":"+minute+":"+second
+                timeIn = day+"/"+month+"/"+year+" "+hour+":"+minute
                 carrecent_Output.set(timeIn+" ทบล: "+license+" จ่าย: "+cost+" บาท")
                 dict_arr = ReadFile('Write.json')
-                car_order = int(dict_arr[len(dict_arr)-1]["order"])+1
-                dict_arr.append(CarDict(car_order,license,timeIn,cost,shopname,0))
+                try:
+                    car_order = int(dict_arr[len(dict_arr)-1]["order"])+1
+                    dict_arr.append(CarDict(car_order,license,timeIn,cost,shopname,1))
+                except IndexError:
+                    ShowLogin("IndexError")
+                    toggleText(loginbtn_Input,"login","logout")
+                except:
+                    ShowLogin("Error")
+                    toggleText(loginbtn_Input,"login","logout")
+
+
                 WriteFile('Write.json',dict_arr)
                 Receipt()
                 print(dict_arr)
@@ -323,32 +576,108 @@ def Summit():
                 amount_Input.set("")
 
     else:
-        root = Tk()
-        root.geometry("250x100+0+0")
-        root.title("คำเตือน")
-        label = Label(root, text="กรุณากรอกข้อมูลให้ถูกต้อง")
-        label.pack(side="top", fill="x", pady=10)
-        B1 = Button(root, text="Okay", command = root.destroy)
-        B1.pack()
-        root.mainloop()
+        carrecent_Output.set("กรุณากรอกข้อมูลให้ถูกต้อง")
 
-    print(shopname_Output)
+
+    #print(shopname_Output)
 
 def Refresh():
+    CheckCarStatus()
     downloadFile(ftp,'Write.json')
     Receipt()
 
 #f3 Function
 def Receipt():
-    data = ReadFile('Write.json')
+    userdata = ReadFile('Write.json')
+    #CheckCarStatus()
     text_Receipt.delete("1.0","end")
-    text_Receipt.insert(END,"ลำดับ      เวลา\t\tทะเบียนรถ\t"+"   จ่ายไป\t     ร้าน\t\t      สถานะ\n")
-    for list in data:
-        print(list["order"])
-        print(list["shop"])
-        text_Receipt.insert(END,"   "+str(list["order"])+"         "+str(list["timeIn"])+
-                            "\t\t"+str(list["carPlate"])+"\t   "+str(list["cost"])+
-                            " ฿\t     "+str(list["shop"])+"\t\t       "+str(list["status"])+"\n")
+    text_Receipt.insert(END,"ลำดับ    วัน/เวลา\t\t           ทะเบียนรถ\t"+"    จ่ายไป\t          ร้าน\t\t         สถานะ\n")
+    status = ""
+    try:
+        for list in userdata:
+            if list["status"] == 0:
+                status = "เช็คเเล้ว"
+            elif list["status"] == 1:
+                status = "ยังอยู่"
+
+            print(list["order"])
+            print(list["shop"])
+
+            text_Receipt.insert(END,"  "+str(list["order"])
+                                +"     "+str(list["timeIn"])
+                                +
+                                "\t\t   "+str(list["carPlate"])
+                                +"\t           "+str(list["cost"])+
+                                " ฿\t           "+str(list["shop"])
+                                +"\t\t          "+status+"\n")
+    except: #TypeError
+        print("Error")
+        ShowLogin("Error")
+        toggleText(loginbtn_Input,"login","logout")
+
+
+
+
+
+#MenuBar Function
+
+
+def CarPlateDict(order,carPlate,timeIn,cost,status):
+    jsonDict =  {"order":order,
+                 "carPlate":carPlate,
+                 "timeIn":timeIn,
+                 "cost":cost,
+                 "status":status}
+    return jsonDict
+
+def ShowAddCarPlate():
+    def AddCarPlate():
+        global addCarPlate_Output,addCarPlate_Input,addcar_entry
+        carPlate = addcar_entry.get()
+        print("carPlate:",carPlate)
+        print('check'+str(CheckSpace(carPlate)))
+        if CheckSpace(carPlate):
+            print('CheckSpace')
+            addCarPlate_Output.set("เพิ่มทะเบียนสำเร็จ")
+            downloadFile(ftp,'carInData.json')
+            cardict_arr = ReadFile('carInData.json')
+            carIn_order = int(cardict_arr[len(cardict_arr)-1]["order"])+1
+            timeIn = day+"/"+month+"/"+year+" "+hour+":"+minute
+            cardict_arr.append(CarPlateDict(carIn_order,carPlate,timeIn,0,1))
+            print("cardict_arr:",cardict_arr)
+            WriteFile2('carInData.json',cardict_arr)
+            uploadFile(ftp,'carInData.json')
+            addCar.destroy()
+
+        else:
+            addCarPlate_Output.set("กรุณากรอกทะเบียนให้ถูกต้อง")
+    global addCarPlate_Output,addCarPlate_Input,addcar_entry,addCar
+
+    addCar = Toplevel(root)
+    addCar.geometry("650x300+500+200")
+    addCar.title("เพิ่มทะเบียนรถ")
+    addCar.configure(background="#8d99ae")
+    addCar.resizable(width=False, height=False)
+
+    showaddstatus_label = Label(addCar,text="สถานะ", font=('TH Sarabun New',20,'bold'))
+    showaddstatus_label.grid(column=0,row=0,sticky=W)
+    showaddstatus_entry = Entry(addCar,font=('TH Sarabun New',25,'bold'),disabledbackground='#ef233c',
+                                disabledforeground='white',textvariable=addCarPlate_Output,state='disable',bd=20,insertwidth=10,width=23,
+                                bg="powder blue",justify='right')
+    showaddstatus_entry.grid(columnspan=4, row=1)
+
+    addcar_label = Label(addCar, text="ทะเบียนรถ: ", font=('TH Sarabun New',20,'bold'))
+    addcar_label.grid(column=0,row=2,sticky=W)
+    addcar_entry = Entry(addCar,font=('TH Sarabun New',25,'bold'),
+                         textvariable=addCarPlate_Input,bd=20,insertwidth=10,width=15,
+                         bg="white",justify='right')
+    addcar_entry.grid(columnspan=4, row=3)
+
+
+    addcar_btn = Button(addCar,padx=16, bg="#2b2d42",fg="white",font=('TH Sarabun New',18,'bold'),width=8,
+                        text="เพิ่มทะเบียน",command=lambda:AddCarPlate())
+    addcar_btn.grid(padx=20,pady=20,column=4,row=3)
+
 
 
 #--------------------------------TOPS-------------------------------
@@ -360,13 +689,11 @@ lblInfo = Label(Tops,font=('TH Sarabun New',30,'bold'),
                 text="",fg="white",bg="#8d99ae",bd=10,anchor='w',relief=SUNKEN)
 lblInfo.grid(row=1,column=0)
 
-lblBlank = Label(f2,font=('TH Sarabun New',50,'bold'),
-                text="",fg="#2b2d42",bd=10,anchor='w')
-lblBlank.grid(row=7,column=0)
+
 
 #------------------------f1 Left-----------------------------
-showlogin_entry = Entry(f1,font=('TH Sarabun New',30,'bold'),state='disable',disabledbackground='#ef233c',
-                        disabledforeground='white',textvariable=showlogin_Output,bd=20,insertwidth=10,
+showlogin_entry = Entry(f1,font=('TH Sarabun New',25,'bold'),state='disable',disabledbackground='#ef233c',
+                        disabledforeground='white',textvariable=showlogin_Output,bd=20,insertwidth=10,width=23,
                         bg="powder blue",justify='right')
 showlogin_entry.grid(columnspan=4, row=0)
 
@@ -395,7 +722,7 @@ password_label = Label(f1, text="Password:", font=('TH Sarabun New',16,'bold'))
 password_label.grid(column=0, row=7, sticky=W)
 password_entry = Entry(f1,font=('TH Sarabun New',16,'bold'),
                        textvariable=password_Input,bd=20,insertwidth=5,width=30,
-                       bg="white",justify='right',show='')
+                       bg="white",justify='right',show='*')
 password_entry.grid(columnspan=4,row=8)
 
 modelogin_label = Label(f1, text="login mode:", font=('TH Sarabun New',14,'bold'))
@@ -448,23 +775,21 @@ text_Receipt = Text(f3,font=('TH Sarabun New',12,'bold'),
                     bd=5,width=60,height=30,bg="#e5dcdc")
 text_Receipt.grid(column=0,row=2,sticky=W)
 
+#=========================Menu Bar==========================
+
+menubar = Menu(root)
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="เพิ่มทะเบียนรถ",font=('TH Sarabun New',18,'bold'),state="disabled", command=lambda:ShowAddCarPlate())
+filemenu.add_separator()
+filemenu.add_command(label="Exit",font=('TH Sarabun New',15,'bold'), command=root.destroy)
+menubar.add_cascade(label="Menu", menu=filemenu)
+
+root.config(menu=menubar)
+#===========================
+
+#============================================================================================
 
 Running()
 clock()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+root.attributes('-fullscreen',True)
 root.mainloop()
