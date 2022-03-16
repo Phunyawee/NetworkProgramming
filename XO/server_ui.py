@@ -31,7 +31,7 @@ try:
         j.close()
     sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
     with open('statics.json','w') as file:
-        json.dump(sorted_dt,file)
+        file.write(json.dumps(sorted_dt,indent=1))
         file.close()
     with open('statics.json','r') as j:
         getdata = json.load(j)
@@ -42,10 +42,12 @@ try:
     #============================Sort data
 except :
     with open('statics.json','w',encoding='utf-8') as file:
-        json.dump(getdata,file)
+        file.write(json.dumps(getdata,indent=1))
+        #json.dump(getdata,file)
         file.close()
     with open('statics_players.json','w',encoding='utf-8') as file:
-        json.dump(getdata,file)
+        file.write(json.dumps(getdata,indent=1))
+        #json.dump(getdata,file)
         file.close()
     print('New File created!')
 class Clock:
@@ -335,7 +337,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                 j.close()
             sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
             with open('statics.json','w') as file:
-                json.dump(sorted_dt,file)
+                file.write(json.dumps(sorted_dt,indent=1))
+                #json.dump(sorted_dt,file)
                 file.close()
             #============================Sort data
             with open('statics.json','r') as j:
@@ -358,14 +361,16 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         j.close()
                     with open('statics.json','w') as file:#play first time
                         getdata[chosen]=1
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
                     with open('statics_players.json','r') as j:
                         getdata = json.load(j)
                         j.close()
                     with open('statics_players.json','w') as file:#play first time
                         getdata[chosen]='[1]{1}<0>(0)'
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
                     if loser not in getDataList:
                         print('add loser')
@@ -375,14 +380,16 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             j.close()
                         with open('statics.json','w') as file:#play first time
                             getdata[loser]=0
-                            json.dump(getdata,file)
+                            file.write(json.dumps(getdata,indent=1))
+                            #json.dump(getdata,file)
                             file.close()   
                         with open('statics_players.json','r') as j:
                             getdata = json.load(j)
                             j.close()
                         with open('statics_players.json','w') as file:#play first time
                             getdata[loser]='[1]{0}<1>(0)'
-                            json.dump(getdata,file)
+                            file.write(json.dumps(getdata,indent=1))
+                            #json.dump(getdata,file)
                             file.close()
                         ####################################################################
                     else:
@@ -398,7 +405,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             draw = int(unZip[3])+0
                         with open('statics_players.json','w') as file:##other time
                             getStatic[loser]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                            json.dump(getStatic,file)
+                            file.write(json.dumps(getStatic,indent=1))
+                            #json.dump(getStatic,file)
                             file.close()
                 
                 if loser not in getDataList:
@@ -410,14 +418,16 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             j.close()
                     with open('statics.json','w') as file:#play first time
                         getdata[loser]=0
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()   
                     with open('statics_players.json','r') as j:
                         getdata = json.load(j)
                         j.close()
                     with open('statics_players.json','w') as file:#play first time
                         getdata[loser]='[1]{0}<1>(0)'
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
                     ####################################################################
                     if chosen not in getDataList:
@@ -428,14 +438,16 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             j.close()
                         with open('statics.json','w') as file:#play first time
                             getdata[chosen]=1
-                            json.dump(getdata,file)
+                            file.write(json.dumps(getdata,indent=1))
+                            #json.dump(getdata,file)
                             file.close()
                         with open('statics_players.json','r') as j:
                             getdata = json.load(j)
                             j.close()
                         with open('statics_players.json','w') as file:#play first time
                             getdata[chosen]='[1]{1}<0>(0)'
-                            json.dump(getdata,file)
+                            file.write(json.dumps(getdata,indent=1))
+                            #json.dump(getdata,file)
                             file.close()
                         ####################################################################
                     else:
@@ -447,7 +459,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         with open('statics.json','w') as file:#play first time
                             tempWin = getdata[chosen]
                             getdata[chosen]= tempWin+1
-                            json.dump(getdata,file)
+                            file.write(json.dumps(getdata,indent=1))
+                            #json.dump(getdata,file)
                             file.close()
 
                         with open('statics_players.json','r') as file:##other time
@@ -460,7 +473,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             draw = int(unZip[3])+0
                         with open('statics_players.json','w') as file:##other time
                             getStatic[chosen]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                            json.dump(getStatic,file)
+                            file.write(json.dumps(getStatic,indent=1))
+                            #json.dump(getStatic,file)
                             file.close()
                         ####################################################################
                 if loser in getDataList and chosen in getDataList:
@@ -476,7 +490,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         draw = int(unZip[3])+0
                     with open('statics_players.json','w') as file:##other time
                         getStatic[loser]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                        json.dump(getStatic,file)
+                        file.write(json.dumps(getStatic,indent=1))
+                        #json.dump(getStatic,file)
                         file.close()
 
                     print('update winner')
@@ -487,7 +502,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                     with open('statics.json','w') as file:#play first time
                         tempWin = getdata[chosen]
                         getdata[chosen]= tempWin+1
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
 
                     with open('statics_players.json','r') as file:##other time
@@ -500,7 +516,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         draw = int(unZip[3])+0
                     with open('statics_players.json','w') as file:##other time
                         getStatic[chosen]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                        json.dump(getStatic,file)
+                        file.write(json.dumps(getStatic,indent=1))
+                        #json.dump(getStatic,file)
                         file.close()
 
                 
@@ -523,7 +540,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         j.close()
                     with open('statics.json','w') as file:#play first time
                         getdata[playerCollector[0]]=0
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
                      #---------------------Set key statics.json-------------------------
                     with open('statics_players.json','r') as j:
@@ -531,7 +549,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         j.close()
                     with open('statics_players.json','w') as file:#play first time
                         getdata[playerCollector[0]]='[1]{0}<0>(1)'
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
                 else: 
                     print('update draw')
@@ -547,7 +566,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         draw = int(unZip[3])+1
                     with open('statics_players.json','w') as file:#play draw
                         getStatic[str(playerCollector[0])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                        json.dump(getStatic,file)
+                        file.write(json.dumps(getStatic,indent=1))
+                        #json.dump(getStatic,file)
                         file.close()
                 
                 if playerCollector[1] not in getDataList:
@@ -559,7 +579,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         j.close()
                     with open('statics.json','w') as file:#play first time
                         getdata[playerCollector[1]]=0
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
                     #---------------------Set key statics.json-------------------------
                     with open('statics_players.json','r') as j:
@@ -567,7 +588,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         j.close()
                     with open('statics_players.json','w') as file:#play first time
                         getdata[playerCollector[1]]='[1]{0}<0>(1)'
-                        json.dump(getdata,file)
+                        file.write(json.dumps(getdata,indent=1))
+                        #json.dump(getdata,file)
                         file.close()
                 else:
                     print('update draw')
@@ -583,7 +605,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         draw = int(unZip[3])+1
                     with open('statics_players.json','w') as file:#play draw
                         getStatic[str(playerCollector[1])]='['+str(round)+']'+'{'+str(win)+'}'+'<'+str(loss)+'>'+'('+str(draw)+')'
-                        json.dump(getStatic,file)
+                        file.write(json.dumps(getStatic,indent=1))
+                        #json.dump(getStatic,file)
                         file.close()
                 
                             
@@ -902,10 +925,12 @@ def clearHall():
     if End > 0:
         emptyDict = {}
         with open('statics.json','w',encoding='utf-8') as file:
-            json.dump(emptyDict,file)
+            file.write(json.dumps(emptyDict,indent=1))
+            #json.dump(emptyDict,file)
             file.close()
         with open('statics_players.json','w',encoding='utf-8') as file:
-            json.dump(emptyDict,file)
+            file.write(json.dumps(emptyDict,indent=1))
+            #json.dump(emptyDict,file)
             file.close()
         print('clear hall data. ')
         return
