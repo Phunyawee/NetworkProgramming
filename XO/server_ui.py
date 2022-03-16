@@ -56,7 +56,7 @@ class Clock:
         self.time2 = time.strftime('%H:%M:%S')
         self.mFrame = Frame()
         self.mFrame.pack()
-        self.watch = Label(self.mFrame, text=self.time2,font=('Microsoft YaHei Light',30,'bold'),fg="Blue",bg='powder blue')
+        self.watch = Label(self.mFrame, text=self.time2,font=('Microsoft YaHei Light',30,'bold'),fg="#f8f9fa",bg='#6f85ff')
         self.watch.pack()
         self.changeLabel() #first call it manually
 
@@ -850,7 +850,7 @@ root = Tk()
 root.geometry("1600x800+0+0")
 #root.attributes('-fullscreen', True)  
 root.title("Tic-tac-toe(Server)")
-root.configure(background='powder blue')
+root.configure(background='#6f85ff')
 messagetry = StringVar()
 modeNow = StringVar()
 modeMainFrame = StringVar()
@@ -858,39 +858,39 @@ player1Label = StringVar()
 player2Label = StringVar()
 player1Label.set('Name')
 player2Label.set('Name')
-Tops = Frame(root,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+Tops = Frame(root,width=1600,height=400,bg="#6f85ff",relief=SUNKEN)
 Tops.pack(side=TOP)
 
-f0 = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0 = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0.grid(row=0,column=0)
 
 #label
 lblInfo = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
-                text="Player1",fg="Blue",bd=10,background='powder blue')
+                text="Player1",fg="#f8f9fa",bd=10,background='#6f85ff')
 lblInfo.grid(row=0,column=0)
 lblRole = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
-                textvariable=player1Label,fg="Blue",bd=10,background='powder blue')
+                textvariable=player1Label,fg="#f8f9fa",bd=10,background='#6f85ff')
 lblRole.grid(row=1,column=0)
 #bank zone
 #===============================================================
-f0a = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0a = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0a.grid(row=0,column=2)
 lblAir = Label(f0a,font=('Microsoft YaHei Light',50,'bold'),
-                text="Player2",fg="Blue",bd=10,background='powder blue')
+                text="Player2",fg="#f8f9fa",bd=10,background='#6f85ff')
 lblAir.grid(row=0,column=0)
 lblRole2 = Label(f0a,font=('Microsoft YaHei Light',40,'bold'),
-                textvariable=player2Label,fg="Blue",bd=10,background='powder blue')
+                textvariable=player2Label,fg="#f8f9fa",bd=10,background='#6f85ff')
 lblRole2.grid(row=1,column=0)
 #===============================================================
 #hall
-f0b = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0b = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0b.grid(row=0,column=1)
 
 lblHall = Label(f0b,font=('Microsoft YaHei Light',50,'bold'),
-                text="\tMonitor\t\t",fg="Blue",background='powder blue')
+                text="\tMonitor\t\t",fg="#f8f9fa",background='#6f85ff')
 lblHall.grid(row=0,column=0)
 lblHall2 = Label(f0b,font=('Microsoft YaHei Light',40,'bold'),
-                textvariable=str(Clock()),fg="Blue",background='powder blue')
+                textvariable=str(Clock()),fg="#f8f9fa",background='#6f85ff')
 lblHall2.grid(row=2,column=0)
 
 statePlayer=StringVar()
@@ -909,10 +909,10 @@ text8 = StringVar()
 text9 = StringVar()
 
 # lblInfo3 = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
-#                 text="\t\t",fg="Blue",bd=10)
+#                 text="\t\t",fg="#f8f9fa",bd=10)
 # lblInfo3.grid(row=0,column=2)
 # lblRole3 = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
-#                 text="\t\t",fg="Blue",bd=10)
+#                 text="\t\t",fg="#f8f9fa",bd=10)
 # lblRole3.grid(row=1,column=2)
 
 
@@ -1011,13 +1011,13 @@ def logWalk():
         made = Toplevel(root)
         made.geometry('400x500')
         made.title("Walk log")
-        made.configure(bg="powder blue")
-        fr1 = Frame(made,width=1000,height=200,bg="powder blue",relief=SUNKEN)
+        made.configure(bg="#6f85ff")
+        fr1 = Frame(made,width=1000,height=200,bg="#6f85ff",relief=SUNKEN)
         fr1.pack(side=TOP)
-        txtWalkLabel = Label(fr1,text='History',font=('TH Sarabun New',17,'bold'),bg="powder blue")
+        txtWalkLabel = Label(fr1,text='History',font=('TH Sarabun New',17,'bold'),bg="#6f85ff")
         txtWalkLabel.grid(row=0,column=0)
-        fr2 = Frame(made,width=1000,height=200,bg="powder blue",relief=SUNKEN)
-        txtWalk = Text(fr2,font=('TH Sarabun New',18,'bold'), bd=8,width=25,height=15,bg="powder blue")
+        fr2 = Frame(made,width=1000,height=200,bg="#6f85ff",relief=SUNKEN)
+        txtWalk = Text(fr2,font=('TH Sarabun New',18,'bold'), bd=8,width=25,height=15,bg="#6f85ff")
         txtWalk.grid(row=0,column=0)
         txtWalk.insert(END,'=======================')
 
@@ -1150,7 +1150,7 @@ def startServer():
         
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>server manage<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-Bottoms = Frame(root,width=1600,bg="powder blue",relief=SUNKEN)
+Bottoms = Frame(root,width=1600,bg="#6f85ff",relief=SUNKEN)
 Bottoms.pack(side=BOTTOM)
 
 f1 = Frame(Bottoms,width=800,height=700,bg="",relief=SUNKEN)
@@ -1158,13 +1158,13 @@ f1.grid(row=0,column=1)
 
 f2 = Frame(Bottoms,width=600,height=700,relief=SUNKEN)
 f2.grid(row=0,column=2)
-f2.configure(background='powder blue')
-f3 = Frame(Bottoms,width=500,height=700,bg='powder blue')
+f2.configure(background='#6f85ff')
+f3 = Frame(Bottoms,width=500,height=700,bg='#6f85ff')
 f3.grid(row=0,column=3)
 lblInfox = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                text="Hall of Fame",fg="Blue",bd=5,bg='powder blue')
+                text="Hall of Fame",fg="#f8f9fa",bd=5,bg='#6f85ff')
 lblInfox.grid(row=0,column=0)
-txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="powder blue")
+txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="#6f85ff")
 txtHall.grid(row=1,column=0)
 
 
@@ -1178,13 +1178,13 @@ font1 = TkFont.Font(family="Microsoft YaHei Light",size = 20,weight = 'bold')
 
 #===============================Calculator Frame===========================
 txtDisplayState = Label(f2,font=font1,
-                text="State",fg="Blue",bd=10,bg='powder blue')
+                text="State",fg="#f8f9fa",bd=10,bg='#6f85ff')
 
 
 txtDisplayState.grid(columnspan=4)
 txtDisplay = Entry(f2,font=font1,
                    textvariable=statePlayer,bd=30,insertwidth=4,
-                   bg="#49A",justify='right',state='disabled',disabledbackground='powder blue')
+                   bg="#49A",justify='right',state='disabled',disabledbackground='#6f85ff')
 txtDisplay.grid(columnspan=4)
 
 btnWidth = 5
@@ -1257,21 +1257,21 @@ btnClear.grid(row=6,columnspan=3)
 #offButton()
 
 lblReference = Label(f1,font=font1, text="State",
-                     bd=16,anchor='w',bg="powder blue").grid(row=0,column=0)  
+                     bd=16,anchor='w',bg="#6f85ff").grid(row=0,column=0)  
 txtReference = Entry(f1,font=font1,textvariable=stateServer,
                      bd=10,insertwidth=4,bg='#49A',justify='right'
-                     ,state='disabled',disabledbackground='powder blue').grid(row=0,column=1)
+                     ,state='disabled',disabledbackground='#6f85ff').grid(row=0,column=1)
 
 #-----------------------------------------------------------------------------------------------------
 lblIp = Label(f1,font=font1, text="ip"
-                 ,bd=16,anchor='w',bg="powder blue").grid(row=1,column=0)  
+                 ,bd=16,anchor='w',bg="#6f85ff").grid(row=1,column=0)  
 txtIp = Entry(f1,font=font1,textvariable=ip_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtIp.grid(row=1,column=1)
 
 #-----------------------------------------------------------------------------------------------------
 lblPort = Label(f1,font=font1, text="port"
-                 ,bd=16,anchor='w',bg="powder blue").grid(row=2,column=0)  
+                 ,bd=16,anchor='w',bg="#6f85ff").grid(row=2,column=0)  
 txtPort = Entry(f1,font=font1,textvariable=port_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtPort.grid(row=2,column=1)  

@@ -19,7 +19,7 @@ class Clock:
         self.mFrame = Frame()
         self.mFrame.pack(side=TOP)
 
-        self.watch = Label(self.mFrame, text=self.time2,font=('Microsoft YaHei Light',30,'bold'),fg="Blue",bg='powder blue')
+        self.watch = Label(self.mFrame, text=self.time2,font=('Terminal',30,'bold'),fg="#fcfcfc",bg='#6f85ff')
         self.watch.pack()
 
         self.changeLabel() #first call it manually
@@ -47,32 +47,33 @@ root = Tk()
 root.geometry("1600x800+0+0")
 #root.attributes('-fullscreen', True)  
 root.title("Tic-tac-toe")
-root.configure(background='powder blue')
+root.configure(background='#6f85ff')
 messagetry = StringVar()
 modeNow = StringVar()
 modeMainFrame = StringVar()
-Tops = Frame(root,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+Tops = Frame(root,width=1600,height=200,bg="#6f85ff",relief=SUNKEN)
 Tops.pack(side=TOP)
 
-f0 = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0 = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0.grid(row=0,column=0)
 
 #label
-lblInfo = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
-                text="TIC-TAC-TOE",fg="Blue",bd=10,background='powder blue')
+#title_font = ImageFont.ENtruetype('font/kindapix.ttf',50)
+lblInfo = Label(f0,font=('Terminal',50,'bold'),
+                text="TIC-TAC-TOE",fg="#fcbc02",bd=10,background='#6f85ff')
 lblInfo.grid(row=0,column=0)
-lblRole = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
-                textvariable=modeMainFrame,fg="Blue",bd=10,background='powder blue')
+lblRole = Label(f0,font=('Terminal',20,'bold'),
+                textvariable=modeMainFrame,fg="#fcfcfc",bd=10,background='#6f85ff')
 lblRole.grid(row=1,column=0)
 #bank zone
 #===============================================================
-f0a = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0a = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0a.grid(row=0,column=1)
-lblAir = Label(f0a,font=('Microsoft YaHei Light',25,'bold'),
-                text="\t\t\tMode",fg="Blue",bd=10,background='powder blue')
+lblAir = Label(f0a,font=('Terminal',25,'bold'),
+                text="\t\t\tMode",fg="#fcfcfc",bd=10,background='#6f85ff')
 lblAir.grid(row=0,column=0)
-lblAir2 = Label(f0a,font=('Microsoft YaHei Light',25,'bold'),
-                text="\t\tClient to Client",fg="Blue",bd=10,background='powder blue')
+lblAir2 = Label(f0a,font=('Terminal',20,'bold'),
+                text="\n\t\t\t\tClient to Client",fg="#fcfcfc",bd=10,background='#6f85ff')
 lblAir2.grid(row=1,column=0)
 
 
@@ -83,21 +84,21 @@ lblAir2.grid(row=1,column=0)
 
 
 # lblAir3 = Label(f0a,font=('Microsoft YaHei Light',30,'bold'),
-#                 text="Button1",fg="Blue",bd=10,background='powder blue')
+#                 text="Button1",fg="#fcfcfc",bd=10,background='#6f85ff')
 # lblAir3.grid(row=1,column=1)
 # lblAir4 = Label(f0a,font=('Microsoft YaHei Light',30,'bold'),
-#                 text="Button2",fg="Blue",bd=10,background='powder blue')
+#                 text="Button2",fg="#fcfcfc",bd=10,background='#6f85ff')
 # lblAir4.grid(row=2,column=1)
 #===============================================================
 #hall
-f0b = Frame(Tops,bg="powder blue",relief=SUNKEN)
+f0b = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0b.grid(row=0,column=2)
 clock = Clock()
-lblHall = Label(f0b,font=('Microsoft YaHei Light',50,'bold'),
-                textvariable=str(clock),fg="Blue",background='powder blue')
+lblHall = Label(f0b,font=('Terminal',70,'bold'),
+                textvariable=str(clock),fg="#fcfcfc",background='#6f85ff')
 lblHall.grid(row=0,column=0)
-lblHall2 = Label(f0b,font=('Microsoft YaHei Light',40,'bold'),
-                text='\t'*2,fg="Blue",bd=10,background='powder blue')
+lblHall2 = Label(f0b,font=('Terminal',70,'bold'),
+                text='\t'*2,fg="#fcfcfc",bd=10,background='#6f85ff')
 lblHall2.grid(row=2,column=0)
 
 
@@ -105,26 +106,26 @@ lblHall2.grid(row=2,column=0)
 
 
 # lblInfo3 = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
-#                 text="\t\t",fg="Blue",bd=10)
+#                 text="\t\t",fg="#fcfcfc",bd=10)
 # lblInfo3.grid(row=0,column=2)
 # lblRole3 = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
-#                 text="\t\t",fg="Blue",bd=10)
+#                 text="\t\t",fg="#fcfcfc",bd=10)
 # lblRole3.grid(row=1,column=2)
 
 
-Bottoms = Frame(root,width=1600,bg="powder blue",relief=SUNKEN)
+Bottoms = Frame(root,width=1600,height=800,bg="#6f85ff",relief=SUNKEN)
 Bottoms.pack(side=BOTTOM)
-f1 = Frame(Bottoms,width=800,height=700,bg="",relief=SUNKEN)
+f1 = Frame(Bottoms,width=500,height=500,bg="#6f85ff",relief=SUNKEN)
 f1.grid(row=1,column=1)
-f2 = Frame(Bottoms,width=600,height=700,relief=SUNKEN)
+f2 = Frame(Bottoms,width=500,height=500,relief=SUNKEN)
 f2.grid(row=1,column=2)
-f2.configure(background='powder blue')
-f3 = Frame(Bottoms,width=500,height=700,relief=SUNKEN,bg="powder blue")
+f2.configure(background='#6f85ff')
+f3 = Frame(Bottoms,width=500,relief=SUNKEN,bg="#6f85ff")
 f3.grid(row=1,column=3)
-lblInfox = Label(f3,font=('Microsoft YaHei Light',50,'bold'),
-                text="Hall of Fame",fg="Blue",bd=10,anchor='w',bg="powder blue")
+lblInfox = Label(f3,font=('Terminal',25,'bold'),
+                text="Hall Of Fame",fg="#fcfcfc",bd=10,anchor='w',bg="#6f85ff")
 lblInfox.grid(row=0,column=0)
-txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="powder blue")
+txtHall = Text(f3,font=('Terminal',15,'bold'), bd=10,width=45,height=22,bg="#feeafa")
 txtHall.grid(row=1,column=0)
 
 chkTime = 0
@@ -461,16 +462,17 @@ def playWithClient():
             endGame = False
             socker.close()
         
-    
-        if receiveMessage == 'disconnected':
-            print(opponent+" : "+receiveMessage)
-            endGame = False
-            socker.close()
-            
-        else:
-            print(str(receiveMessage)+'\n')
-            clientPlay2(receiveMessage)
-    
+        try:
+            if receiveMessage == 'disconnected':
+                print(opponent+" : "+receiveMessage)
+                endGame = False
+                socker.close()
+                
+            else:
+                print(str(receiveMessage)+'\n')
+                clientPlay2(receiveMessage)
+        except:
+            print('clear state')
     
     
 
@@ -655,6 +657,10 @@ def disConnected():
         default("Server")   
         statePlayer.set("disconnected")
         actionWindow("Reconnect for play again.")  
+    if whatRole == 3:
+        default("CtoC")   
+        statePlayer.set("disconnected")
+        actionWindow("Reconnect for play again.") 
 
 
 def clientPlay(tmp):
@@ -865,7 +871,7 @@ def configMode():
             default('Client')
             btnConfig['text']='Client'
         elif whatRole==3:
-            txtName.configure(state='disabled',disabledbackground='powder blue')
+            txtName.configure(state='disabled',disabledbackground='#6f85ff')
             btnClient['text']='On'
             if recentRole == 1:
                 modeNow.set('Server')
@@ -883,11 +889,11 @@ def changeModeClient():
     if configAllow == True:
         if(btnClient['text']=='On'):
             default('CtoC')
-            modeMainFrame.set('Client to Client')
+            modeMainFrame.set('Client to Client !!!')
             txtName.configure(state='normal')
             btnClient['text']='Off'
         elif(btnClient['text']=='Off'):
-            txtName.configure(state='disabled',disabledbackground='powder blue')
+            txtName.configure(state='disabled',disabledbackground='#6f85ff')
             if recentRole == 1:
                 default('Client')
             elif recentRole == 2:
@@ -907,18 +913,18 @@ configAllow = True
 #         made = Toplevel(root)
 #         made.geometry('300x300')
 #         made.title("Config")
-#         made.configure(bg="powder blue")
-#         fr1 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+#         made.configure(bg="#6f85ff")
+#         fr1 = Frame(made,width=1600,height=400,bg="#6f85ff",relief=SUNKEN)
 #         fr1.pack(side=TOP)
-#         txtLabel=Label(fr1,font=('Microsoft YaHei Light',13,'bold'),text="Config",bg="powder blue")
+#         txtLabel=Label(fr1,font=('Microsoft YaHei Light',13,'bold'),text="Config",bg="#6f85ff")
 #         txtLabel.grid(row=0,column=0)
-#         fr2 = Frame(made,width=1600,height=400,bg="powder blue",relief=SUNKEN)
+#         fr2 = Frame(made,width=1600,height=400,bg="#6f85ff",relief=SUNKEN)
 #         fr2.pack(side=TOP)
-#         txtCh=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Mode\t",bg="powder blue")
+#         txtCh=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Mode\t",bg="#6f85ff")
 #         txtCh.grid(row=0,column=0)
-#         txtAir=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="\n\n",bg="powder blue")
+#         txtAir=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="\n\n",bg="#6f85ff")
 #         txtAir.grid(row=1,column=0)
-#         txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="powder blue")
+#         txtCh2=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="Client with Client\t",bg="#6f85ff")
 #         txtCh2.grid(row=1,column=0)
 #         if whatRole == 1:
 #             btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=configMode)
@@ -939,7 +945,7 @@ configAllow = True
 #                 btnConfig.grid(row=0,column=1)
 #             btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=changeModeClient)
 #             btnClient.grid(row=1,column=1)
-#         socket.AI_NUMERICSERV=Label(fr2,font=('Microsoft YaHei Light',11,'bold'),text='\n\n\n\n\n\n\n\n\n\n\n\n',bg='powder blue').grid(row=2,column=2)
+#         socket.AI_NUMERICSERV=Label(fr2,font=('Microsoft YaHei Light',11,'bold'),text='\n\n\n\n\n\n\n\n\n\n\n\n',bg='#6f85ff').grid(row=2,column=2)
 #         btnClose=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='close',command=close).grid(row=2,column=2)
 #         made.mainloop()
 #     except:
@@ -992,7 +998,7 @@ def default(role):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         modeMainFrame.set('Client')
         modeNow.set('Server')
-        txtName.configure(state='disabled',disabledbackground='powder blue')
+        txtName.configure(state='disabled',disabledbackground='#6f85ff')
     elif role =="Server":
         print("Server mode")
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1001,7 +1007,7 @@ def default(role):
         recentRole = whatRole
         modeMainFrame.set('Server')
         modeNow.set('Client')
-        txtName.configure(state='disabled',disabledbackground='powder blue')
+        txtName.configure(state='disabled',disabledbackground='#6f85ff')
     elif role == "CtoC":
         print("Server mode")
         socker = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -1037,7 +1043,7 @@ def offConnection():
     txtIp["state"] = "disabled"
     txtPort["state"] = "disabled"
     btnStart["state"] = "disabled"
-    txtName.configure(state='disabled',disabledbackground='powder blue')
+    txtName.configure(state='disabled',disabledbackground='#6f85ff')
     configAllow = False
     
 
@@ -1063,23 +1069,23 @@ def clearButton():
 def offButton():
     print('offButton')
     btn1["state"] = "disabled"
-    btn1.configure(bg="#49A")
+    btn1.configure(bg="#fbc93c")
     btn2["state"] = "disabled"
-    btn2.configure(bg="#49A")
+    btn2.configure(bg="#fbc93c")
     btn3["state"] = "disabled"
-    btn3.configure(bg="#49A")
+    btn3.configure(bg="#fbc93c")
     btn4["state"] = "disabled"
-    btn4.configure(bg="#49A")
+    btn4.configure(bg="#fbc93c")
     btn5["state"] = "disabled"
-    btn5.configure(bg="#49A")
+    btn5.configure(bg="#fbc93c")
     btn6["state"] = "disabled"
-    btn6.configure(bg="#49A")
+    btn6.configure(bg="#fbc93c")
     btn7["state"] = "disabled"
-    btn7.configure(bg="#49A")
+    btn7.configure(bg="#fbc93c")
     btn8["state"] = "disabled"
-    btn8.configure(bg="#49A")
+    btn8.configure(bg="#fbc93c")
     btn9["state"] = "disabled"
-    btn9.configure(bg="#49A")
+    btn9.configure(bg="#fbc93c")
     return 0
     
 def onButton():
@@ -1151,6 +1157,7 @@ def communication():
         playWithClient()
     
     btnSend["state"]= "disabled"
+    
 def upDate():
     print("update call")
     text1.set(number[0])
@@ -1330,48 +1337,57 @@ def getStart(playTime):
                 if playTime == 1:
                     ip = ip_Input.get()
                     port = int(port_Input.get())
-                    if port <1025 or port > 65535:
+                    if port >1025 and port < 65535:
                         port = "x"
 
-                    try:
-                        ip = ip_Input.get()
-                        port = int(port_Input.get())
-                        ip_recent = ip_Input.get()
-                        port_recent = port_Input.get()
-                    except TypeError:
-                        stateServer.set("invalid input")
+                        try:
+                            ip = ip_Input.get()
+                            port = int(port_Input.get())
+                            ip_recent = ip_Input.get()
+                            port_recent = port_Input.get()
+                        except TypeError:
+                            stateServer.set("invalid input")
 
+                            
                         
-                      
-                    try:
-                        serversocket.bind((ip, port))
-                        serversocket.listen(5)
-                        c,addr = serversocket.accept()
-                        offButton()
-                        offConnection()
-                        stateServer.set("Welcome to XO Game")
-                        statePlayer.set("your turn")
-                        clientPlay(0)
-                
-                    except TimeoutError:
-                        stateServer.set("ip/port error")
-                        print("TimeoutError")
-                        actionWindow("ip/port error")
-                    except ConnectionRefusedError:
-                        stateServer.set("ip/port error")
-                        print("ConnectionRefusedError ")
-                        actionWindow("ip/port error")
-                    except ConnectionResetError :
-                        stateServer.set("ip/port error")
-                        print("ConnectionResetError")
-                        actionWindow("ip/port error")
-                    except OSError:
-                        stateServer.set("ip/port error")
-                        print("OSError")
-                        actionWindow("ip/port error")
+                        try:
+                            serversocket.bind((ip, port))
+                            serversocket.listen(5)
+                            c,addr = serversocket.accept()
+                            offButton()
+                            offConnection()
+                            stateServer.set("Welcome to XO Game")
+                            statePlayer.set("your turn")
+                            clientPlay(0)
+                    
+                        except TimeoutError:
+                            stateServer.set("ip/port error")
+                            print("TimeoutError")
+                            actionWindow("ip/port error")
+                        except ConnectionRefusedError:
+                            stateServer.set("ip/port error")
+                            print("ConnectionRefusedError ")
+                            actionWindow("ip/port error")
+                        except ConnectionResetError :
+                            stateServer.set("ip/port error")
+                            print("ConnectionResetError")
+                            actionWindow("ip/port error")
+                        except OSError:
+                            stateServer.set("ip/port error")
+                            print("OSError")
+                            actionWindow("ip/port error")
         if whatRole == 3:
             server = ip_Input.get()
             port = int(port_Input.get())
+            if port <1025 or port > 65535:
+                port = "x"
+            try:
+                server = ip_Input.get()
+                port = int(port_Input.get())
+                ip_recent = ip_Input.get()
+                port_recent = port_Input.get()
+            except TypeError:
+                stateServer.set("invalid input")
             nameOfPlayer = name_Input.get()
             if len(nameOfPlayer)==1 and nameOfPlayer.isnumeric():
                 print('forbidden')
@@ -1425,57 +1441,57 @@ def getStart(playTime):
     
 #==========================Fonts==========================================
 #font.Font(family='Helvetica', size=12, weight='bold')
-font1 = TkFont.Font(family="Microsoft YaHei Light",size = 20,weight = 'bold')
+font1 = TkFont.Font(family="Terminal",size = 20,weight = 'bold')
 
 #===============================Calculator Frame===========================
 txtDisplayState = Label(f2,font=font1,
-                text="State",fg="Blue",bd=10,anchor='w',bg='powder blue')
+                text="State",fg="#f8f9fa",bd=20,anchor='w',bg='#6f85ff')
 
 
 txtDisplayState.grid(columnspan=4)
 txtDisplay = Entry(f2,font=font1,
                    textvariable=statePlayer,bd=30,insertwidth=4,
-                   bg="#49A",justify='right',state='disabled',disabledbackground='powder blue')
+                   bg="#ffeb3b",justify='right',state='disabled',disabledbackground='#6f85ff')
 txtDisplay.grid(columnspan=4)
 
 
 
 #=======================================================================================================
 whatRole = 1
-fr1 = Frame(f0a,width=10,height=10,bg="powder blue",relief=SUNKEN)
+fr1 = Frame(f0a,width=10,height=10,bg="#6f85ff",relief=SUNKEN)
 fr1.grid(row=0,column=1)
-fr2 = Frame(f0a,width=10,height=10,bg="powder blue",relief=SUNKEN)
+fr2 = Frame(f0a,width=15,height=15,bg="#6f85ff",relief=SUNKEN)
 fr2.grid(row=1,column=1)
 
 
 if whatRole == 1:
-    btnConfig=Button(fr1,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=lambda:configMode())
+    btnConfig=Button(fr1,padx=10,pady=10,bd=5,font=('Terminal',11,'bold'),text='Server',bg="#adff02",command=lambda:configMode())
     btnConfig.grid(row=0,column=1)
     
     
-    txtEmpty=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="",bg="powder blue")
+    txtEmpty=Label(fr2,font=('Terminal',11,'bold'),text="",bg="#6f85ff")
     txtEmpty.grid(row=0,column=1)
 
-    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=lambda:changeModeClient())
+    btnClient=Button(fr2,padx=22,pady=10,bd=5,font=('Terminal',11,'bold'),text='On',bg="#adff02",command=lambda:changeModeClient())
     btnClient.grid(row=1,column=1)
     
 elif whatRole == 2:
-    btnConfig=Button(fr1,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=lambda:configMode())
+    btnConfig=Button(fr1,font=('Terminal',11,'bold'),text='Client',command=lambda:configMode())
     btnConfig.grid(row=0,column=1)
 
-    txtEmpty=Label(fr2,font=('Microsoft YaHei Light',13,'bold'),text="",bg="powder blue")
+    txtEmpty=Label(fr2,font=('Terminal',11,'bold'),text="",bg="#6f85ff")
     txtEmpty.grid(row=0,column=1)
 
-    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='On',command=lambda:changeModeClient())
+    btnClient=Button(fr2,font=('Terminal',11,'bold'),text='On',command=lambda:changeModeClient())
     btnClient.grid(row=1,column=1)
 elif whatRole == 3:
     if recentRole == 1:
-        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Server',command=lambda:configMode())
+        btnConfig=Button(fr2,font=('Terminal',11,'bold'),text='Server',command=lambda:configMode())
         btnConfig.grid(row=0,column=1)
     elif recentRole == 2:
-        btnConfig=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Client',command=lambda:configMode())
+        btnConfig=Button(fr2,font=('Terminal',11,'bold'),text='Client',command=lambda:configMode())
         btnConfig.grid(row=0,column=1)
-    btnClient=Button(fr2,font=('Microsoft YaHei Light',11,'bold'),text='Off',command=lambda:changeModeClient())
+    btnClient=Button(fr2,font=('Terminal',11,'bold'),text='Off',bg="#7ac000",command=lambda:changeModeClient())
     btnClient.grid(row=1,column=1)
 
 
@@ -1493,37 +1509,37 @@ btn1 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text1,width=btnWidth,
               height=btnHeight,
-              bg="#49A",command=lambda:btnClick(1))
+              bg="#fbc93c",command=lambda:btnClick(1))
 btn1.grid(row=3,column=0)
 
 btn2 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text2,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(2))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(2))
 btn2.grid(row=3,column=1)
 
 btn3 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text3,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(3))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(3))
 btn3.grid(row=3,column=2)
 #===============================Row4=======================================
 btn4 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text4,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(4))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(4))
 btn4.grid(row=4,column=0)
 
 btn5 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text5,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(5))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(5))
 btn5.grid(row=4,column=1)
 
 btn6 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text6,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(6))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(6))
 btn6.grid(row=4,column=2)
 
 #===============================Row3=======================================
@@ -1531,62 +1547,61 @@ btn6.grid(row=4,column=2)
 btn7 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text7,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(7))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(7))
 btn7.grid(row=5,column=0)
 
 btn8 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text8,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(8))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(8))
 btn8.grid(row=5,column=1)
 
 btn9 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text9,width=btnWidth,
-              height=btnHeight,bg="#49A",command=lambda:btnClick(9))
+              height=btnHeight,bg="#fbc93c",command=lambda:btnClick(9))
 btn9.grid(row=5,column=2)
 
-btnSend = Button(f2,padx=16,pady=16,bd=8,fg="black",
+btnSend = Button(f2,padx=0.5,pady=16,bd=8,fg="black",
               font=font1,
               text="SEND",width=23,
-              height=btnHeight,bg="#49A",command=communication)
+              height=btnHeight,bg="#f28482",command=communication)
 btnSend.grid(row=6,columnspan=3)
 
 offButton()
 
 lblReference = Label(f1,font=font1, text="State",
-                     bd=16,anchor='w',bg="powder blue").grid(row=0,column=0)  
+                     bd=16,anchor='w',bg="#6f85ff").grid(row=0,column=0)  
 txtReference = Entry(f1,font=font1,textvariable=stateServer,
-                     bd=10,insertwidth=4,bg='#49A',justify='right',state='disabled',disabledbackground='powder blue').grid(row=0,column=1)
+                     bd=10,insertwidth=4,bg='#fb983c',justify='right',state='disabled',disabledbackground='#6f85ff').grid(row=0,column=1)
 
 #-----------------------------------------------------------------------------------------------------
 lblIp = Label(f1,font=font1, text="ip"
-                 ,bd=16,anchor='w',bg="powder blue").grid(row=1,column=0)  
+                 ,bd=16,anchor='w',bg="#6f85ff").grid(row=1,column=0)  
 txtIp = Entry(f1,font=font1,textvariable=ip_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtIp.grid(row=1,column=1)
 
 #-----------------------------------------------------------------------------------------------------
 lblPort = Label(f1,font=font1, text="port"
-                 ,bd=16,anchor='w',bg="powder blue").grid(row=2,column=0)  
+                 ,bd=16,anchor='w',bg="#6f85ff").grid(row=2,column=0)  
 txtPort = Entry(f1,font=font1,textvariable=port_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtPort.grid(row=2,column=1)  
 
 lblName = Label(f1,font=font1, text="Name"
-                 ,bd=16,anchor='w',bg="powder blue").grid(row=3,column=0)  
+                 ,bd=16,anchor='w',bg="#6f85ff").grid(row=3,column=0)  
 txtName = Entry(f1,font=font1,textvariable=name_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtName.grid(row=3,column=1)  
 
 
-
-btnStart = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
-                  width=10,text="Connect",bg="#49A",command=lambda:getStart(1))
-btnStart.grid(row=7,column=1)
-btnTry = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
-                  width=5,text="Exit",bg="#49A",command=closeGame)
-btnTry.grid(row=8,column=1)
+btnStart = Button(f1,padx=15,pady=15,bd=16,fg="black",font=font1,
+                  width=10,text="Connect",bg="#7ac000",command=lambda:getStart(1))
+btnStart.grid(row=6,column=1)
+btnTry = Button(f1,padx=61,pady=16,bd=16,fg="black",font=font1,
+                 width=5,text="Exit",bg="#7ac000",command=closeGame)
+btnTry.grid(row=7,column=1)
 menubar= Menu(root)
 filemenu = Menu(menubar, tearoff =0,font= 'Helvetica 30 bold')
 menubar.add_cascade(label="File",menu=filemenu)
