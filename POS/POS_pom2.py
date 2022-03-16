@@ -301,6 +301,19 @@ def outPay():
             #print(int(TimeSum))
             if cost > 1000:
                 show_cost.set(0)
+            if cost >= 501  and cost <= 1000:
+                show_cost.set(0)
+                if  diff_in_minutes < 120:
+                    show_cost.set(0)
+                if  diff_in_minutes > 120:
+                    parking_fee = 0   
+                    time_hr = int(diff_in_minutes / 60)-2 #340/6 = 5
+                    time_min = diff_in_minutes % 60 #340/6 = 40
+                    parking_fee = 30*time_hr
+                    if time_min >= 30:
+                        parking_fee += 30
+                    show_cost.set(parking_fee)
+                break
             if cost >= 100  and cost <= 500:
                 if  diff_in_minutes < 60:
                     show_cost.set(0)
@@ -312,6 +325,7 @@ def outPay():
                     if time_min >= 30:
                         parking_fee += 30
                     show_cost.set(parking_fee)
+                break
             if cost < 100:
                 parking_fee = 0
                 time_hr = int(diff_in_minutes / 60) #340/6 = 5
@@ -637,7 +651,7 @@ bd=16,anchor='w',bg="#ffecad")
 lblCost.grid(row=6,column=0)
 
 textCost = Entry(f1,font=('Microsoft JhengHei Light',18,'bold'),textvariable = show_cost,
-bd=10,insertwidth=4,bg='white',justify = 'right')
+bd=10,insertwidth=4,bg='white',justify = 'right',state=DISABLED,disabledbackground='white',disabledforeground='black')
 textCost.grid(row=6,column=1)
 
 btnOut = Button(f1,padx=16,pady=16,fg="black",

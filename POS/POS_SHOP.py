@@ -282,10 +282,10 @@ def toggleText(varBtn,txt1,txt2):
         if modelogin_Input == 2:
             ftpserver_entry.config(state='normal')
             modelogin_Input.set(2)
-        try:
+        '''try:
             addCar.destroy()
         except:
-            print("addCar.destroy()")
+            print("addCar.destroy()")'''
 
 
 
@@ -542,6 +542,9 @@ def Summit():
     global dict_arr, car_order, shopname, day,month,year,hour,minute,second
     license = license_Input.get()
     cost  = amount_Input.get()
+    if int(cost) < 0:
+        carrecent_Output.set("กรุณากรอกข้อมูลให้ถูกต้อง")
+        return
     CheckCarStatus()
     downloadFile(ftp,'Write.json')
     Receipt()
@@ -550,7 +553,7 @@ def Summit():
             if CheckCarPlate(license):
                 print("car_order",car_order)
                 timeIn = day+"/"+month+"/"+year+" "+hour+":"+minute
-                carrecent_Output.set(timeIn+" ทบล: "+license+" จ่าย: "+cost+" บาท")
+                carrecent_Output.set(timeIn+" ทบร: "+license+" จ่าย: "+cost+" บาท")
                 dict_arr = ReadFile('Write.json')
                 try:
                     car_order = int(dict_arr[len(dict_arr)-1]["order"])+1

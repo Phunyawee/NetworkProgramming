@@ -21,65 +21,37 @@
       "status": 1
    },
    {
-      "order": 1,
-      "carPlate": "\u0e01\u0e071234",
-      "timeIn": "16/03/2022 22:26",
+      "order": 0,
+      "carPlate": "\u0e12\u0e0d7638",
+      "timeIn": "17/03/2022 01:29",
       "cost": 0,
       "status": 1
    },
    {
       "order": 2,
-      "carPlate": "\u0e01\u0e081234",
-      "timeIn": "16/03/2022 22:26",
+      "carPlate": "\u0e01\u0e072345",
+      "timeIn": "17/03/2022 01:30",
       "cost": 0,
       "status": 1
    },
    {
-      "order": 0,
-      "carPlate": "w",
-      "timeIn": "16/03/2022 22:38",
+      "order": 2,
+      "carPlate": "\u0e1a\u0e029123",
+      "timeIn": "17/03/2022 02:22",
       "cost": 0,
       "status": 1
    },
    {
-      "order": 1,
-      "carPlate": "q",
-      "timeIn": "16/03/2022 22:38",
+      "order": 3,
+      "carPlate": "\u0e01\u0e013434",
+      "timeIn": "17/02/2022 02:23",
       "cost": 0,
-      "status": 1
+      "status": 2
    },
    {
-      "order": 0,
-      "carPlate": "ddd",
-      "timeIn": "16/03/2022 22:45",
-      "cost": 0,
-      "status": 1
-   },
-   {
-      "order": 0,
-      "carPlate": "\u0e01\u0e084444",
-      "timeIn": "16/03/2022 23:56",
-      "cost": 0,
-      "status": 1
-   },
-   {
-      "order": 1,
-      "carPlate": "\u0e01\u0e2b3544",
-      "timeIn": "00:00:19",
-      "cost": 0,
-      "status": 1
-   },
-   {
-      "order": 0,
-      "carPlate": "\u0e01\u0e141234",
-      "timeIn": "17/03/2022 00:33",
-      "cost": 0,
-      "status": 1
-   },
-   {
-      "order": 1,
-      "carPlate": "\u0e09\u0e0a5889",
-      "timeIn": "00:33:37",
+      "order": 3,
+      "carPlate": "\u0e14\u0e017777",
+      "timeIn": "17/02/2022 02:32",
       "cost": 0,
       "status": 1
    }
