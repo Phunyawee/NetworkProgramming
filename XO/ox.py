@@ -1091,23 +1091,23 @@ def offButton():
 def onButton():
     print('onButton')
     btn1["state"] = "normal"
-    btn1.configure(bg="Green")
+    btn1.configure(bg="#ffc8dd")
     btn2["state"] = "normal"
-    btn2.configure(bg="Green")
+    btn2.configure(bg="#ffc8dd")
     btn3["state"] = "normal"
-    btn3.configure(bg="Green")
+    btn3.configure(bg="#ffc8dd")
     btn4["state"] = "normal"
-    btn4.configure(bg="Green")
+    btn4.configure(bg="#ffc8dd")
     btn5["state"] = "normal"
-    btn5.configure(bg="Green")
+    btn5.configure(bg="#ffc8dd")
     btn6["state"] = "normal"
-    btn6.configure(bg="Green")
+    btn6.configure(bg="#ffc8dd")
     btn7["state"] = "normal"
-    btn7.configure(bg="Green")
+    btn7.configure(bg="#ffc8dd")
     btn8["state"] = "normal"
-    btn8.configure(bg="Green")
+    btn8.configure(bg="#ffc8dd")
     btn9["state"] = "normal"
-    btn9.configure(bg="Green")
+    btn9.configure(bg="#ffc8dd")
     return 0 
 
 

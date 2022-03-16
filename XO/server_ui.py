@@ -56,7 +56,7 @@ class Clock:
         self.time2 = time.strftime('%H:%M:%S')
         self.mFrame = Frame()
         self.mFrame.pack()
-        self.watch = Label(self.mFrame, text=self.time2,font=('Microsoft YaHei Light',30,'bold'),fg="#f8f9fa",bg='#6f85ff')
+        self.watch = Label(self.mFrame, text=self.time2,font=('Fixedsys',30,'bold'),fg="#f8f9fa",bg='#6f85ff')
         self.watch.pack()
         self.changeLabel() #first call it manually
 
@@ -865,20 +865,20 @@ f0 = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0.grid(row=0,column=0)
 
 #label
-lblInfo = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
+lblInfo = Label(f0,font=('Fixedsys',35,'bold'),
                 text="Player1",fg="#f8f9fa",bd=10,background='#6f85ff')
 lblInfo.grid(row=0,column=0)
-lblRole = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
+lblRole = Label(f0,font=('Fixedsys',35,'bold'),
                 textvariable=player1Label,fg="#f8f9fa",bd=10,background='#6f85ff')
 lblRole.grid(row=1,column=0)
 #bank zone
 #===============================================================
 f0a = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0a.grid(row=0,column=2)
-lblAir = Label(f0a,font=('Microsoft YaHei Light',50,'bold'),
+lblAir = Label(f0a,font=('Fixedsys',35,'bold'),
                 text="Player2",fg="#f8f9fa",bd=10,background='#6f85ff')
 lblAir.grid(row=0,column=0)
-lblRole2 = Label(f0a,font=('Microsoft YaHei Light',40,'bold'),
+lblRole2 = Label(f0a,font=('Fixedsys',35,'bold'),
                 textvariable=player2Label,fg="#f8f9fa",bd=10,background='#6f85ff')
 lblRole2.grid(row=1,column=0)
 #===============================================================
@@ -886,10 +886,10 @@ lblRole2.grid(row=1,column=0)
 f0b = Frame(Tops,bg="#6f85ff",relief=SUNKEN)
 f0b.grid(row=0,column=1)
 
-lblHall = Label(f0b,font=('Microsoft YaHei Light',50,'bold'),
-                text="\tMonitor\t\t",fg="#f8f9fa",background='#6f85ff')
+lblHall = Label(f0b,font=('Fixedsys',50,'bold'),
+                text="\tMONITOR\t\t",fg="#fcbc02",background='#6f85ff')
 lblHall.grid(row=0,column=0)
-lblHall2 = Label(f0b,font=('Microsoft YaHei Light',40,'bold'),
+lblHall2 = Label(f0b,font=('Fixedsys',40,'bold'),
                 textvariable=str(Clock()),fg="#f8f9fa",background='#6f85ff')
 lblHall2.grid(row=2,column=0)
 
@@ -908,10 +908,10 @@ text7 = StringVar()
 text8 = StringVar()
 text9 = StringVar()
 
-# lblInfo3 = Label(f0,font=('Microsoft YaHei Light',50,'bold'),
+# lblInfo3 = Label(f0,font=('Fixedsys',50,'bold'),
 #                 text="\t\t",fg="#f8f9fa",bd=10)
 # lblInfo3.grid(row=0,column=2)
-# lblRole3 = Label(f0,font=('Microsoft YaHei Light',40,'bold'),
+# lblRole3 = Label(f0,font=('Fixedsys',40,'bold'),
 #                 text="\t\t",fg="#f8f9fa",bd=10)
 # lblRole3.grid(row=1,column=2)
 
@@ -1161,10 +1161,10 @@ f2.grid(row=0,column=2)
 f2.configure(background='#6f85ff')
 f3 = Frame(Bottoms,width=500,height=700,bg='#6f85ff')
 f3.grid(row=0,column=3)
-lblInfox = Label(f3,font=('Microsoft YaHei Light',40,'bold'),
-                text="Hall of Fame",fg="#f8f9fa",bd=5,bg='#6f85ff')
+lblInfox = Label(f3,font=('Fixedsys',30,'bold'),
+                text="Hall Of Fame",fg="#f8f9fa",bd=5,bg='#6f85ff')
 lblInfox.grid(row=0,column=0)
-txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="#6f85ff")
+txtHall = Text(f3,font=('TH Sarabun New',17,'bold'), bd=8,width=45,height=15,bg="#feeafa")
 txtHall.grid(row=1,column=0)
 
 
@@ -1174,7 +1174,7 @@ chkTime = 0
 
 #==========================Fonts==========================================
 #font.Font(family='Helvetica', size=12, weight='bold')
-font1 = TkFont.Font(family="Microsoft YaHei Light",size = 20,weight = 'bold')
+font1 = TkFont.Font(family="Fixedsys",size = 20,weight = 'bold')
 
 #===============================Calculator Frame===========================
 txtDisplayState = Label(f2,font=font1,
@@ -1195,37 +1195,37 @@ btn1 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text1,width=btnWidth,
               height=btnHeight,
-              bg="#49A")
+              bg="#fec89a")
 btn1.grid(row=3,column=0)
 
 btn2 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text2,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn2.grid(row=3,column=1)
 
 btn3 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text3,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn3.grid(row=3,column=2)
 #===============================Row4=======================================
 btn4 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text4,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn4.grid(row=4,column=0)
 
 btn5 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text5,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn5.grid(row=4,column=1)
 
 btn6 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text6,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn6.grid(row=4,column=2)
 
 #===============================Row3=======================================
@@ -1233,25 +1233,25 @@ btn6.grid(row=4,column=2)
 btn7 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text7,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn7.grid(row=5,column=0)
 
 btn8 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text8,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn8.grid(row=5,column=1)
 
 btn9 = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               textvariable=text9,width=btnWidth,
-              height=btnHeight,bg="#49A")
+              height=btnHeight,bg="#fec89a")
 btn9.grid(row=5,column=2)
 
 btnClear = Button(f2,padx=16,pady=16,bd=8,fg="black",
               font=font1,
               text="CLEAR",width=23,
-              height=btnHeight,bg="#49A",command=lambda:resetToDefault())
+              height=btnHeight,bg="#f07167",command=lambda:resetToDefault())
 btnClear.grid(row=6,columnspan=3)
 
 #offButton()
@@ -1270,24 +1270,24 @@ txtIp = Entry(f1,font=font1,textvariable=ip_Input,
 txtIp.grid(row=1,column=1)
 
 #-----------------------------------------------------------------------------------------------------
-lblPort = Label(f1,font=font1, text="port"
+lblPort = Label(f1,font=font1, text="Port"
                  ,bd=16,anchor='w',bg="#6f85ff").grid(row=2,column=0)  
 txtPort = Entry(f1,font=font1,textvariable=port_Input,
                      bd=10,insertwidth=4,bg='white',justify='right')
 txtPort.grid(row=2,column=1)  
 
 
-btnStart = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
-                  width=10,text="Connect",bg="#49A",command=lambda:startServer())
+btnStart = Button(f1,padx=8,pady=10,bd=16,fg="black",font=font1,
+                  width=10,text="Connect",bg="#7ac000",command=lambda:startServer())
 btnStart.grid(row=7,column=1)
-btnTry = Button(f1,padx=16,pady=16,bd=16,fg="black",font=font1,
-                  width=5,text="Exit",bg="#49A",command=closeGame)
+btnTry = Button(f1,padx=50,pady=10,bd=16,fg="black",font=font1,
+                  width=5,text="Exit",bg="#7ac000",command=closeGame)
 btnTry.grid(row=8,column=1)
 menubar= Menu(root)
 filemenu = Menu(menubar, tearoff =0,font= 'Helvetica 30 bold')
 menubar.add_cascade(label="File",font= 'Helvetica 30 bold',menu=filemenu)
 filemenu.add_command(label="Walk History ",command=logWalk)
-filemenu.add_command(label="Clear hall of  fame",command=clearHall)
+filemenu.add_command(label="Clear hall Of  fame",command=clearHall)
 filemenu.add_command(label="Exit", command = closeGame)
 
 root.config(menu=menubar)
