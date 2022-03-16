@@ -220,9 +220,10 @@ def check():
             print (str(record.player2)+"   16WIN !!!!!!!!!!!!!!")
             return record.player2
     else:
-        if count == 9 and haveWinner == False:
+        if count == 9:
             gameRunning = False
             haveWinner = False
+        haveWinner == False
         return 'Draw'
     return 'None'
 def resetToDefault():
@@ -303,11 +304,16 @@ def Monitor(touch,getNamePlayer,choose):#my self
         print("Server disconnect")
     print_table_monitor(msg_monitor)
     getWinner = check()
+    print('getWinner'+getWinner)
+    print('haveWin'+str(haveWinner))
+    if getWinner == 'Draw' and haveWinner == False:
+        gameRunning = False
+   
     if gameRunning == False: 
-        if count == 9 and haveWinner==False:
+        if count == 10 and haveWinner==False:
             print("Draw !!!!!")
             statePlayer.set("Draw !!!!!")
-            statePlayer.set('Server ready')
+            #statePlayer.set('Server ready')
 
         else:
             print (getWinner+" winner !!!")  
@@ -342,8 +348,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                 print('Winner: '+chosen)
                 print('Loser: '+loser)
                 
-
-
+                
+                print('getDataList:'+str(getDataList))
                 if chosen not in getDataList:
                     print('add winner')
                     print('####################################################################')
@@ -506,9 +512,12 @@ def Monitor(touch,getNamePlayer,choose):#my self
                             
                             
             elif chosen == 'Draw':
+                
                 print(str(playerCollector[0])+' vs '+str(playerCollector[1])+' = Draw')
                 if playerCollector[0] not in getDataList:
                      #---------------------Set key statics.json-------------------------
+                    print('add draw')
+                    print('####################################################################')
                     with open('statics.json','r') as j:
                         getdata = json.load(j)
                         j.close()
@@ -525,14 +534,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         json.dump(getdata,file)
                         file.close()
                 else: 
-                    #---------------------Set key statics.json-------------------------
-                    with open('statics.json','r') as j:
-                        getdata = json.load(j)
-                        j.close()
-                    with open('statics.json','w') as file:#play first time
-                        getdata[playerCollector[0]]=0
-                        json.dump(getdata,file)
-                        file.close()
+                    print('update draw')
+                    print('####################################################################')
                     #---------------------Set key statics.json-------------------------
                     with open('statics_players.json','r') as file:#play draw
                         getStatic=json.load(file)
@@ -548,6 +551,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         file.close()
                 
                 if playerCollector[1] not in getDataList:
+                    print('add draw')
+                    print('####################################################################')
                     #---------------------Set key statics.json-------------------------
                     with open('statics.json','r') as j:
                         getdata = json.load(j)
@@ -565,14 +570,8 @@ def Monitor(touch,getNamePlayer,choose):#my self
                         json.dump(getdata,file)
                         file.close()
                 else:
-                     #---------------------Set key statics.json-------------------------
-                    with open('statics.json','r') as j:
-                        getdata = json.load(j)
-                        j.close()
-                    with open('statics.json','w') as file:#play first time
-                        getdata[playerCollector[1]]=0
-                        json.dump(getdata,file)
-                        file.close()
+                    print('update draw')
+                    print('####################################################################')
                      #---------------------Set key statics.json-------------------------
                     with open('statics_players.json','r') as file:#play draw
                         getStatic=json.load(file)
@@ -1030,7 +1029,7 @@ def upDate():
 def default():
     print('default call')
     global record,server,threadLock,CONNECTIONS_LIST,PORT,BUFSIZE
-    global msg,msg_monitor,nameSet,count,stopState,runnerServer
+    global msg,msg_monitor,nameSet,count,stopState,runnerServer,haveWinner
     global getdata,getStatic
     #hallOfFrame()
     stateServer.set('Server ready')
@@ -1038,6 +1037,7 @@ def default():
     count = 0
     nameSet = True 
     runnerServer = False
+    haveWinner = False
     player1Label.set('Name')
     player2Label.set('Name')    
     msg_monitor = ['1','2','3','4','5','6','7','8','9']
