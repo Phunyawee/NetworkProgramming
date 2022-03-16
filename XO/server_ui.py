@@ -27,7 +27,7 @@ try:
 
     #============================Sort data
     with open('statics.json','r') as j:
-        getdata = json.load(j)
+        getdata = json.load(j)  
         j.close()
     sorted_dt = {key: value for key, value in sorted(getdata.items(), key=lambda item: item[1],reverse=True)}
     with open('statics.json','w') as file:
@@ -1057,12 +1057,12 @@ def default():
     global msg,msg_monitor,nameSet,count,stopState,runnerServer,haveWinner
     global getdata,getStatic
     #hallOfFrame()
-    stateServer.set('Server ready')
+    #stateServer.set('Server ready')
     stopState = False
     count = 0
     nameSet = True 
     runnerServer = False
-    haveWinner = False
+    haveWinner = True
     player1Label.set('Name')
     player2Label.set('Name')    
     msg_monitor = ['1','2','3','4','5','6','7','8','9']
